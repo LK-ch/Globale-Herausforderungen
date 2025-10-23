@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CO₂-Rechner Schweiz</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -356,6 +357,10 @@
                 <div class="value" id="totalResult" style="color: #0284c7; font-size: 2.5rem;">0 kg CO₂</div>
             </div>
 
+            <button class="calculate-btn" onclick="downloadPDF()" style="margin-top: 1.5rem; background: linear-gradient(135deg, #059669, #047857);">
+                📄 Ergebnisse als PDF herunterladen
+            </button>
+
             <div class="comparison">
                 <h4>📌 Einordnung</h4>
                 <div id="comparisonText"></div>
@@ -381,6 +386,9 @@
     </main>
 
     <script>
+        // Globale Variable für die letzten Berechnungen
+        let lastCalculation = null;
+
         function calculateCO2() {
             // Mobilität
             const carKm = parseFloat(document.getElementById('carKm').value) || 0;
@@ -402,6 +410,7 @@
             // Ernährung
             const meatKg = parseFloat(document.getElementById('meatKg').value) || 0;
             const dietFactor = parseFloat(document.getElementById('diet').value);
+            const dietText = document.getElementById('diet').selectedOptions[0].text;
             
             // Fleisch: ca. 10 kg CO₂ pro kg (BAFU-Daten: 50 kg Fleisch = 500 kg CO₂)
             const meatCO2 = meatKg * 10;
@@ -413,10 +422,19 @@
 
             // Wohnen
             const heatingCO2 = parseFloat(document.getElementById('heatingType').value);
+            const heatingText = document.getElementById('heatingType').selectedOptions[0].text;
             const housingTotal = heatingCO2;
 
             // Gesamtsumme
             const total = mobilityTotal + foodTotal + housingTotal;
+
+            // Speichere Berechnung für PDF
+            lastCalculation = {
+                carKm, carType, trainKm, flightKm,
+                carTypeText: document.getElementById('carType').selectedOptions[0].text,
+                meatKg, dietText, heatingText,
+                mobilityTotal, foodTotal, housingTotal, total
+            };
 
             // Ergebnisse anzeigen
             document.getElementById('mobilityResult').textContent = Math.round(mobilityTotal) + ' kg CO₂';
@@ -452,6 +470,160 @@
             // Ergebnisse einblenden
             document.getElementById('results').classList.add('show');
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function downloadPDF() {
+            if (!lastCalculation) {
+                alert('Bitte berechnen Sie zuerst Ihren CO₂-Fussabdruck!');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const calc = lastCalculation;
+            const today = new Date().toLocaleDateString('de-CH');
+            
+            let yPos = 20;
+            
+            // Titel
+            doc.setFontSize(20);
+            doc.setTextColor(30, 58, 138);
+            doc.text('CO₂-Fussabdruck Berechnung', 105, yPos, { align: 'center' });
+            
+            yPos += 10;
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Erstellt am: ${today}`, 105, yPos, { align: 'center' });
+            
+            yPos += 15;
+            
+            // Ihre Eingaben
+            doc.setFontSize(14);
+            doc.setTextColor(30, 58, 138);
+            doc.text('Ihre Eingaben', 20, yPos);
+            
+            yPos += 10;
+            doc.setFontSize(11);
+            doc.setTextColor(0);
+            
+            // Mobilität
+            doc.setFont(undefined, 'bold');
+            doc.text('Mobilität:', 20, yPos);
+            doc.setFont(undefined, 'normal');
+            yPos += 7;
+            doc.text(`• Auto: ${calc.carKm.toLocaleString('de-CH')} km/Jahr (${calc.carTypeText})`, 25, yPos);
+            yPos += 6;
+            doc.text(`• Zug: ${calc.trainKm.toLocaleString('de-CH')} km/Jahr`, 25, yPos);
+            yPos += 6;
+            doc.text(`• Flugzeug: ${calc.flightKm.toLocaleString('de-CH')} km/Jahr`, 25, yPos);
+            
+            yPos += 12;
+            
+            // Ernährung
+            doc.setFont(undefined, 'bold');
+            doc.text('Ernährung:', 20, yPos);
+            doc.setFont(undefined, 'normal');
+            yPos += 7;
+            doc.text(`• Fleischkonsum: ${calc.meatKg} kg/Jahr`, 25, yPos);
+            yPos += 6;
+            doc.text(`• Ernährungsweise: ${calc.dietText}`, 25, yPos);
+            
+            yPos += 12;
+            
+            // Wohnen
+            doc.setFont(undefined, 'bold');
+            doc.text('Wohnen:', 20, yPos);
+            doc.setFont(undefined, 'normal');
+            yPos += 7;
+            doc.text(`• Heizung: ${calc.heatingText}`, 25, yPos);
+            
+            yPos += 15;
+            
+            // Trennlinie
+            doc.setDrawColor(200);
+            doc.line(20, yPos, 190, yPos);
+            
+            yPos += 10;
+            
+            // Ihre Ergebnisse
+            doc.setFontSize(14);
+            doc.setTextColor(30, 58, 138);
+            doc.text('Ihre Ergebnisse', 20, yPos);
+            
+            yPos += 10;
+            doc.setFontSize(11);
+            doc.setTextColor(0);
+            
+            doc.text(`Mobilität: ${Math.round(calc.mobilityTotal).toLocaleString('de-CH')} kg CO₂/Jahr`, 25, yPos);
+            yPos += 7;
+            doc.text(`Ernährung: ${Math.round(calc.foodTotal).toLocaleString('de-CH')} kg CO₂/Jahr`, 25, yPos);
+            yPos += 7;
+            doc.text(`Wohnen: ${Math.round(calc.housingTotal).toLocaleString('de-CH')} kg CO₂/Jahr`, 25, yPos);
+            
+            yPos += 12;
+            
+            // Gesamtergebnis - hervorgehoben
+            doc.setFillColor(224, 242, 254);
+            doc.rect(20, yPos - 5, 170, 12, 'F');
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(12);
+            doc.setTextColor(2, 132, 199);
+            doc.text(`Ihr jährlicher CO₂-Fussabdruck: ${(calc.total / 1000).toFixed(2)} Tonnen CO₂`, 25, yPos + 3);
+            
+            yPos += 15;
+            
+            // Vergleichswerte
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(11);
+            doc.setTextColor(0);
+            
+            doc.setFont(undefined, 'bold');
+            doc.text('Zum Vergleich:', 20, yPos);
+            doc.setFont(undefined, 'normal');
+            yPos += 7;
+            doc.text('• Schweizer Durchschnitt: 13,0 Tonnen CO₂eq/Jahr', 25, yPos);
+            yPos += 6;
+            doc.text('• Weltdurchschnitt: 6,0 Tonnen CO₂eq/Jahr', 25, yPos);
+            yPos += 6;
+            doc.text('• Planetare Grenze: 0,6 Tonnen CO₂eq/Jahr', 25, yPos);
+            
+            yPos += 15;
+            
+            // Trennlinie
+            doc.setDrawColor(200);
+            doc.line(20, yPos, 190, yPos);
+            
+            yPos += 10;
+            
+            // Datenquellen
+            doc.setFontSize(12);
+            doc.setTextColor(30, 58, 138);
+            doc.text('Datenquellen', 20, yPos);
+            
+            yPos += 8;
+            doc.setFontSize(9);
+            doc.setTextColor(0);
+            doc.text('Alle Berechnungen basieren auf offiziellen Schweizer Daten:', 20, yPos);
+            yPos += 6;
+            doc.text('• Bundesamt für Umwelt (BAFU) - Treibhausgasinventar 2023', 20, yPos);
+            yPos += 5;
+            doc.text('• Bundesamt für Energie (BFE) - CO₂-Emissionsvorschriften 2025', 20, yPos);
+            yPos += 5;
+            doc.text('• Bundesamt für Zivilluftfahrt (BAZL) - CO₂-Emissionen Luftverkehr', 20, yPos);
+            
+            yPos += 10;
+            doc.setFontSize(8);
+            doc.setTextColor(100);
+            doc.text('Quellen: bafu.admin.ch, bfe.admin.ch, bazl.admin.ch', 20, yPos);
+            
+            // Fusszeile
+            doc.setFontSize(8);
+            doc.setTextColor(150);
+            doc.text('Allgemeinbildung LK bfsl | CO₂-Rechner Schweiz', 105, 285, { align: 'center' });
+            
+            // PDF speichern
+            doc.save(`CO2-Fussabdruck_${today.replace(/\./g, '-')}.pdf`);
         }
     </script>
 </body>
