@@ -171,7 +171,7 @@
         </section>
 
         <section class="topics-grid">
-            <a href="globalisierung.html" class="topic-card">
+            <a href="globalisierung/" class="topic-card">
                 <span class="topic-icon">🌐</span>
                 <h3>Globalisierung</h3>
                 <p>
@@ -181,7 +181,7 @@
                 <span class="read-more">Mehr erfahren →</span>
             </a>
 
-            <a href="oekonomie-oekologie.html" class="topic-card">
+            <a href="oekonomie-und-oekologie/" class="topic-card">
                 <span class="topic-icon">⚖️</span>
                 <h3>Ökonomie und Ökologie</h3>
                 <p>
@@ -191,7 +191,7 @@
                 <span class="read-more">Mehr erfahren →</span>
             </a>
 
-            <a href="konsumverhalten.html" class="topic-card">
+            <a href="konsumverhalten/" class="topic-card">
                 <span class="topic-icon">🛒</span>
                 <h3>Konsumverhalten</h3>
                 <p>
@@ -201,7 +201,7 @@
                 <span class="read-more">Mehr erfahren →</span>
             </a>
 
-            <a href="energie.html" class="topic-card">
+            <a href="energie/" class="topic-card">
                 <span class="topic-icon">⚡</span>
                 <h3>Energie</h3>
                 <p>
