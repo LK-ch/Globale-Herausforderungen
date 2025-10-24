@@ -3,81 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Globalisierungs-Quiz - Weltkarten-Spiel</title>
+    <title>Globalisierungs-Quiz - Die Supply Chain entdecken</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
         
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        @keyframes celebration {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-10deg) scale(1.1); }
+            75% { transform: rotate(10deg) scale(1.1); }
         }
         
-        @keyframes route {
-            0% { stroke-dashoffset: 1000; }
-            100% { stroke-dashoffset: 0; }
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
         }
         
-        .draggable {
-            cursor: move;
-            transition: transform 0.2s;
-        }
-        
-        .draggable:hover {
-            transform: scale(1.1);
-        }
-        
-        .draggable.dragging {
-            opacity: 0.5;
-            transform: scale(1.2);
-        }
-        
-        .drop-zone {
-            transition: all 0.3s;
-        }
-        
-        .drop-zone.drag-over {
-            transform: scale(1.1);
-            filter: brightness(1.2);
-        }
-        
-        .drop-zone.correct {
-            animation: pulse 0.5s ease-in-out;
-        }
-        
-        .route-line {
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: route 2s ease-in-out forwards;
+        .pulse-animation {
+            animation: pulse 0.5s ease-in-out 3;
         }
         
         .celebration {
-            animation: bounce 0.5s ease-in-out 3;
+            animation: celebration 0.6s ease-in-out 2;
         }
         
-        #worldMap {
-            max-width: 100%;
-            height: auto;
-        }
-        
-        .country-marker {
+        .option-card {
+            transition: all 0.3s;
             cursor: pointer;
         }
         
-        .country-marker circle {
-            transition: r 0.2s, fill 0.2s;
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         
-        .country-marker:hover circle {
-            r: 3;
+        .option-card.correct {
+            animation: pulse 0.5s ease-in-out;
         }
         
-        .country-label {
-            pointer-events: none;
-            user-select: none;
+        .option-card.wrong {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
     </style>
 </head>
@@ -87,252 +65,473 @@
     <script>
         // Game State
         let gameState = {
-            currentLevel: 0,
+            currentProduct: null,
+            currentStep: 0,
             score: 0,
             lives: 3,
-            correctAnswers: 0,
-            currentProduct: null,
-            difficulty: 'easy', // easy, medium, hard
+            correctInRound: 0,
             gameMode: 'menu', // menu, playing, result, final
-            currentQuestionIndex: 0,
-            showHint: false
+            showHint: false,
+            usedHint: false
         };
 
-        // Product data with quiz questions
+        // Product data with chronological questions following the supply chain
         const products = {
             tshirt: {
                 name: 'T-Shirt',
                 icon: '👕',
                 color: '#3B82F6',
+                gradient: 'from-blue-500 to-blue-600',
+                totalSteps: 6,
                 questions: [
                     {
-                        question: 'Wo wird die Baumwolle für T-Shirts hauptsächlich angebaut?',
-                        options: ['Indien', 'Schweiz', 'Deutschland', 'Brasilien'],
-                        correctCountry: 'Indien',
-                        coordinates: { x: 64, y: 38 },
-                        fact: 'Indien ist der zweitgrößte Baumwollproduzent der Welt! Ein einziges T-Shirt benötigt etwa 2.700 Liter Wasser.',
-                        co2: '2.1 kg CO₂'
+                        step: 1,
+                        stepTitle: '🌱 Schritt 1: Rohstoffe',
+                        question: 'Wo wird die Baumwolle für dein T-Shirt hauptsächlich angebaut?',
+                        options: [
+                            { country: 'Indien', flag: '🇮🇳', correct: true },
+                            { country: 'Schweiz', flag: '🇨🇭', correct: false },
+                            { country: 'Deutschland', flag: '🇩🇪', correct: false },
+                            { country: 'Kanada', flag: '🇨🇦', correct: false }
+                        ],
+                        correctAnswer: 'Indien',
+                        fact: 'Indien ist der zweitgrößte Baumwollproduzent der Welt! Ein einziges T-Shirt benötigt etwa 2.700 Liter Wasser beim Anbau.',
+                        co2: '2.1 kg CO₂',
+                        hint: 'Dieses Land in Südasien ist bekannt für seine große Textilproduktion.'
                     },
                     {
-                        question: 'In welchem Land wird der Stoff oft gewebt und gefärbt?',
-                        options: ['China', 'Italien', 'USA', 'Kanada'],
-                        correctCountry: 'China',
-                        coordinates: { x: 72, y: 34 },
-                        fact: 'China ist die weltgrößte Textilindustrie. Beim Färben werden oft große Mengen Wasser verschmutzt.',
-                        co2: '3.5 kg CO₂'
+                        step: 2,
+                        stepTitle: '🧵 Schritt 2: Spinnen & Weben',
+                        question: 'In welchem Land wird die Baumwolle zu Garn gesponnen und zu Stoff gewebt?',
+                        options: [
+                            { country: 'China', flag: '🇨🇳', correct: true },
+                            { country: 'Italien', flag: '🇮🇹', correct: false },
+                            { country: 'USA', flag: '🇺🇸', correct: false },
+                            { country: 'Brasilien', flag: '🇧🇷', correct: false }
+                        ],
+                        correctAnswer: 'China',
+                        fact: 'China ist die weltgrößte Textilindustrie und verarbeitet Baumwolle aus der ganzen Welt zu Stoffen.',
+                        co2: '3.5 kg CO₂',
+                        hint: 'Die „Werkbank der Welt" in Ostasien.'
                     },
                     {
-                        question: 'Wo werden viele T-Shirts zusammengenäht?',
-                        options: ['Bangladesh', 'Norwegen', 'Australien', 'Mexiko'],
-                        correctCountry: 'Bangladesh',
-                        coordinates: { x: 67, y: 40 },
-                        fact: 'Bangladesh ist eines der größten Textilproduktionsländer. Viele Menschen arbeiten dort in der Bekleidungsindustrie.',
-                        co2: '1.2 kg CO₂'
+                        step: 3,
+                        stepTitle: '🎨 Schritt 3: Färben & Veredeln',
+                        question: 'Wo wird der Stoff oft gefärbt und chemisch behandelt?',
+                        options: [
+                            { country: 'China', flag: '🇨🇳', correct: true },
+                            { country: 'Norwegen', flag: '🇳🇴', correct: false },
+                            { country: 'Australien', flag: '🇦🇺', correct: false },
+                            { country: 'Argentinien', flag: '🇦🇷', correct: false }
+                        ],
+                        correctAnswer: 'China',
+                        fact: 'Beim Färben werden oft große Mengen Wasser und Chemikalien verwendet. Dies kann die Umwelt stark belasten.',
+                        co2: '2.8 kg CO₂',
+                        hint: 'Oft im gleichen Land wie das Weben - effizient für kurze Transportwege.'
+                    },
+                    {
+                        step: 4,
+                        stepTitle: '✂️ Schritt 4: Nähen',
+                        question: 'In welchem Land werden viele T-Shirts zusammengenäht?',
+                        options: [
+                            { country: 'Bangladesh', flag: '🇧🇩', correct: true },
+                            { country: 'Finnland', flag: '🇫🇮', correct: false },
+                            { country: 'Mexiko', flag: '🇲🇽', correct: false },
+                            { country: 'Japan', flag: '🇯🇵', correct: false }
+                        ],
+                        correctAnswer: 'Bangladesh',
+                        fact: 'Bangladesh ist eines der größten Textilproduktionsländer. Tausende Menschen arbeiten in Nähereien – oft unter schwierigen Bedingungen.',
+                        co2: '1.2 kg CO₂',
+                        hint: 'Ein südasiatisches Land, Nachbar von Indien, bekannt für günstige Textilproduktion.'
+                    },
+                    {
+                        step: 5,
+                        stepTitle: '🚢 Schritt 5: Transport',
+                        question: 'Wie kommt dein T-Shirt in die Schweiz?',
+                        options: [
+                            { country: 'Containerschiff', flag: '🚢', correct: true },
+                            { country: 'Flugzeug', flag: '✈️', correct: false },
+                            { country: 'Zug', flag: '🚂', correct: false },
+                            { country: 'LKW direkt', flag: '🚛', correct: false }
+                        ],
+                        correctAnswer: 'Containerschiff',
+                        fact: 'Dein T-Shirt reist etwa 15.000 km auf einem Containerschiff über den Ozean. Die Reise dauert 4-6 Wochen!',
+                        co2: '0.8 kg CO₂',
+                        hint: 'Der günstigste und umweltfreundlichste Weg für lange Distanzen.'
+                    },
+                    {
+                        step: 6,
+                        stepTitle: '🏪 Schritt 6: Verkauf',
+                        question: 'Wo kaufst du dein T-Shirt schließlich?',
+                        options: [
+                            { country: 'Geschäft in der Schweiz', flag: '🇨🇭', correct: true },
+                            { country: 'Direkt in China', flag: '🇨🇳', correct: false },
+                            { country: 'Online aus Indien', flag: '🇮🇳', correct: false },
+                            { country: 'Im Hafen', flag: '⚓', correct: false }
+                        ],
+                        correctAnswer: 'Geschäft in der Schweiz',
+                        fact: 'Nach seiner Weltreise von über 15.000 km landet dein T-Shirt endlich im Schweizer Laden. Es wurde von über 20 verschiedenen Händen berührt!',
+                        co2: '0.3 kg CO₂',
+                        hint: 'Am Ende der Reise – dort wo du lebst!'
                     }
                 ],
-                route: [
-                    { x: 64, y: 38 }, // Indien
-                    { x: 72, y: 34 }, // China
-                    { x: 67, y: 40 }, // Bangladesh
-                    { x: 50, y: 28 }  // Schweiz
-                ]
+                totalCO2: '10.7 kg CO₂',
+                totalDistance: '~15.000 km',
+                funFact: 'Ein durchschnittliches T-Shirt reist weiter als die meisten Menschen in einem Jahr!'
             },
             smartphone: {
                 name: 'Smartphone',
                 icon: '📱',
                 color: '#8B5CF6',
+                gradient: 'from-purple-500 to-purple-600',
+                totalSteps: 6,
                 questions: [
                     {
-                        question: 'Wo wird Coltan für Smartphone-Batterien oft abgebaut?',
-                        options: ['Kongo', 'Grönland', 'Island', 'Argentinien'],
-                        correctCountry: 'Kongo',
-                        coordinates: { x: 52, y: 52 },
-                        fact: 'Der Kongo besitzt 80% der weltweiten Coltan-Reserven. Dieser Rohstoff ist essentiell für Kondensatoren in Elektronik.',
-                        co2: '15 kg CO₂'
+                        step: 1,
+                        stepTitle: '⛏️ Schritt 1: Rohstoffabbau',
+                        question: 'Wo werden seltene Erden und Coltan für dein Smartphone abgebaut?',
+                        options: [
+                            { country: 'Kongo', flag: '🇨🇩', correct: true },
+                            { country: 'Grönland', flag: '🇬🇱', correct: false },
+                            { country: 'Island', flag: '🇮🇸', correct: false },
+                            { country: 'Neuseeland', flag: '🇳🇿', correct: false }
+                        ],
+                        correctAnswer: 'Kongo',
+                        fact: 'Der Kongo besitzt 80% der weltweiten Coltan-Reserven! Über 60 verschiedene Materialien werden für ein Smartphone benötigt.',
+                        co2: '15 kg CO₂',
+                        hint: 'Ein zentralafrikanisches Land mit reichen Bodenschätzen.'
                     },
                     {
-                        question: 'In welchem Land werden die meisten Mikrochips produziert?',
-                        options: ['Taiwan', 'Portugal', 'Ägypten', 'Peru'],
-                        correctCountry: 'Taiwan',
-                        coordinates: { x: 74, y: 42 },
-                        fact: 'Taiwan produziert über 60% der weltweiten Mikrochips! Eine einzige Chip-Fabrik kostet mehrere Milliarden Dollar.',
-                        co2: '25 kg CO₂'
+                        step: 2,
+                        stepTitle: '💾 Schritt 2: Chip-Produktion',
+                        question: 'Wo werden die komplexen Mikrochips hergestellt?',
+                        options: [
+                            { country: 'Taiwan', flag: '🇹🇼', correct: true },
+                            { country: 'Portugal', flag: '🇵🇹', correct: false },
+                            { country: 'Ägypten', flag: '🇪🇬', correct: false },
+                            { country: 'Peru', flag: '🇵🇪', correct: false }
+                        ],
+                        correctAnswer: 'Taiwan',
+                        fact: 'Taiwan produziert über 60% der weltweiten Mikrochips! Eine einzige Chip-Fabrik kostet mehrere Milliarden Dollar zu bauen.',
+                        co2: '25 kg CO₂',
+                        hint: 'Eine Insel vor der Küste Chinas, Weltmarktführer in der Halbleiterproduktion.'
                     },
                     {
-                        question: 'Wo werden die meisten Smartphones zusammengebaut?',
-                        options: ['China', 'Finnland', 'Spanien', 'Südafrika'],
-                        correctCountry: 'China',
-                        coordinates: { x: 72, y: 34 },
-                        fact: 'China ist die „Werkbank der Welt". Allein in Shenzhen werden täglich Hunderttausende Smartphones produziert.',
-                        co2: '8 kg CO₂'
+                        step: 3,
+                        stepTitle: '📱 Schritt 3: Display-Herstellung',
+                        question: 'Wo werden die hochauflösenden Displays produziert?',
+                        options: [
+                            { country: 'Südkorea', flag: '🇰🇷', correct: true },
+                            { country: 'Polen', flag: '🇵🇱', correct: false },
+                            { country: 'Türkei', flag: '🇹🇷', correct: false },
+                            { country: 'Chile', flag: '🇨🇱', correct: false }
+                        ],
+                        correctAnswer: 'Südkorea',
+                        fact: 'Südkorea und Japan sind führend in der Display-Technologie. Ein modernes Display hat mehr Pixel als das menschliche Auge unterscheiden kann!',
+                        co2: '12 kg CO₂',
+                        hint: 'Bekannt für Technologie-Giganten wie Samsung und LG.'
+                    },
+                    {
+                        step: 4,
+                        stepTitle: '🔧 Schritt 4: Zusammenbau',
+                        question: 'Wo werden die Smartphones zusammengesetzt?',
+                        options: [
+                            { country: 'China', flag: '🇨🇳', correct: true },
+                            { country: 'Finnland', flag: '🇫🇮', correct: false },
+                            { country: 'Spanien', flag: '🇪🇸', correct: false },
+                            { country: 'Südafrika', flag: '🇿🇦', correct: false }
+                        ],
+                        correctAnswer: 'China',
+                        fact: 'In riesigen Fabriken in Shenzhen werden täglich über 500.000 Smartphones produziert! Die Arbeiter*innen setzen hunderte Einzelteile zusammen.',
+                        co2: '8 kg CO₂',
+                        hint: 'Die „Werkbank der Welt" – auch Shenzhen genannt, die Tech-Hauptstadt.'
+                    },
+                    {
+                        step: 5,
+                        stepTitle: '📦 Schritt 5: Verpackung & Transport',
+                        question: 'Wie wird dein neues Smartphone in die Schweiz transportiert?',
+                        options: [
+                            { country: 'Luftfracht', flag: '✈️', correct: true },
+                            { country: 'Schiff', flag: '🚢', correct: false },
+                            { country: 'Zug', flag: '🚂', correct: false },
+                            { country: 'Auto', flag: '🚗', correct: false }
+                        ],
+                        correctAnswer: 'Luftfracht',
+                        fact: 'Neue Smartphones werden oft per Flugzeug transportiert, um schnell in den Läden zu sein. Das ist schnell, aber sehr CO₂-intensiv!',
+                        co2: '7 kg CO₂',
+                        hint: 'Der schnellste, aber umweltschädlichste Transportweg.'
+                    },
+                    {
+                        step: 6,
+                        stepTitle: '🛍️ Schritt 6: Im Laden',
+                        question: 'Wo kaufst du dein Smartphone?',
+                        options: [
+                            { country: 'Elektronikgeschäft CH', flag: '🇨🇭', correct: true },
+                            { country: 'Direkt aus China', flag: '🇨🇳', correct: false },
+                            { country: 'Vom Flughafen', flag: '✈️', correct: false },
+                            { country: 'Aus Taiwan', flag: '🇹🇼', correct: false }
+                        ],
+                        correctAnswer: 'Elektronikgeschäft CH',
+                        fact: 'Nach einer Reise von ca. 20.000 km und Teilen aus über 10 verschiedenen Ländern liegt dein Smartphone endlich im Schweizer Laden!',
+                        co2: '1 kg CO₂',
+                        hint: 'Der letzte Stopp der Reise in deinem Heimatland.'
                     }
                 ],
-                route: [
-                    { x: 52, y: 52 }, // Kongo
-                    { x: 74, y: 42 }, // Taiwan
-                    { x: 72, y: 34 }, // China
-                    { x: 50, y: 28 }  // Schweiz
-                ]
+                totalCO2: '68 kg CO₂',
+                totalDistance: '~20.000 km',
+                funFact: 'Ein Smartphone enthält mehr Rechenleistung als die Computer, die Apollo 11 zum Mond gebracht haben!'
             },
             coffee: {
                 name: 'Kaffee',
                 icon: '☕',
                 color: '#D97706',
+                gradient: 'from-amber-600 to-amber-700',
+                totalSteps: 5,
                 questions: [
                     {
+                        step: 1,
+                        stepTitle: '🌱 Schritt 1: Anbau',
                         question: 'Welches Land ist der größte Kaffeeproduzent der Welt?',
-                        options: ['Brasilien', 'Schweiz', 'Russland', 'Indien'],
-                        correctCountry: 'Brasilien',
-                        coordinates: { x: 32, y: 58 },
-                        fact: 'Brasilien produziert etwa ein Drittel des weltweiten Kaffees! Die Ernte erfolgt oft noch von Hand.',
-                        co2: '0.5 kg CO₂'
+                        options: [
+                            { country: 'Brasilien', flag: '🇧🇷', correct: true },
+                            { country: 'Schweiz', flag: '🇨🇭', correct: false },
+                            { country: 'Russland', flag: '🇷🇺', correct: false },
+                            { country: 'Kanada', flag: '🇨🇦', correct: false }
+                        ],
+                        correctAnswer: 'Brasilien',
+                        fact: 'Brasilien produziert etwa ein Drittel des weltweiten Kaffees! Die Kaffeebohnen wachsen an Sträuchern in tropischen Regionen.',
+                        co2: '0.5 kg CO₂',
+                        hint: 'Das größte Land in Südamerika.'
                     },
                     {
-                        question: 'Aus welcher Region kommt traditionell der beste Arabica-Kaffee?',
-                        options: ['Äthiopien', 'Schweden', 'Japan', 'Frankreich'],
-                        correctCountry: 'Äthiopien',
-                        coordinates: { x: 56, y: 48 },
-                        fact: 'Äthiopien ist die Geburtsstätte des Kaffees! Hier wächst Kaffee noch wild im Hochland.',
-                        co2: '0.3 kg CO₂'
+                        step: 2,
+                        stepTitle: '🌾 Schritt 2: Ernte',
+                        question: 'Wo wird der hochwertigste Arabica-Kaffee traditionell geerntet?',
+                        options: [
+                            { country: 'Äthiopien', flag: '🇪🇹', correct: true },
+                            { country: 'Schweden', flag: '🇸🇪', correct: false },
+                            { country: 'Japan', flag: '🇯🇵', correct: false },
+                            { country: 'Frankreich', flag: '🇫🇷', correct: false }
+                        ],
+                        correctAnswer: 'Äthiopien',
+                        fact: 'Äthiopien ist die Geburtsstätte des Kaffees! Hier wächst Kaffee noch wild im Hochland. Die Ernte erfolgt oft von Hand.',
+                        co2: '0.3 kg CO₂',
+                        hint: 'Ein ostafrikanisches Hochland – die Heimat des Kaffees.'
                     },
                     {
-                        question: 'In welchem Land wird der Kaffee oft für Europa geröstet?',
-                        options: ['Deutschland', 'Thailand', 'Chile', 'Kanada'],
-                        correctCountry: 'Deutschland',
-                        coordinates: { x: 50, y: 26 },
-                        fact: 'Deutschland ist Europas größter Kaffeeröster. Beim Rösten entwickelt sich erst das typische Kaffeearoma!',
-                        co2: '0.6 kg CO₂'
+                        step: 3,
+                        stepTitle: '🚢 Schritt 3: Export',
+                        question: 'Wie reisen die grünen Kaffeebohnen nach Europa?',
+                        options: [
+                            { country: 'Containerschiff', flag: '🚢', correct: true },
+                            { country: 'Flugzeug', flag: '✈️', correct: false },
+                            { country: 'U-Boot', flag: '🤿', correct: false },
+                            { country: 'Drohne', flag: '🚁', correct: false }
+                        ],
+                        correctAnswer: 'Containerschiff',
+                        fact: 'Die grünen Kaffeebohnen reisen in großen Säcken per Schiff nach Europa. Die Reise kann 4-8 Wochen dauern!',
+                        co2: '0.4 kg CO₂',
+                        hint: 'Der klassische Weg für Rohstoffe über den Ozean.'
+                    },
+                    {
+                        step: 4,
+                        stepTitle: '🔥 Schritt 4: Röstung',
+                        question: 'In welchem Land wird der Kaffee für Europa oft geröstet?',
+                        options: [
+                            { country: 'Deutschland', flag: '🇩🇪', correct: true },
+                            { country: 'Thailand', flag: '🇹🇭', correct: false },
+                            { country: 'Chile', flag: '🇨🇱', correct: false },
+                            { country: 'Indien', flag: '🇮🇳', correct: false }
+                        ],
+                        correctAnswer: 'Deutschland',
+                        fact: 'Deutschland ist Europas größter Kaffeeröster! Beim Rösten entwickelt sich erst das typische Kaffeearoma und die braune Farbe.',
+                        co2: '0.6 kg CO₂',
+                        hint: 'Europas größte Wirtschaft, bekannt für Qualität und Präzision.'
+                    },
+                    {
+                        step: 5,
+                        stepTitle: '☕ Schritt 5: In deiner Tasse',
+                        question: 'Wo genießt du deinen Kaffee?',
+                        options: [
+                            { country: 'Zuhause in der Schweiz', flag: '🇨🇭', correct: true },
+                            { country: 'In Brasilien', flag: '🇧🇷', correct: false },
+                            { country: 'In Äthiopien', flag: '🇪🇹', correct: false },
+                            { country: 'Auf dem Schiff', flag: '🚢', correct: false }
+                        ],
+                        correctAnswer: 'Zuhause in der Schweiz',
+                        fact: 'Nach seiner langen Reise kannst du endlich deinen Kaffee genießen! Für eine Tasse werden etwa 140 Liter Wasser benötigt (Anbau inklusive).',
+                        co2: '0.1 kg CO₂',
+                        hint: 'Da wo du jetzt sitzt!'
                     }
                 ],
-                route: [
-                    { x: 32, y: 58 }, // Brasilien
-                    { x: 56, y: 48 }, // Äthiopien
-                    { x: 50, y: 26 }, // Deutschland
-                    { x: 50, y: 28 }  // Schweiz
-                ]
+                totalCO2: '1.9 kg CO₂ pro kg',
+                totalDistance: '~10.000 km',
+                funFact: 'Kaffee ist nach Erdöl das zweitwertvollste Handelsgut der Welt!'
             },
             sneakers: {
                 name: 'Sneakers',
                 icon: '👟',
                 color: '#EF4444',
+                gradient: 'from-red-500 to-red-600',
+                totalSteps: 6,
                 questions: [
                     {
-                        question: 'Wo wird Naturkautschuk für Schuhsohlen hauptsächlich gewonnen?',
-                        options: ['Malaysia', 'Österreich', 'Polen', 'Irland'],
-                        correctCountry: 'Malaysia',
-                        coordinates: { x: 70, y: 50 },
-                        fact: 'Malaysia ist einer der größten Kautschuk-Produzenten. Kautschuk kommt vom Gummibaum und wird für flexible Sohlen verwendet.',
-                        co2: '3.2 kg CO₂'
+                        step: 1,
+                        stepTitle: '🌳 Schritt 1: Naturkautschuk',
+                        question: 'Wo wird der Naturkautschuk für die Schuhsohlen gewonnen?',
+                        options: [
+                            { country: 'Malaysia', flag: '🇲🇾', correct: true },
+                            { country: 'Österreich', flag: '🇦🇹', correct: false },
+                            { country: 'Polen', flag: '🇵🇱', correct: false },
+                            { country: 'Irland', flag: '🇮🇪', correct: false }
+                        ],
+                        correctAnswer: 'Malaysia',
+                        fact: 'Malaysia ist einer der größten Kautschuk-Produzenten! Kautschuk wird vom Gummibaum gewonnen und macht die Sohlen flexibel.',
+                        co2: '3.2 kg CO₂',
+                        hint: 'Ein südostasiatisches Land mit tropischem Klima – ideal für Gummibäume.'
                     },
                     {
-                        question: 'In welchem Land werden die meisten Sportschuhe produziert?',
-                        options: ['Vietnam', 'Dänemark', 'Marokko', 'Türkei'],
-                        correctCountry: 'Vietnam',
-                        coordinates: { x: 70, y: 44 },
-                        fact: 'Vietnam produziert fast ein Drittel aller Schuhe weltweit! Ein Sneaker durchläuft über 360 Arbeitsschritte.',
-                        co2: '4.5 kg CO₂'
+                        step: 2,
+                        stepTitle: '🏭 Schritt 2: Material-Verarbeitung',
+                        question: 'Wo werden die synthetischen Materialien für Sneakers hergestellt?',
+                        options: [
+                            { country: 'China', flag: '🇨🇳', correct: true },
+                            { country: 'Belgien', flag: '🇧🇪', correct: false },
+                            { country: 'Neuseeland', flag: '🇳🇿', correct: false },
+                            { country: 'Kenia', flag: '🇰🇪', correct: false }
+                        ],
+                        correctAnswer: 'China',
+                        fact: 'China produziert die meisten synthetischen Materialien. Gummi wird vulkanisiert, Stoffe gewebt und Kunststoffe geformt.',
+                        co2: '5.8 kg CO₂',
+                        hint: 'Die weltgrößte Produktionsnation für Materialien aller Art.'
                     },
                     {
-                        question: 'Wo werden synthetische Materialien für Sneakers oft hergestellt?',
-                        options: ['China', 'Belgien', 'Neuseeland', 'Kenia'],
-                        correctCountry: 'China',
-                        coordinates: { x: 72, y: 34 },
-                        fact: 'China produziert die meisten synthetischen Materialien. Ein moderner Sneaker besteht aus über 65 verschiedenen Teilen!',
-                        co2: '5.8 kg CO₂'
+                        step: 3,
+                        stepTitle: '👟 Schritt 3: Schuh-Produktion',
+                        question: 'In welchem Land werden die meisten Sportschuhe zusammengebaut?',
+                        options: [
+                            { country: 'Vietnam', flag: '🇻🇳', correct: true },
+                            { country: 'Dänemark', flag: '🇩🇰', correct: false },
+                            { country: 'Marokko', flag: '🇲🇦', correct: false },
+                            { country: 'Argentinien', flag: '🇦🇷', correct: false }
+                        ],
+                        correctAnswer: 'Vietnam',
+                        fact: 'Vietnam produziert fast ein Drittel aller Schuhe weltweit! Ein Paar Sneakers durchläuft über 360 verschiedene Arbeitsschritte.',
+                        co2: '4.5 kg CO₂',
+                        hint: 'Ein südostasiatisches Land, Nachbar von China, wichtiger Produktionsstandort.'
+                    },
+                    {
+                        step: 4,
+                        stepTitle: '✓ Schritt 4: Qualitätskontrolle',
+                        question: 'Wo werden die fertigen Schuhe geprüft und verpackt?',
+                        options: [
+                            { country: 'Vietnam', flag: '🇻🇳', correct: true },
+                            { country: 'Italien', flag: '🇮🇹', correct: false },
+                            { country: 'USA', flag: '🇺🇸', correct: false },
+                            { country: 'Schweiz', flag: '🇨🇭', correct: false }
+                        ],
+                        correctAnswer: 'Vietnam',
+                        fact: 'Jeder Schuh wird geprüft, ob er den Standards entspricht. Dann werden sie verpackt und für den Export vorbereitet.',
+                        co2: '0.8 kg CO₂',
+                        hint: 'Im gleichen Land wie die Produktion – effizienter Transport.'
+                    },
+                    {
+                        step: 5,
+                        stepTitle: '🚢 Schritt 5: Seefracht',
+                        question: 'Wie gelangen deine Sneakers nach Europa?',
+                        options: [
+                            { country: 'Containerschiff', flag: '🚢', correct: true },
+                            { country: 'Flugzeug', flag: '✈️', correct: false },
+                            { country: 'Rakete', flag: '🚀', correct: false },
+                            { country: 'Zu Fuß', flag: '👣', correct: false }
+                        ],
+                        correctAnswer: 'Containerschiff',
+                        fact: 'Die Sneakers reisen etwa 6-8 Wochen in Containern über den Pazifik und durch den Suezkanal nach Europa.',
+                        co2: '1.2 kg CO₂',
+                        hint: 'Die günstigste Methode für schwere Güter über lange Distanzen.'
+                    },
+                    {
+                        step: 6,
+                        stepTitle: '🏪 Schritt 6: Im Sportgeschäft',
+                        question: 'Wo stehen deine Sneakers schließlich im Regal?',
+                        options: [
+                            { country: 'Sportgeschäft Schweiz', flag: '🇨🇭', correct: true },
+                            { country: 'Fabrik Vietnam', flag: '🇻🇳', correct: false },
+                            { country: 'Hafen Hamburg', flag: '⚓', correct: false },
+                            { country: 'Online-Lager China', flag: '📦', correct: false }
+                        ],
+                        correctAnswer: 'Sportgeschäft Schweiz',
+                        fact: 'Nach 18.000 km und über 50 verschiedenen Händen stehen deine Sneakers endlich im Schweizer Sportgeschäft!',
+                        co2: '0.5 kg CO₂',
+                        hint: 'Am Ende der langen Reise – in deiner Heimat!'
                     }
                 ],
-                route: [
-                    { x: 70, y: 50 }, // Malaysia
-                    { x: 70, y: 44 }, // Vietnam
-                    { x: 72, y: 34 }, // China
-                    { x: 50, y: 28 }  // Schweiz
-                ]
+                totalCO2: '16 kg CO₂',
+                totalDistance: '~18.000 km',
+                funFact: 'Die globale Schuhindustrie produziert jährlich über 24 Milliarden Paar Schuhe!'
             }
-        };
-
-        // Country positions on improved world map
-        const countries = {
-            'Indien': { x: 64, y: 38, label: 'Indien' },
-            'China': { x: 72, y: 34, label: 'China' },
-            'Bangladesh': { x: 67, y: 40, label: 'Bangladesh' },
-            'Kongo': { x: 52, y: 52, label: 'Kongo' },
-            'Taiwan': { x: 74, y: 42, label: 'Taiwan' },
-            'Brasilien': { x: 32, y: 58, label: 'Brasilien' },
-            'Äthiopien': { x: 56, y: 48, label: 'Äthiopien' },
-            'Deutschland': { x: 50, y: 26, label: 'Deutschland' },
-            'Malaysia': { x: 70, y: 50, label: 'Malaysia' },
-            'Vietnam': { x: 70, y: 44, label: 'Vietnam' },
-            'Schweiz': { x: 50, y: 28, label: 'Schweiz' },
-            'USA': { x: 18, y: 32, label: 'USA' },
-            'Japan': { x: 78, y: 36, label: 'Japan' }
         };
 
         function renderMenu() {
             return `
-                <div class="container mx-auto px-4 py-8">
+                <div class="container mx-auto px-4 py-8 slide-in">
                     <div class="max-w-4xl mx-auto text-center">
-                        <div class="text-6xl mb-6 animate-bounce">🌍</div>
+                        <div class="text-6xl mb-6">🌍</div>
                         <h1 class="text-5xl font-bold text-gray-800 mb-4">
-                            Globalisierungs-Quiz
+                            Die Supply Chain entdecken
                         </h1>
                         <p class="text-xl text-gray-600 mb-8">
-                            Ziehe die Produkte auf die richtige Position auf der Weltkarte!
+                            Folge deinen Alltagsprodukten auf ihrer Weltreise!
                         </p>
                         
                         <div class="bg-white rounded-xl p-6 shadow-lg mb-8">
-                            <h2 class="text-2xl font-bold mb-4 text-gray-800">Wie wird gespielt?</h2>
+                            <h2 class="text-2xl font-bold mb-4 text-gray-800">📋 Spielregeln</h2>
                             <div class="grid md:grid-cols-3 gap-4 text-left">
                                 <div class="bg-blue-50 p-4 rounded-lg">
                                     <div class="text-3xl mb-2">1️⃣</div>
                                     <p class="font-semibold mb-1">Wähle ein Produkt</p>
-                                    <p class="text-sm text-gray-600">Klicke auf ein Produkt unten</p>
+                                    <p class="text-sm text-gray-600">T-Shirt, Smartphone, Kaffee oder Sneakers</p>
                                 </div>
                                 <div class="bg-green-50 p-4 rounded-lg">
                                     <div class="text-3xl mb-2">2️⃣</div>
                                     <p class="font-semibold mb-1">Beantworte Fragen</p>
-                                    <p class="text-sm text-gray-600">Klicke das richtige Land auf der Karte an</p>
+                                    <p class="text-sm text-gray-600">Folge der Supply Chain Schritt für Schritt</p>
                                 </div>
                                 <div class="bg-purple-50 p-4 rounded-lg">
                                     <div class="text-3xl mb-2">3️⃣</div>
-                                    <p class="font-semibold mb-1">Sammle Punkte</p>
-                                    <p class="text-sm text-gray-600">Jede richtige Antwort = 100 Punkte!</p>
+                                    <p class="font-semibold mb-1">Lerne & Sammle</p>
+                                    <p class="text-sm text-gray-600">100 Punkte pro richtiger Antwort!</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-4 mb-8">
-                            <p class="text-lg font-semibold text-gray-800 flex items-center justify-center gap-2">
+                            <p class="text-lg font-semibold text-gray-800 flex items-center justify-center gap-2 flex-wrap">
                                 <span>❤️</span>
-                                <span>Du hast ${gameState.lives} Leben</span>
+                                <span>Leben: ${gameState.lives}</span>
                                 <span>|</span>
-                                <span>🎯</span>
-                                <span>Aktueller Score: ${gameState.score}</span>
+                                <span>⭐</span>
+                                <span>Punkte: ${gameState.score}</span>
                             </p>
                         </div>
 
                         <h2 class="text-2xl font-bold mb-6 text-gray-800">Wähle ein Produkt:</h2>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             ${Object.entries(products).map(([key, product]) => `
                                 <button
                                     onclick="startProduct('${key}')"
-                                    class="p-6 rounded-xl text-white font-bold text-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
-                                    style="background-color: ${product.color}"
+                                    class="bg-gradient-to-br ${product.gradient} p-8 rounded-xl text-white font-bold text-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
                                 >
-                                    <div class="text-5xl mb-2">${product.icon}</div>
-                                    <div>${product.name}</div>
-                                    <div class="text-sm mt-2 opacity-90">${product.questions.length} Fragen</div>
+                                    <div class="text-6xl mb-3">${product.icon}</div>
+                                    <div class="text-2xl mb-2">${product.name}</div>
+                                    <div class="text-sm opacity-90">${product.totalSteps} Schritte</div>
+                                    <div class="text-sm opacity-90 mt-2">
+                                        <div>🌍 ${product.totalDistance}</div>
+                                        <div>💨 ${product.totalCO2}</div>
+                                    </div>
                                 </button>
                             `).join('')}
                         </div>
-
-                        ${gameState.correctAnswers > 0 ? `
-                            <div class="mt-8 bg-green-50 rounded-xl p-6">
-                                <h3 class="text-xl font-bold text-green-800 mb-2">🎉 Fortschritt</h3>
-                                <p class="text-gray-700">
-                                    Du hast bisher ${gameState.correctAnswers} Fragen richtig beantwortet!
-                                </p>
-                            </div>
-                        ` : ''}
                     </div>
                 </div>
             `;
@@ -340,141 +539,97 @@
 
         function renderGame() {
             const product = products[gameState.currentProduct];
-            const question = product.questions[gameState.currentQuestionIndex];
+            const question = product.questions[gameState.currentStep];
+            const progress = ((gameState.currentStep + 1) / product.questions.length) * 100;
             
             return `
-                <div class="container mx-auto px-4 py-8">
-                    <div class="max-w-6xl mx-auto">
+                <div class="container mx-auto px-4 py-8 slide-in">
+                    <div class="max-w-4xl mx-auto">
                         <!-- Header -->
                         <div class="bg-white rounded-xl p-4 shadow-lg mb-6">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between flex-wrap gap-4">
                                 <button onclick="backToMenu()" class="text-gray-600 hover:text-gray-800 flex items-center gap-2">
                                     <span>←</span> Zurück
                                 </button>
                                 <div class="flex items-center gap-6">
                                     <div class="flex items-center gap-2">
                                         <span>❤️</span>
-                                        <span class="font-bold">${'❤️'.repeat(gameState.lives)}</span>
+                                        <span class="font-bold text-red-500">${'❤️'.repeat(gameState.lives)}</span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span>⭐</span>
-                                        <span class="font-bold">${gameState.score}</span>
+                                        <span class="font-bold text-yellow-600">${gameState.score} Punkte</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Product Info -->
-                        <div class="bg-white rounded-xl p-6 shadow-lg mb-6" style="border-left: 4px solid ${product.color}">
-                            <div class="flex items-center gap-4">
+                        <!-- Product & Progress -->
+                        <div class="bg-white rounded-xl p-6 shadow-lg mb-6">
+                            <div class="flex items-center gap-4 mb-4">
                                 <div class="text-5xl">${product.icon}</div>
-                                <div>
+                                <div class="flex-1">
                                     <h2 class="text-2xl font-bold text-gray-800">${product.name}</h2>
-                                    <p class="text-gray-600">Frage ${gameState.currentQuestionIndex + 1} von ${product.questions.length}</p>
+                                    <p class="text-gray-600">${question.stepTitle}</p>
                                 </div>
                             </div>
+                            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                                <div class="h-full bg-gradient-to-r ${product.gradient} transition-all duration-500 rounded-full flex items-center justify-end pr-2"
+                                    style="width: ${progress}%">
+                                    <span class="text-white text-xs font-bold">${Math.round(progress)}%</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Schritt ${gameState.currentStep + 1} von ${product.questions.length}
+                            </p>
                         </div>
 
-                        <!-- Question -->
-                        <div class="bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl p-8 shadow-lg mb-6 text-white">
-                            <h3 class="text-3xl font-bold mb-4">${question.question}</h3>
-                            <p class="text-lg opacity-90">Klicke auf das richtige Land auf der Weltkarte!</p>
+                        <!-- Question Card -->
+                        <div class="bg-gradient-to-br ${product.gradient} rounded-xl p-8 shadow-lg mb-6 text-white">
+                            <h3 class="text-3xl font-bold mb-6">${question.question}</h3>
+                            
                             ${gameState.showHint ? `
-                                <div class="mt-4 bg-white bg-opacity-20 rounded-lg p-4">
-                                    <p class="text-sm">💡 Tipp: Suche nach <strong>${question.correctCountry}</strong></p>
+                                <div class="bg-white bg-opacity-20 rounded-lg p-4 mb-4">
+                                    <p class="text-sm">💡 <strong>Tipp:</strong> ${question.hint}</p>
+                                    <p class="text-xs mt-2 opacity-75">(Du erhältst nur 75 Punkte statt 100)</p>
                                 </div>
                             ` : `
-                                <button onclick="showHint()" class="mt-4 bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg text-sm">
+                                <button onclick="showHint()" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg text-sm mb-4 transition-all">
                                     💡 Tipp anzeigen (-25 Punkte)
                                 </button>
                             `}
                         </div>
 
-                        <!-- World Map -->
-                        <div class="bg-gradient-to-br from-blue-100 to-green-100 rounded-xl p-6 shadow-lg">
-                            <svg id="worldMap" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
-                                <!-- Ocean background -->
-                                <rect width="100" height="70" fill="#DBEAFE"/>
-                                
-                                <!-- More realistic continents -->
-                                
-                                <!-- North America -->
-                                <path d="M 8 18 L 10 15 L 14 14 L 18 16 L 22 18 L 24 22 L 26 28 L 28 35 L 26 40 L 22 42 L 18 41 L 14 38 L 10 35 L 8 28 Z" 
-                                    fill="#86EFAC" stroke="#059669" stroke-width="0.3" opacity="0.9"/>
-                                
-                                <!-- Central America -->
-                                <path d="M 22 42 L 24 44 L 26 45 L 24 42 Z" 
-                                    fill="#86EFAC" stroke="#059669" stroke-width="0.3" opacity="0.9"/>
-                                
-                                <!-- South America -->
-                                <path d="M 26 45 L 30 46 L 33 50 L 35 55 L 36 60 L 35 65 L 32 67 L 28 66 L 26 62 L 25 56 L 26 50 Z" 
-                                    fill="#86EFAC" stroke="#059669" stroke-width="0.3" opacity="0.9"/>
-                                
-                                <!-- Europe -->
-                                <path d="M 46 22 L 48 20 L 52 21 L 55 23 L 56 26 L 54 29 L 52 31 L 48 30 L 46 27 Z" 
-                                    fill="#FCD34D" stroke="#F59E0B" stroke-width="0.3" opacity="0.9"/>
-                                
-                                <!-- Africa -->
-                                <path d="M 47 32 L 50 30 L 53 31 L 56 33 L 58 38 L 59 45 L 58 52 L 56 58 L 53 61 L 50 60 L 48 56 L 47 50 L 46 42 L 47 36 Z" 
-                                    fill="#FCD34D" stroke="#F59E0B" stroke-width="0.3" opacity="0.9"/>
-                                
-                                <!-- Asia -->
-                                <path d="M 56 18 L 62 16 L 68 17 L 74 19 L 78 22 L 80 26 L 82 32 L 82 38 L 80 42 L 76 45 L 72 46 L 68 44 L 64 40 L 60 36 L 58 30 L 57 24 Z" 
-                                    fill="#FCA5A5" stroke="#DC2626" stroke-width="0.3" opacity="0.9"/>
-                                
-                                <!-- Middle East / India region -->
-                                <path d="M 58 30 L 62 32 L 66 35 L 68 40 L 67 44 L 64 46 L 60 44 L 58 40 L 58 35 Z" 
-                                    fill="#FCA5A5" stroke="#DC2626" stroke-width="0.3" opacity="0.9"/>
-                                
-                                <!-- Southeast Asia -->
-                                <path d="M 68 44 L 72 45 L 74 48 L 72 52 L 69 53 L 67 50 L 68 47 Z" 
-                                    fill="#FCA5A5" stroke="#DC2626" stroke-width="0.3" opacity="0.9"/>
-                                
-                                <!-- Australia -->
-                                <path d="M 74 54 L 78 55 L 82 57 L 84 60 L 82 63 L 78 64 L 74 62 L 72 59 L 72 56 Z" 
-                                    fill="#A78BFA" stroke="#7C3AED" stroke-width="0.3" opacity="0.9"/>
-
-                                <!-- Country Markers with stable positioning -->
-                                ${Object.entries(countries).map(([name, pos]) => `
-                                    <g class="country-marker" onclick="selectCountry('${name}')">
-                                        <circle cx="${pos.x}" cy="${pos.y}" r="2" fill="${product.color}" stroke="white" stroke-width="0.5" opacity="0.9"/>
-                                        <text class="country-label" x="${pos.x}" y="${pos.y - 3.5}" 
-                                            font-size="2.5" 
-                                            fill="#1F2937" 
-                                            text-anchor="middle"
-                                            font-weight="600"
-                                            style="paint-order: stroke; stroke: white; stroke-width: 0.3px;">
-                                            ${pos.label}
-                                        </text>
-                                    </g>
-                                `).join('')}
-
-                                <!-- Switzerland Marker (Special) -->
-                                <g>
-                                    <circle cx="50" cy="28" r="2.5" fill="#EF4444" stroke="white" stroke-width="0.7" opacity="1"/>
-                                    <text x="50" y="24" font-size="3" fill="#EF4444" text-anchor="middle" font-weight="bold">🇨🇭</text>
-                                </g>
-                            </svg>
-                        </div>
-
-                        <!-- Options as buttons (fallback for mobile) -->
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
-                            ${question.options.map(option => `
+                        <!-- Answer Options -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${question.options.map((option, idx) => `
                                 <button
-                                    onclick="selectCountry('${option}')"
-                                    class="bg-white hover:bg-gray-50 border-2 border-gray-300 hover:border-blue-500 rounded-lg p-4 font-semibold text-gray-700 transition-all"
+                                    onclick="selectAnswer('${option.country}')"
+                                    class="option-card bg-white border-4 border-gray-300 hover:border-${product.color.slice(1)} rounded-xl p-6 text-left shadow-lg"
                                 >
-                                    ${option}
+                                    <div class="flex items-center gap-4">
+                                        <div class="text-5xl">${option.flag}</div>
+                                        <div class="flex-1">
+                                            <div class="text-xl font-bold text-gray-800">${option.country}</div>
+                                        </div>
+                                    </div>
                                 </button>
                             `).join('')}
+                        </div>
+
+                        <!-- Info Box -->
+                        <div class="mt-6 bg-blue-50 rounded-xl p-4 text-sm text-gray-700">
+                            <p class="font-semibold mb-1">ℹ️ Info zu diesem Schritt:</p>
+                            <p>CO₂-Ausstoss: <strong>${question.co2}</strong></p>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        function renderResult(isCorrect, question) {
+        function renderResult(isCorrect) {
             const product = products[gameState.currentProduct];
+            const question = product.questions[gameState.currentStep];
             
             return `
                 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -482,42 +637,45 @@
                         <div class="text-center">
                             <div class="text-8xl mb-4">${isCorrect ? '🎉' : '😅'}</div>
                             <h2 class="text-4xl font-bold mb-4 ${isCorrect ? 'text-green-600' : 'text-orange-600'}">
-                                ${isCorrect ? 'Richtig!' : 'Nicht ganz!'}
+                                ${isCorrect ? 'Richtig!' : 'Leider falsch!'}
                             </h2>
                             
                             ${isCorrect ? `
-                                <div class="text-2xl font-bold text-green-600 mb-4">
-                                    +${gameState.showHint ? '75' : '100'} Punkte!
+                                <div class="text-3xl font-bold text-green-600 mb-4">
+                                    +${gameState.usedHint ? '75' : '100'} Punkte!
                                 </div>
                             ` : `
                                 <div class="text-lg text-gray-600 mb-4">
-                                    Die richtige Antwort war: <strong>${question.correctCountry}</strong>
+                                    Die richtige Antwort war: <strong>${question.correctAnswer}</strong>
+                                </div>
+                                <div class="text-xl text-red-600 mb-4">
+                                    -1 Leben ❤️
                                 </div>
                             `}
 
-                            <div class="bg-blue-50 rounded-xl p-6 mb-6 text-left">
-                                <p class="text-lg font-semibold mb-2">💡 Wusstest du?</p>
-                                <p class="text-gray-700">${question.fact}</p>
-                                <div class="mt-3 text-sm text-gray-600">
-                                    <span class="font-semibold">CO₂-Ausstoss in diesem Schritt:</span> ${question.co2}
+                            <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-6 text-left">
+                                <p class="text-lg font-semibold mb-3 text-gray-800">💡 Wusstest du?</p>
+                                <p class="text-gray-700 leading-relaxed">${question.fact}</p>
+                                <div class="mt-4 pt-4 border-t border-gray-300">
+                                    <p class="text-sm text-gray-600">
+                                        <span class="font-semibold">CO₂-Ausstoss in diesem Schritt:</span> ${question.co2}
+                                    </p>
                                 </div>
                             </div>
 
-                            ${gameState.currentQuestionIndex < product.questions.length - 1 ? `
+                            ${gameState.currentStep < product.questions.length - 1 ? `
                                 <button
                                     onclick="nextQuestion()"
-                                    class="w-full py-4 px-8 rounded-xl text-white font-bold text-xl shadow-lg hover:shadow-xl transition-all"
-                                    style="background-color: ${product.color}"
+                                    class="w-full py-4 px-8 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white font-bold text-xl rounded-xl shadow-lg transition-all"
                                 >
-                                    Nächste Frage →
+                                    Weiter zum nächsten Schritt →
                                 </button>
                             ` : `
                                 <button
                                     onclick="finishProduct()"
-                                    class="w-full py-4 px-8 rounded-xl text-white font-bold text-xl shadow-lg hover:shadow-xl transition-all"
-                                    style="background-color: ${product.color}"
+                                    class="w-full py-4 px-8 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white font-bold text-xl rounded-xl shadow-lg transition-all"
                                 >
-                                    ${product.name} abgeschlossen! 🎊
+                                    Reise abschließen 🎊
                                 </button>
                             `}
                         </div>
@@ -526,69 +684,89 @@
             `;
         }
 
-        function renderFinalResult() {
+        function renderFinal() {
             const product = products[gameState.currentProduct];
             const totalQuestions = product.questions.length;
-            const correctInThisRound = gameState.correctAnswers;
-            const percentage = Math.round((correctInThisRound / totalQuestions) * 100);
+            const percentage = Math.round((gameState.correctInRound / totalQuestions) * 100);
             
             return `
-                <div class="container mx-auto px-4 py-8">
+                <div class="container mx-auto px-4 py-8 slide-in">
                     <div class="max-w-3xl mx-auto">
                         <div class="bg-white rounded-3xl p-12 shadow-2xl text-center">
-                            <div class="text-7xl mb-6">🏆</div>
+                            <div class="text-7xl mb-6 celebration">🏆</div>
                             <h2 class="text-4xl font-bold text-gray-800 mb-4">
-                                ${product.name} abgeschlossen!
+                                ${product.icon} ${product.name} abgeschlossen!
                             </h2>
                             
-                            <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl p-8 mb-8">
-                                <div class="grid grid-cols-3 gap-4">
+                            <div class="bg-gradient-to-br ${product.gradient} text-white rounded-2xl p-8 mb-8">
+                                <div class="grid grid-cols-3 gap-4 mb-6">
                                     <div>
                                         <p class="text-sm opacity-90 mb-1">Punkte</p>
                                         <p class="text-4xl font-bold">${gameState.score}</p>
                                     </div>
                                     <div>
                                         <p class="text-sm opacity-90 mb-1">Richtig</p>
-                                        <p class="text-4xl font-bold">${correctInThisRound}/${totalQuestions}</p>
+                                        <p class="text-4xl font-bold">${gameState.correctInRound}/${totalQuestions}</p>
                                     </div>
                                     <div>
                                         <p class="text-sm opacity-90 mb-1">Genauigkeit</p>
                                         <p class="text-4xl font-bold">${percentage}%</p>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6 mb-8">
-                                <p class="text-lg font-semibold mb-2">🌍 Die Reise im Überblick</p>
-                                <div class="text-left space-y-2 text-sm text-gray-700">
-                                    ${product.questions.map((q, idx) => `
-                                        <div class="flex items-center gap-2">
-                                            <span>${idx + 1}.</span>
-                                            <span>${q.correctCountry}</span>
-                                            <span class="text-gray-500">(${q.co2})</span>
+                                <div class="border-t border-white border-opacity-30 pt-6">
+                                    <div class="grid grid-cols-2 gap-4 text-left">
+                                        <div>
+                                            <p class="text-sm opacity-90">Gesamte Distanz</p>
+                                            <p class="text-2xl font-bold">${product.totalDistance}</p>
                                         </div>
-                                    `).join('')}
-                                    <div class="flex items-center gap-2 font-bold text-red-600">
-                                        <span>→</span>
-                                        <span>🇨🇭 Schweiz</span>
+                                        <div>
+                                            <p class="text-sm opacity-90">CO₂-Fussabdruck</p>
+                                            <p class="text-2xl font-bold">${product.totalCO2}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6 mb-6">
+                                <p class="text-lg font-semibold mb-2 text-gray-800">✨ ${product.funFact}</p>
+                            </div>
+
+                            <div class="bg-green-50 rounded-xl p-6 mb-8 text-left">
+                                <p class="font-bold text-gray-800 mb-3 text-center">🌱 Was kannst du tun?</p>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-green-600">✓</span>
+                                        <span>Kaufe lokale und nachhaltig produzierte Produkte, wenn möglich</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-green-600">✓</span>
+                                        <span>Repariere Dinge, statt sie wegzuwerfen</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-green-600">✓</span>
+                                        <span>Achte auf Fair-Trade und Bio-Siegel</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-green-600">✓</span>
+                                        <span>Kaufe nur, was du wirklich brauchst</span>
+                                    </li>
+                                </ul>
+                            </div>
+
                             ${percentage === 100 ? `
-                                <div class="bg-green-50 rounded-xl p-6 mb-8">
-                                    <p class="text-2xl font-bold text-green-600 mb-2">🌟 Perfekt!</p>
-                                    <p class="text-gray-700">Du bist ein Globalisierungs-Experte! Alle Fragen richtig beantwortet!</p>
+                                <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-6 mb-6">
+                                    <p class="text-2xl font-bold text-orange-600 mb-2">🌟 Perfekt!</p>
+                                    <p class="text-gray-700">Du bist ein Globalisierungs-Experte!</p>
                                 </div>
                             ` : percentage >= 66 ? `
-                                <div class="bg-blue-50 rounded-xl p-6 mb-8">
+                                <div class="bg-blue-50 rounded-xl p-6 mb-6">
                                     <p class="text-2xl font-bold text-blue-600 mb-2">👏 Super!</p>
-                                    <p class="text-gray-700">Sehr gut! Du kennst dich schon gut mit globalen Lieferketten aus!</p>
+                                    <p class="text-gray-700">Sehr gut! Du kennst dich schon gut aus!</p>
                                 </div>
                             ` : `
-                                <div class="bg-orange-50 rounded-xl p-6 mb-8">
-                                    <p class="text-2xl font-bold text-orange-600 mb-2">💪 Weiter so!</p>
-                                    <p class="text-gray-700">Guter Start! Probiere weitere Produkte aus, um mehr zu lernen!</p>
+                                <div class="bg-purple-50 rounded-xl p-6 mb-6">
+                                    <p class="text-2xl font-bold text-purple-600 mb-2">💪 Weiter so!</p>
+                                    <p class="text-gray-700">Guter Start! Probiere weitere Produkte aus!</p>
                                 </div>
                             `}
 
@@ -596,7 +774,7 @@
                                 onclick="backToMenu()"
                                 class="w-full py-4 px-8 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold text-xl rounded-xl shadow-lg transition-all"
                             >
-                                Weiterspielen
+                                Nächstes Produkt erkunden 🚀
                             </button>
                         </div>
                     </div>
@@ -606,44 +784,47 @@
 
         function startProduct(productKey) {
             gameState.currentProduct = productKey;
-            gameState.currentQuestionIndex = 0;
+            gameState.currentStep = 0;
             gameState.gameMode = 'playing';
             gameState.showHint = false;
-            gameState.correctAnswers = 0;
+            gameState.usedHint = false;
+            gameState.correctInRound = 0;
             render();
         }
 
-        function selectCountry(countryName) {
+        function selectAnswer(answer) {
             const product = products[gameState.currentProduct];
-            const question = product.questions[gameState.currentQuestionIndex];
-            const isCorrect = countryName === question.correctCountry;
+            const question = product.questions[gameState.currentStep];
+            const isCorrect = answer === question.correctAnswer;
             
             if (isCorrect) {
-                gameState.score += gameState.showHint ? 75 : 100;
-                gameState.correctAnswers++;
+                gameState.score += gameState.usedHint ? 75 : 100;
+                gameState.correctInRound++;
             } else {
                 gameState.lives--;
                 if (gameState.lives <= 0) {
-                    alert('Game Over! Du hast keine Leben mehr.');
+                    alert('Game Over! 😢 Du hast keine Leben mehr.\n\nDein finaler Score: ' + gameState.score + ' Punkte');
                     resetGame();
                     return;
                 }
             }
             
             gameState.gameMode = 'result';
-            gameState.lastAnswer = { isCorrect, question };
+            gameState.lastAnswerCorrect = isCorrect;
             render();
         }
 
         function showHint() {
             gameState.showHint = true;
+            gameState.usedHint = true;
             render();
         }
 
         function nextQuestion() {
-            gameState.currentQuestionIndex++;
+            gameState.currentStep++;
             gameState.gameMode = 'playing';
             gameState.showHint = false;
+            gameState.usedHint = false;
             render();
         }
 
@@ -660,15 +841,14 @@
 
         function resetGame() {
             gameState = {
-                currentLevel: 0,
+                currentProduct: null,
+                currentStep: 0,
                 score: 0,
                 lives: 3,
-                correctAnswers: 0,
-                currentProduct: null,
-                difficulty: 'easy',
+                correctInRound: 0,
                 gameMode: 'menu',
-                currentQuestionIndex: 0,
-                showHint: false
+                showHint: false,
+                usedHint: false
             };
             render();
         }
@@ -682,10 +862,10 @@
                 app.innerHTML = renderGame();
             } else if (gameState.gameMode === 'result') {
                 const gameHTML = renderGame();
-                const resultHTML = renderResult(gameState.lastAnswer.isCorrect, gameState.lastAnswer.question);
+                const resultHTML = renderResult(gameState.lastAnswerCorrect);
                 app.innerHTML = gameHTML + resultHTML;
             } else if (gameState.gameMode === 'final') {
-                app.innerHTML = renderFinalResult();
+                app.innerHTML = renderFinal();
             }
         }
 
