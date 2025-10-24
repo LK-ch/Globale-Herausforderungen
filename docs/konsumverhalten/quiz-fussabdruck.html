@@ -194,6 +194,11 @@
             line-height: 1.6;
         }
 
+        .explanation.wrong {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+        }
+
         .explanation.show {
             display: block;
             animation: slideIn 0.4s ease;
@@ -201,6 +206,10 @@
 
         .explanation strong {
             color: #059669;
+        }
+
+        .explanation.wrong strong {
+            color: #ef4444;
         }
 
         .next-btn {
@@ -505,6 +514,7 @@
                 explanation.innerHTML = '<strong style="color: #10b981;">✓ RICHTIG!</strong> ' + q.explanation.replace('<strong>Richtig!</strong> ', '');
             } else {
                 explanation.innerHTML = '<strong style="color: #ef4444;">✗ FALSCH!</strong> ' + q.explanation.replace('<strong>Richtig!</strong> ', '');
+                explanation.classList.add('wrong');
             }
             
             explanation.classList.add('show');
