@@ -502,9 +502,11 @@
             if (selected === q.correct) {
                 score++;
                 document.getElementById('score').textContent = score;
+                explanation.innerHTML = '<strong style="color: #10b981;">✓ RICHTIG!</strong> ' + q.explanation.replace('<strong>Richtig!</strong> ', '');
+            } else {
+                explanation.innerHTML = '<strong style="color: #ef4444;">✗ FALSCH!</strong> ' + q.explanation.replace('<strong>Richtig!</strong> ', '');
             }
             
-            explanation.innerHTML = q.explanation;
             explanation.classList.add('show');
             nextBtn.classList.add('show');
         }
