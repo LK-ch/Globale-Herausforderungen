@@ -3,9 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Globalisierungs-Quiz - Die Supply Chain entdecken</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Weltreise von Alltagsgegenständen</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+            background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cdefs%3E%3CradialGradient id='globe' cx='50%25' cy='40%25'%3E%3Cstop offset='0%25' style='stop-color:%234a90e2;stop-opacity:1' /%3E%3Cstop offset='70%25' style='stop-color:%232c5aa0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%231a3a6b;stop-opacity:1' /%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='400' cy='400' r='300' fill='url(%23globe)' opacity='0.3'/%3E%3Cg fill='%2334d399' opacity='0.4'%3E%3Cpath d='M 400 300 Q 420 310 425 340 Q 430 370 420 400 Q 410 430 400 450 Q 390 430 385 400 Q 380 360 390 330 Q 395 310 400 300 Z'/%3E%3Cpath d='M 380 260 Q 390 255 400 260 Q 410 265 415 275 Q 410 285 400 285 Q 390 285 385 280 Q 378 272 380 260 Z'/%3E%3Cpath d='M 430 250 Q 470 260 500 280 Q 520 300 530 330 Q 535 360 525 390 Q 515 410 500 420 Q 480 410 465 395 Q 450 375 445 350 Q 440 320 445 290 Q 440 270 430 250 Z'/%3E%3Cpath d='M 280 250 Q 300 240 320 245 Q 340 255 350 275 Q 355 300 345 325 Q 335 345 320 355 Q 305 350 295 335 Q 285 315 280 290 Q 275 270 280 250 Z'/%3E%3Cpath d='M 320 370 Q 330 365 340 375 Q 345 395 340 420 Q 335 450 325 475 Q 315 485 310 475 Q 305 455 308 430 Q 312 400 315 385 Q 318 375 320 370 Z'/%3E%3Cpath d='M 520 480 Q 540 475 555 485 Q 565 500 560 515 Q 550 525 535 522 Q 520 515 515 500 Q 513 487 520 480 Z'/%3E%3C/g%3E%3Cg stroke='%23ffffff' stroke-width='1' fill='none' opacity='0.15'%3E%3Cellipse cx='400' cy='400' rx='300' ry='300'/%3E%3Cellipse cx='400' cy='400' rx='300' ry='240'/%3E%3Cellipse cx='400' cy='400' rx='300' ry='180'/%3E%3Cellipse cx='400' cy='400' rx='300' ry='120'/%3E%3Cellipse cx='400' cy='400' rx='300' ry='60'/%3E%3Cellipse cx='400' cy='400' rx='240' ry='300'/%3E%3Cellipse cx='400' cy='400' rx='180' ry='300'/%3E%3Cellipse cx='400' cy='400' rx='120' ry='300'/%3E%3Cellipse cx='400' cy='400' rx='60' ry='300'/%3E%3Cline x1='400' y1='100' x2='400' y2='700'/%3E%3Cline x1='100' y1='400' x2='700' y2='400'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin: 1rem 0 0 0;
+            color: #0ea5e9;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem 2rem 1rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            color: #1e3a8a;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            color: #1e3a8a;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .product-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .progress-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar-container {
+            background: #e5e7eb;
+            height: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .question-card h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .hint-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .hint-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .hint-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .option-button {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .option-button:hover {
+            transform: translateY(-5px);
+            border-color: #10b981;
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
+        }
+
+        .option-flag {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .option-name {
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 1.1rem;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-icon {
+            font-size: 5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            color: #1e3a8a;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .fact-box {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+        }
+
+        .fact-box p {
+            color: #1e3a8a;
+            line-height: 1.6;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .info-item {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .tips-box {
+            background: #dcfce7;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+        }
+
+        .tips-box h4 {
+            color: #059669;
+            margin-bottom: 0.75rem;
+        }
+
+        .tips-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-box li {
+            color: #166534;
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
         @keyframes slideIn {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -21,48 +373,44 @@
             25% { transform: rotate(-10deg) scale(1.1); }
             75% { transform: rotate(10deg) scale(1.1); }
         }
-        
+
         .slide-in {
             animation: slideIn 0.5s ease-out;
         }
-        
-        .pulse-animation {
-            animation: pulse 0.5s ease-in-out 3;
-        }
-        
+
         .celebration {
             animation: celebration 0.6s ease-in-out 2;
         }
-        
-        .option-card {
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .option-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        
-        .option-card.correct {
-            animation: pulse 0.5s ease-in-out;
-        }
-        
-        .option-card.wrong {
-            animation: shake 0.5s ease-in-out;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-green-50 min-h-screen">
+<body>
     <div id="app"></div>
 
     <script>
+        // Shuffle function to randomize options
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
         // Game State
         let gameState = {
             currentProduct: null,
@@ -70,9 +418,10 @@
             score: 0,
             lives: 3,
             correctInRound: 0,
-            gameMode: 'menu', // menu, playing, result, final
+            gameMode: 'menu', // menu, playing, result, summary, final
             showHint: false,
-            usedHint: false
+            usedHint: false,
+            shuffledOptions: []
         };
 
         // Product data with chronological questions following the supply chain
@@ -87,6 +436,7 @@
                     {
                         step: 1,
                         stepTitle: '🌱 Schritt 1: Rohstoffe',
+                        intro: 'Um ein T-Shirt herzustellen, braucht es Baumwolle, die von der Baumwollpflanze stammt.',
                         question: 'Wo wird die Baumwolle für dein T-Shirt hauptsächlich angebaut?',
                         options: [
                             { country: 'Indien', flag: '🇮🇳', correct: true },
@@ -96,12 +446,12 @@
                         ],
                         correctAnswer: 'Indien',
                         fact: 'Indien ist der zweitgrößte Baumwollproduzent der Welt! Ein einziges T-Shirt benötigt etwa 2.700 Liter Wasser beim Anbau.',
-                        co2: '2.1 kg CO₂',
                         hint: 'Dieses Land in Südasien ist bekannt für seine große Textilproduktion.'
                     },
                     {
                         step: 2,
                         stepTitle: '🧵 Schritt 2: Spinnen & Weben',
+                        intro: 'Die geerntete Baumwolle muss nun zu Garn gesponnen und dann zu Stoff gewebt werden.',
                         question: 'In welchem Land wird die Baumwolle zu Garn gesponnen und zu Stoff gewebt?',
                         options: [
                             { country: 'China', flag: '🇨🇳', correct: true },
@@ -111,12 +461,12 @@
                         ],
                         correctAnswer: 'China',
                         fact: 'China ist die weltgrößte Textilindustrie und verarbeitet Baumwolle aus der ganzen Welt zu Stoffen.',
-                        co2: '3.5 kg CO₂',
                         hint: 'Die „Werkbank der Welt" in Ostasien.'
                     },
                     {
                         step: 3,
                         stepTitle: '🎨 Schritt 3: Färben & Veredeln',
+                        intro: 'Der rohe, weiße Stoff wird nun gefärbt und chemisch behandelt, um ihm Farbe und besondere Eigenschaften zu geben.',
                         question: 'Wo wird der Stoff oft gefärbt und chemisch behandelt?',
                         options: [
                             { country: 'China', flag: '🇨🇳', correct: true },
@@ -126,12 +476,12 @@
                         ],
                         correctAnswer: 'China',
                         fact: 'Beim Färben werden oft große Mengen Wasser und Chemikalien verwendet. Dies kann die Umwelt stark belasten.',
-                        co2: '2.8 kg CO₂',
                         hint: 'Oft im gleichen Land wie das Weben - effizient für kurze Transportwege.'
                     },
                     {
                         step: 4,
                         stepTitle: '✂️ Schritt 4: Nähen',
+                        intro: 'Der gefärbte Stoff wird nun zugeschnitten und zu fertigen T-Shirts zusammengenäht.',
                         question: 'In welchem Land werden viele T-Shirts zusammengenäht?',
                         options: [
                             { country: 'Bangladesh', flag: '🇧🇩', correct: true },
@@ -141,12 +491,12 @@
                         ],
                         correctAnswer: 'Bangladesh',
                         fact: 'Bangladesh ist eines der größten Textilproduktionsländer. Tausende Menschen arbeiten in Nähereien – oft unter schwierigen Bedingungen.',
-                        co2: '1.2 kg CO₂',
                         hint: 'Ein südasiatisches Land, Nachbar von Indien, bekannt für günstige Textilproduktion.'
                     },
                     {
                         step: 5,
                         stepTitle: '🚢 Schritt 5: Transport',
+                        intro: 'Das fertige T-Shirt muss nun von Asien in die Schweiz transportiert werden.',
                         question: 'Wie kommt dein T-Shirt in die Schweiz?',
                         options: [
                             { country: 'Containerschiff', flag: '🚢', correct: true },
@@ -156,12 +506,12 @@
                         ],
                         correctAnswer: 'Containerschiff',
                         fact: 'Dein T-Shirt reist etwa 15.000 km auf einem Containerschiff über den Ozean. Die Reise dauert 4-6 Wochen!',
-                        co2: '0.8 kg CO₂',
                         hint: 'Der günstigste und umweltfreundlichste Weg für lange Distanzen.'
                     },
                     {
                         step: 6,
                         stepTitle: '🏪 Schritt 6: Verkauf',
+                        intro: 'Nach der langen Reise ist das T-Shirt endlich in Europa angekommen.',
                         question: 'Wo kaufst du dein T-Shirt schließlich?',
                         options: [
                             { country: 'Geschäft in der Schweiz', flag: '🇨🇭', correct: true },
@@ -171,13 +521,19 @@
                         ],
                         correctAnswer: 'Geschäft in der Schweiz',
                         fact: 'Nach seiner Weltreise von über 15.000 km landet dein T-Shirt endlich im Schweizer Laden. Es wurde von über 20 verschiedenen Händen berührt!',
-                        co2: '0.3 kg CO₂',
                         hint: 'Am Ende der Reise – dort wo du lebst!'
                     }
                 ],
-                totalCO2: '10.7 kg CO₂',
                 totalDistance: '~15.000 km',
-                funFact: 'Ein durchschnittliches T-Shirt reist weiter als die meisten Menschen in einem Jahr!'
+                funFact: 'Ein durchschnittliches T-Shirt reist weiter als die meisten Menschen in einem Jahr!',
+                journey: [
+                    { step: 1, location: 'Indien', icon: '🇮🇳', description: 'Baumwollanbau' },
+                    { step: 2, location: 'China', icon: '🇨🇳', description: 'Spinnen & Weben' },
+                    { step: 3, location: 'China', icon: '🇨🇳', description: 'Färben' },
+                    { step: 4, location: 'Bangladesh', icon: '🇧🇩', description: 'Nähen' },
+                    { step: 5, location: 'Ozean', icon: '🚢', description: 'Transport' },
+                    { step: 6, location: 'Schweiz', icon: '🇨🇭', description: 'Verkauf' }
+                ]
             },
             smartphone: {
                 name: 'Smartphone',
@@ -189,6 +545,7 @@
                     {
                         step: 1,
                         stepTitle: '⛏️ Schritt 1: Rohstoffabbau',
+                        intro: 'Ein Smartphone besteht aus über 60 verschiedenen Materialien. Für die Elektronik werden seltene Erden und Coltan benötigt.',
                         question: 'Wo werden seltene Erden und Coltan für dein Smartphone abgebaut?',
                         options: [
                             { country: 'Kongo', flag: '🇨🇩', correct: true },
@@ -198,12 +555,12 @@
                         ],
                         correctAnswer: 'Kongo',
                         fact: 'Der Kongo besitzt 80% der weltweiten Coltan-Reserven! Über 60 verschiedene Materialien werden für ein Smartphone benötigt.',
-                        co2: '15 kg CO₂',
                         hint: 'Ein zentralafrikanisches Land mit reichen Bodenschätzen.'
                     },
                     {
                         step: 2,
                         stepTitle: '💾 Schritt 2: Chip-Produktion',
+                        intro: 'Das Herzstück eines Smartphones sind die Mikrochips. Diese winzigen, aber extrem komplexen Bauteile werden in High-Tech-Fabriken hergestellt.',
                         question: 'Wo werden die komplexen Mikrochips hergestellt?',
                         options: [
                             { country: 'Taiwan', flag: '🇹🇼', correct: true },
@@ -213,12 +570,12 @@
                         ],
                         correctAnswer: 'Taiwan',
                         fact: 'Taiwan produziert über 60% der weltweiten Mikrochips! Eine einzige Chip-Fabrik kostet mehrere Milliarden Dollar zu bauen.',
-                        co2: '25 kg CO₂',
                         hint: 'Eine Insel vor der Küste Chinas, Weltmarktführer in der Halbleiterproduktion.'
                     },
                     {
                         step: 3,
                         stepTitle: '📱 Schritt 3: Display-Herstellung',
+                        intro: 'Das Display ist eines der teuersten und aufwendigsten Teile eines Smartphones. Es wird in spezialisierten Fabriken gefertigt.',
                         question: 'Wo werden die hochauflösenden Displays produziert?',
                         options: [
                             { country: 'Südkorea', flag: '🇰🇷', correct: true },
@@ -228,12 +585,12 @@
                         ],
                         correctAnswer: 'Südkorea',
                         fact: 'Südkorea und Japan sind führend in der Display-Technologie. Ein modernes Display hat mehr Pixel als das menschliche Auge unterscheiden kann!',
-                        co2: '12 kg CO₂',
                         hint: 'Bekannt für Technologie-Giganten wie Samsung und LG.'
                     },
                     {
                         step: 4,
                         stepTitle: '🔧 Schritt 4: Zusammenbau',
+                        intro: 'Alle Einzelteile - Chips, Display, Kamera, Batterie und hunderte weitere Komponenten - werden nun zusammengesetzt.',
                         question: 'Wo werden die Smartphones zusammengesetzt?',
                         options: [
                             { country: 'China', flag: '🇨🇳', correct: true },
@@ -243,12 +600,12 @@
                         ],
                         correctAnswer: 'China',
                         fact: 'In riesigen Fabriken in Shenzhen werden täglich über 500.000 Smartphones produziert! Die Arbeiter*innen setzen hunderte Einzelteile zusammen.',
-                        co2: '8 kg CO₂',
                         hint: 'Die „Werkbank der Welt" – auch Shenzhen genannt, die Tech-Hauptstadt.'
                     },
                     {
                         step: 5,
                         stepTitle: '📦 Schritt 5: Verpackung & Transport',
+                        intro: 'Das fertige Smartphone wird in seine Verpackung gelegt und muss nun schnell zu den Kunden gebracht werden.',
                         question: 'Wie wird dein neues Smartphone in die Schweiz transportiert?',
                         options: [
                             { country: 'Luftfracht', flag: '✈️', correct: true },
@@ -257,13 +614,13 @@
                             { country: 'Auto', flag: '🚗', correct: false }
                         ],
                         correctAnswer: 'Luftfracht',
-                        fact: 'Neue Smartphones werden oft per Flugzeug transportiert, um schnell in den Läden zu sein. Das ist schnell, aber sehr CO₂-intensiv!',
-                        co2: '7 kg CO₂',
+                        fact: 'Neue Smartphones werden oft per Flugzeug transportiert, um schnell in den Läden zu sein. Das ist schnell, aber sehr umweltbelastend!',
                         hint: 'Der schnellste, aber umweltschädlichste Transportweg.'
                     },
                     {
                         step: 6,
                         stepTitle: '🛍️ Schritt 6: Im Laden',
+                        intro: 'Nach seiner Reise durch viele Länder ist das Smartphone endlich beim Verkäufer angekommen.',
                         question: 'Wo kaufst du dein Smartphone?',
                         options: [
                             { country: 'Elektronikgeschäft CH', flag: '🇨🇭', correct: true },
@@ -273,13 +630,19 @@
                         ],
                         correctAnswer: 'Elektronikgeschäft CH',
                         fact: 'Nach einer Reise von ca. 20.000 km und Teilen aus über 10 verschiedenen Ländern liegt dein Smartphone endlich im Schweizer Laden!',
-                        co2: '1 kg CO₂',
                         hint: 'Der letzte Stopp der Reise in deinem Heimatland.'
                     }
                 ],
-                totalCO2: '68 kg CO₂',
                 totalDistance: '~20.000 km',
-                funFact: 'Ein Smartphone enthält mehr Rechenleistung als die Computer, die Apollo 11 zum Mond gebracht haben!'
+                funFact: 'Ein Smartphone enthält mehr Rechenleistung als die Computer, die Apollo 11 zum Mond gebracht haben!',
+                journey: [
+                    { step: 1, location: 'Kongo', icon: '🇨🇩', description: 'Rohstoffabbau' },
+                    { step: 2, location: 'Taiwan', icon: '🇹🇼', description: 'Chip-Produktion' },
+                    { step: 3, location: 'Südkorea', icon: '🇰🇷', description: 'Display-Herstellung' },
+                    { step: 4, location: 'China', icon: '🇨🇳', description: 'Zusammenbau' },
+                    { step: 5, location: 'Flugzeug', icon: '✈️', description: 'Luftfracht' },
+                    { step: 6, location: 'Schweiz', icon: '🇨🇭', description: 'Verkauf' }
+                ]
             },
             coffee: {
                 name: 'Kaffee',
@@ -291,6 +654,7 @@
                     {
                         step: 1,
                         stepTitle: '🌱 Schritt 1: Anbau',
+                        intro: 'Kaffee wächst an Sträuchern in tropischen Regionen. Die Kaffeepflanze braucht viel Sonne, Regen und die richtige Höhenlage.',
                         question: 'Welches Land ist der größte Kaffeeproduzent der Welt?',
                         options: [
                             { country: 'Brasilien', flag: '🇧🇷', correct: true },
@@ -300,12 +664,12 @@
                         ],
                         correctAnswer: 'Brasilien',
                         fact: 'Brasilien produziert etwa ein Drittel des weltweiten Kaffees! Die Kaffeebohnen wachsen an Sträuchern in tropischen Regionen.',
-                        co2: '0.5 kg CO₂',
                         hint: 'Das größte Land in Südamerika.'
                     },
                     {
                         step: 2,
                         stepTitle: '🌾 Schritt 2: Ernte',
+                        intro: 'Wenn die Kaffeekirschen reif sind, werden sie geerntet. In den Kirschen stecken die wertvollen Kaffeebohnen.',
                         question: 'Wo wird der hochwertigste Arabica-Kaffee traditionell geerntet?',
                         options: [
                             { country: 'Äthiopien', flag: '🇪🇹', correct: true },
@@ -315,12 +679,12 @@
                         ],
                         correctAnswer: 'Äthiopien',
                         fact: 'Äthiopien ist die Geburtsstätte des Kaffees! Hier wächst Kaffee noch wild im Hochland. Die Ernte erfolgt oft von Hand.',
-                        co2: '0.3 kg CO₂',
                         hint: 'Ein ostafrikanisches Hochland – die Heimat des Kaffees.'
                     },
                     {
                         step: 3,
                         stepTitle: '🚢 Schritt 3: Export',
+                        intro: 'Die getrockneten, grünen Kaffeebohnen werden in große Säcke verpackt und müssen nun nach Europa transportiert werden.',
                         question: 'Wie reisen die grünen Kaffeebohnen nach Europa?',
                         options: [
                             { country: 'Containerschiff', flag: '🚢', correct: true },
@@ -330,12 +694,12 @@
                         ],
                         correctAnswer: 'Containerschiff',
                         fact: 'Die grünen Kaffeebohnen reisen in großen Säcken per Schiff nach Europa. Die Reise kann 4-8 Wochen dauern!',
-                        co2: '0.4 kg CO₂',
                         hint: 'Der klassische Weg für Rohstoffe über den Ozean.'
                     },
                     {
                         step: 4,
                         stepTitle: '🔥 Schritt 4: Röstung',
+                        intro: 'Die grünen Bohnen haben noch kein Kaffeearoma. Erst beim Rösten entwickelt sich der typische Duft und Geschmack.',
                         question: 'In welchem Land wird der Kaffee für Europa oft geröstet?',
                         options: [
                             { country: 'Deutschland', flag: '🇩🇪', correct: true },
@@ -345,12 +709,12 @@
                         ],
                         correctAnswer: 'Deutschland',
                         fact: 'Deutschland ist Europas größter Kaffeeröster! Beim Rösten entwickelt sich erst das typische Kaffeearoma und die braune Farbe.',
-                        co2: '0.6 kg CO₂',
                         hint: 'Europas größte Wirtschaft, bekannt für Qualität und Präzision.'
                     },
                     {
                         step: 5,
                         stepTitle: '☕ Schritt 5: In deiner Tasse',
+                        intro: 'Der geröstete Kaffee wird gemahlen und ist bereit, als leckeres Getränk genossen zu werden.',
                         question: 'Wo genießt du deinen Kaffee?',
                         options: [
                             { country: 'Zuhause in der Schweiz', flag: '🇨🇭', correct: true },
@@ -360,13 +724,18 @@
                         ],
                         correctAnswer: 'Zuhause in der Schweiz',
                         fact: 'Nach seiner langen Reise kannst du endlich deinen Kaffee genießen! Für eine Tasse werden etwa 140 Liter Wasser benötigt (Anbau inklusive).',
-                        co2: '0.1 kg CO₂',
                         hint: 'Da wo du jetzt sitzt!'
                     }
                 ],
-                totalCO2: '1.9 kg CO₂ pro kg',
                 totalDistance: '~10.000 km',
-                funFact: 'Kaffee ist nach Erdöl das zweitwertvollste Handelsgut der Welt!'
+                funFact: 'Kaffee ist nach Erdöl das zweitwertvollste Handelsgut der Welt!',
+                journey: [
+                    { step: 1, location: 'Brasilien', icon: '🇧🇷', description: 'Anbau' },
+                    { step: 2, location: 'Äthiopien', icon: '🇪🇹', description: 'Ernte' },
+                    { step: 3, location: 'Ozean', icon: '🚢', description: 'Export' },
+                    { step: 4, location: 'Deutschland', icon: '🇩🇪', description: 'Röstung' },
+                    { step: 5, location: 'Schweiz', icon: '🇨🇭', description: 'Genuss' }
+                ]
             },
             sneakers: {
                 name: 'Sneakers',
@@ -378,6 +747,7 @@
                     {
                         step: 1,
                         stepTitle: '🌳 Schritt 1: Naturkautschuk',
+                        intro: 'Für flexible Schuhsohlen wird Naturkautschuk benötigt, der vom Gummibaum gewonnen wird.',
                         question: 'Wo wird der Naturkautschuk für die Schuhsohlen gewonnen?',
                         options: [
                             { country: 'Malaysia', flag: '🇲🇾', correct: true },
@@ -387,12 +757,12 @@
                         ],
                         correctAnswer: 'Malaysia',
                         fact: 'Malaysia ist einer der größten Kautschuk-Produzenten! Kautschuk wird vom Gummibaum gewonnen und macht die Sohlen flexibel.',
-                        co2: '3.2 kg CO₂',
                         hint: 'Ein südostasiatisches Land mit tropischem Klima – ideal für Gummibäume.'
                     },
                     {
                         step: 2,
                         stepTitle: '🏭 Schritt 2: Material-Verarbeitung',
+                        intro: 'Neben Kautschuk braucht ein Sneaker viele synthetische Materialien wie Kunststoffe, Schaumstoffe und Textilien.',
                         question: 'Wo werden die synthetischen Materialien für Sneakers hergestellt?',
                         options: [
                             { country: 'China', flag: '🇨🇳', correct: true },
@@ -402,12 +772,12 @@
                         ],
                         correctAnswer: 'China',
                         fact: 'China produziert die meisten synthetischen Materialien. Gummi wird vulkanisiert, Stoffe gewebt und Kunststoffe geformt.',
-                        co2: '5.8 kg CO₂',
                         hint: 'Die weltgrößte Produktionsnation für Materialien aller Art.'
                     },
                     {
                         step: 3,
                         stepTitle: '👟 Schritt 3: Schuh-Produktion',
+                        intro: 'Aus über 65 verschiedenen Einzelteilen wird nun ein fertiger Sneaker zusammengesetzt. Das erfordert viele Arbeitsschritte.',
                         question: 'In welchem Land werden die meisten Sportschuhe zusammengebaut?',
                         options: [
                             { country: 'Vietnam', flag: '🇻🇳', correct: true },
@@ -417,12 +787,12 @@
                         ],
                         correctAnswer: 'Vietnam',
                         fact: 'Vietnam produziert fast ein Drittel aller Schuhe weltweit! Ein Paar Sneakers durchläuft über 360 verschiedene Arbeitsschritte.',
-                        co2: '4.5 kg CO₂',
                         hint: 'Ein südostasiatisches Land, Nachbar von China, wichtiger Produktionsstandort.'
                     },
                     {
                         step: 4,
                         stepTitle: '✓ Schritt 4: Qualitätskontrolle',
+                        intro: 'Bevor die Schuhe verschickt werden, muss jedes Paar geprüft werden, ob es den Qualitätsstandards entspricht.',
                         question: 'Wo werden die fertigen Schuhe geprüft und verpackt?',
                         options: [
                             { country: 'Vietnam', flag: '🇻🇳', correct: true },
@@ -432,12 +802,12 @@
                         ],
                         correctAnswer: 'Vietnam',
                         fact: 'Jeder Schuh wird geprüft, ob er den Standards entspricht. Dann werden sie verpackt und für den Export vorbereitet.',
-                        co2: '0.8 kg CO₂',
                         hint: 'Im gleichen Land wie die Produktion – effizienter Transport.'
                     },
                     {
                         step: 5,
                         stepTitle: '🚢 Schritt 5: Seefracht',
+                        intro: 'Die verpackten Sneakers werden in Container geladen und auf die lange Reise nach Europa geschickt.',
                         question: 'Wie gelangen deine Sneakers nach Europa?',
                         options: [
                             { country: 'Containerschiff', flag: '🚢', correct: true },
@@ -447,12 +817,12 @@
                         ],
                         correctAnswer: 'Containerschiff',
                         fact: 'Die Sneakers reisen etwa 6-8 Wochen in Containern über den Pazifik und durch den Suezkanal nach Europa.',
-                        co2: '1.2 kg CO₂',
                         hint: 'Die günstigste Methode für schwere Güter über lange Distanzen.'
                     },
                     {
                         step: 6,
                         stepTitle: '🏪 Schritt 6: Im Sportgeschäft',
+                        intro: 'Nach ihrer langen Reise sind die Sneakers endlich in Europa angekommen und werden an die Geschäfte verteilt.',
                         question: 'Wo stehen deine Sneakers schließlich im Regal?',
                         options: [
                             { country: 'Sportgeschäft Schweiz', flag: '🇨🇭', correct: true },
@@ -462,168 +832,143 @@
                         ],
                         correctAnswer: 'Sportgeschäft Schweiz',
                         fact: 'Nach 18.000 km und über 50 verschiedenen Händen stehen deine Sneakers endlich im Schweizer Sportgeschäft!',
-                        co2: '0.5 kg CO₂',
                         hint: 'Am Ende der langen Reise – in deiner Heimat!'
                     }
                 ],
-                totalCO2: '16 kg CO₂',
                 totalDistance: '~18.000 km',
-                funFact: 'Die globale Schuhindustrie produziert jährlich über 24 Milliarden Paar Schuhe!'
+                funFact: 'Die globale Schuhindustrie produziert jährlich über 24 Milliarden Paar Schuhe!',
+                journey: [
+                    { step: 1, location: 'Malaysia', icon: '🇲🇾', description: 'Kautschuk' },
+                    { step: 2, location: 'China', icon: '🇨🇳', description: 'Material-Verarbeitung' },
+                    { step: 3, location: 'Vietnam', icon: '🇻🇳', description: 'Produktion' },
+                    { step: 4, location: 'Vietnam', icon: '🇻🇳', description: 'Qualitätskontrolle' },
+                    { step: 5, location: 'Ozean', icon: '🚢', description: 'Seefracht' },
+                    { step: 6, location: 'Schweiz', icon: '🇨🇭', description: 'Verkauf' }
+                ]
             }
         };
 
         function renderMenu() {
             return `
-                <div class="container mx-auto px-4 py-8 slide-in">
-                    <div class="max-w-4xl mx-auto text-center">
-                        <div class="text-6xl mb-6">🌍</div>
-                        <h1 class="text-5xl font-bold text-gray-800 mb-4">
-                            Die Supply Chain entdecken
-                        </h1>
-                        <p class="text-xl text-gray-600 mb-8">
-                            Folge deinen Alltagsprodukten auf ihrer Weltreise!
-                        </p>
-                        
-                        <div class="bg-white rounded-xl p-6 shadow-lg mb-8">
-                            <h2 class="text-2xl font-bold mb-4 text-gray-800">📋 Spielregeln</h2>
-                            <div class="grid md:grid-cols-3 gap-4 text-left">
-                                <div class="bg-blue-50 p-4 rounded-lg">
-                                    <div class="text-3xl mb-2">1️⃣</div>
-                                    <p class="font-semibold mb-1">Wähle ein Produkt</p>
-                                    <p class="text-sm text-gray-600">T-Shirt, Smartphone, Kaffee oder Sneakers</p>
-                                </div>
-                                <div class="bg-green-50 p-4 rounded-lg">
-                                    <div class="text-3xl mb-2">2️⃣</div>
-                                    <p class="font-semibold mb-1">Beantworte Fragen</p>
-                                    <p class="text-sm text-gray-600">Folge der Supply Chain Schritt für Schritt</p>
-                                </div>
-                                <div class="bg-purple-50 p-4 rounded-lg">
-                                    <div class="text-3xl mb-2">3️⃣</div>
-                                    <p class="font-semibold mb-1">Lerne & Sammle</p>
-                                    <p class="text-sm text-gray-600">100 Punkte pro richtiger Antwort!</p>
-                                </div>
+                <header>
+                    <h1>🌍 Weltreise von Alltagsgegenständen</h1>
+                    <a href="index.html" class="back-link">← Zurück zum Lernpfad</a>
+                </header>
+
+                <main class="slide-in">
+                    <div class="card">
+                        <h2>📋 Spielregeln</h2>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">1️⃣ Wähle</div>
+                                <div class="info-value" style="font-size: 1rem;">Produkt</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">2️⃣ Beantworte</div>
+                                <div class="info-value" style="font-size: 1rem;">Fragen</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">3️⃣ Sammle</div>
+                                <div class="info-value" style="font-size: 1rem;">Punkte</div>
                             </div>
                         </div>
+                        <p style="color: #666; line-height: 1.6;">
+                            Folge der Supply Chain Schritt für Schritt von der Rohstoffgewinnung bis in den Schweizer Laden. 
+                            Jede richtige Antwort bringt dir <strong>100 Punkte</strong>!
+                        </p>
+                    </div>
 
-                        <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-4 mb-8">
-                            <p class="text-lg font-semibold text-gray-800 flex items-center justify-center gap-2 flex-wrap">
-                                <span>❤️</span>
+                    <div class="progress-card">
+                        <div class="progress-info">
+                            <div class="stat">
+                                <span style="font-size: 1.5rem;">❤️</span>
                                 <span>Leben: ${gameState.lives}</span>
-                                <span>|</span>
-                                <span>⭐</span>
+                            </div>
+                            <div class="stat">
+                                <span style="font-size: 1.5rem;">⭐</span>
                                 <span>Punkte: ${gameState.score}</span>
-                            </p>
+                            </div>
                         </div>
+                    </div>
 
-                        <h2 class="text-2xl font-bold mb-6 text-gray-800">Wähle ein Produkt:</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card">
+                        <h2>Wähle ein Produkt:</h2>
+                        <div class="product-grid">
                             ${Object.entries(products).map(([key, product]) => `
-                                <button
-                                    onclick="startProduct('${key}')"
-                                    class="bg-gradient-to-br ${product.gradient} p-8 rounded-xl text-white font-bold text-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
-                                >
-                                    <div class="text-6xl mb-3">${product.icon}</div>
-                                    <div class="text-2xl mb-2">${product.name}</div>
-                                    <div class="text-sm opacity-90">${product.totalSteps} Schritte</div>
-                                    <div class="text-sm opacity-90 mt-2">
+                                <div class="product-card" onclick="startProduct('${key}')">
+                                    <div class="product-icon">${product.icon}</div>
+                                    <div class="product-name">${product.name}</div>
+                                    <div class="product-info">${product.totalSteps} Schritte</div>
+                                    <div class="product-info" style="margin-top: 0.5rem;">
                                         <div>🌍 ${product.totalDistance}</div>
-                                        <div>💨 ${product.totalCO2}</div>
                                     </div>
-                                </button>
+                                </div>
                             `).join('')}
                         </div>
                     </div>
-                </div>
+                </main>
             `;
         }
 
         function renderGame() {
             const product = products[gameState.currentProduct];
             const question = product.questions[gameState.currentStep];
+            const shuffledOptions = gameState.shuffledOptions[gameState.currentStep];
             const progress = ((gameState.currentStep + 1) / product.questions.length) * 100;
             
             return `
-                <div class="container mx-auto px-4 py-8 slide-in">
-                    <div class="max-w-4xl mx-auto">
-                        <!-- Header -->
-                        <div class="bg-white rounded-xl p-4 shadow-lg mb-6">
-                            <div class="flex items-center justify-between flex-wrap gap-4">
-                                <button onclick="backToMenu()" class="text-gray-600 hover:text-gray-800 flex items-center gap-2">
-                                    <span>←</span> Zurück
-                                </button>
-                                <div class="flex items-center gap-6">
-                                    <div class="flex items-center gap-2">
-                                        <span>❤️</span>
-                                        <span class="font-bold text-red-500">${'❤️'.repeat(gameState.lives)}</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span>⭐</span>
-                                        <span class="font-bold text-yellow-600">${gameState.score} Punkte</span>
-                                    </div>
-                                </div>
+                <header>
+                    <h1>🌍 ${product.icon} ${product.name}</h1>
+                    <a href="#" onclick="backToMenu(); return false;" class="back-link">← Zurück zum Menü</a>
+                </header>
+
+                <main class="slide-in">
+                    <div class="progress-card">
+                        <h3 style="color: #1e3a8a; margin-bottom: 1rem;">Dein Fortschritt</h3>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="progress-info">
+                            <div style="color: #666;">Schritt ${gameState.currentStep + 1} von ${product.questions.length}</div>
+                            <div class="stat">
+                                <span>❤️</span>
+                                <span>${'❤️'.repeat(gameState.lives)}</span>
                             </div>
-                        </div>
-
-                        <!-- Product & Progress -->
-                        <div class="bg-white rounded-xl p-6 shadow-lg mb-6">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="text-5xl">${product.icon}</div>
-                                <div class="flex-1">
-                                    <h2 class="text-2xl font-bold text-gray-800">${product.name}</h2>
-                                    <p class="text-gray-600">${question.stepTitle}</p>
-                                </div>
+                            <div class="stat">
+                                <span>⭐</span>
+                                <span>${gameState.score} Punkte</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                                <div class="h-full bg-gradient-to-r ${product.gradient} transition-all duration-500 rounded-full flex items-center justify-end pr-2"
-                                    style="width: ${progress}%">
-                                    <span class="text-white text-xs font-bold">${Math.round(progress)}%</span>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mt-2">
-                                Schritt ${gameState.currentStep + 1} von ${product.questions.length}
-                            </p>
-                        </div>
-
-                        <!-- Question Card -->
-                        <div class="bg-gradient-to-br ${product.gradient} rounded-xl p-8 shadow-lg mb-6 text-white">
-                            <h3 class="text-3xl font-bold mb-6">${question.question}</h3>
-                            
-                            ${gameState.showHint ? `
-                                <div class="bg-white bg-opacity-20 rounded-lg p-4 mb-4">
-                                    <p class="text-sm">💡 <strong>Tipp:</strong> ${question.hint}</p>
-                                    <p class="text-xs mt-2 opacity-75">(Du erhältst nur 75 Punkte statt 100)</p>
-                                </div>
-                            ` : `
-                                <button onclick="showHint()" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg text-sm mb-4 transition-all">
-                                    💡 Tipp anzeigen (-25 Punkte)
-                                </button>
-                            `}
-                        </div>
-
-                        <!-- Answer Options -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            ${question.options.map((option, idx) => `
-                                <button
-                                    onclick="selectAnswer('${option.country}')"
-                                    class="option-card bg-white border-4 border-gray-300 hover:border-${product.color.slice(1)} rounded-xl p-6 text-left shadow-lg"
-                                >
-                                    <div class="flex items-center gap-4">
-                                        <div class="text-5xl">${option.flag}</div>
-                                        <div class="flex-1">
-                                            <div class="text-xl font-bold text-gray-800">${option.country}</div>
-                                        </div>
-                                    </div>
-                                </button>
-                            `).join('')}
-                        </div>
-
-                        <!-- Info Box -->
-                        <div class="mt-6 bg-blue-50 rounded-xl p-4 text-sm text-gray-700">
-                            <p class="font-semibold mb-1">ℹ️ Info zu diesem Schritt:</p>
-                            <p>CO₂-Ausstoss: <strong>${question.co2}</strong></p>
                         </div>
                     </div>
-                </div>
+
+                    <div class="question-card">
+                        <p style="font-size: 1.1rem; margin-bottom: 1rem; opacity: 0.95;">${question.intro}</p>
+                        <h3>${question.question}</h3>
+                        
+                        ${gameState.showHint ? `
+                            <div class="hint-box">
+                                <p><strong>💡 Tipp:</strong> ${question.hint}</p>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">(Du erhältst nur 75 Punkte statt 100)</p>
+                            </div>
+                        ` : `
+                            <button onclick="showHint()" class="hint-button" style="margin-top: 1rem;">
+                                💡 Tipp anzeigen (-25 Punkte)
+                            </button>
+                        `}
+                    </div>
+
+                    <div class="card">
+                        <h3>Wähle deine Antwort:</h3>
+                        <div class="options-grid">
+                            ${shuffledOptions.map(option => `
+                                <div class="option-button" onclick="selectAnswer('${option.country}')">
+                                    <div class="option-flag">${option.flag}</div>
+                                    <div class="option-name">${option.country}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </main>
             `;
         }
 
@@ -632,55 +977,95 @@
             const question = product.questions[gameState.currentStep];
             
             return `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div class="bg-white rounded-3xl p-8 max-w-2xl w-full shadow-2xl ${isCorrect ? 'celebration' : ''}">
-                        <div class="text-center">
-                            <div class="text-8xl mb-4">${isCorrect ? '🎉' : '😅'}</div>
-                            <h2 class="text-4xl font-bold mb-4 ${isCorrect ? 'text-green-600' : 'text-orange-600'}">
-                                ${isCorrect ? 'Richtig!' : 'Leider falsch!'}
-                            </h2>
-                            
-                            ${isCorrect ? `
-                                <div class="text-3xl font-bold text-green-600 mb-4">
-                                    +${gameState.usedHint ? '75' : '100'} Punkte!
-                                </div>
-                            ` : `
-                                <div class="text-lg text-gray-600 mb-4">
-                                    Die richtige Antwort war: <strong>${question.correctAnswer}</strong>
-                                </div>
-                                <div class="text-xl text-red-600 mb-4">
-                                    -1 Leben ❤️
-                                </div>
-                            `}
-
-                            <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-6 text-left">
-                                <p class="text-lg font-semibold mb-3 text-gray-800">💡 Wusstest du?</p>
-                                <p class="text-gray-700 leading-relaxed">${question.fact}</p>
-                                <div class="mt-4 pt-4 border-t border-gray-300">
-                                    <p class="text-sm text-gray-600">
-                                        <span class="font-semibold">CO₂-Ausstoss in diesem Schritt:</span> ${question.co2}
-                                    </p>
-                                </div>
+                <div class="modal">
+                    <div class="modal-content ${isCorrect ? 'celebration' : ''}">
+                        <div class="modal-icon">${isCorrect ? '🎉' : '😅'}</div>
+                        <h2 class="modal-title" style="color: ${isCorrect ? '#10b981' : '#f59e0b'};">
+                            ${isCorrect ? 'Richtig!' : 'Leider falsch!'}
+                        </h2>
+                        
+                        ${isCorrect ? `
+                            <div style="text-align: center; font-size: 2rem; font-weight: bold; color: #10b981; margin: 1rem 0;">
+                                +${gameState.usedHint ? '75' : '100'} Punkte!
                             </div>
+                        ` : `
+                            <div style="text-align: center; color: #666; margin: 1rem 0;">
+                                Die richtige Antwort war: <strong>${question.correctAnswer}</strong>
+                            </div>
+                            <div style="text-align: center; font-size: 1.5rem; color: #ef4444; margin: 1rem 0;">
+                                -1 Leben ❤️
+                            </div>
+                        `}
 
-                            ${gameState.currentStep < product.questions.length - 1 ? `
-                                <button
-                                    onclick="nextQuestion()"
-                                    class="w-full py-4 px-8 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white font-bold text-xl rounded-xl shadow-lg transition-all"
-                                >
-                                    Weiter zum nächsten Schritt →
-                                </button>
-                            ` : `
-                                <button
-                                    onclick="finishProduct()"
-                                    class="w-full py-4 px-8 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white font-bold text-xl rounded-xl shadow-lg transition-all"
-                                >
-                                    Reise abschließen 🎊
-                                </button>
-                            `}
+                        <div class="fact-box">
+                            <p style="font-weight: bold; margin-bottom: 0.75rem; color: #1e3a8a;">💡 Wusstest du?</p>
+                            <p>${question.fact}</p>
                         </div>
+
+                        ${gameState.currentStep < product.questions.length - 1 ? `
+                            <button onclick="nextQuestion()" class="action-button" style="width: 100%; margin-top: 1.5rem;">
+                                Weiter zum nächsten Schritt →
+                            </button>
+                        ` : `
+                            <button onclick="finishProduct()" class="action-button" style="width: 100%; margin-top: 1.5rem;">
+                                Reise abschließen 🎊
+                            </button>
+                        `}
                     </div>
                 </div>
+            `;
+        }
+
+        function renderSummary() {
+            const product = products[gameState.currentProduct];
+            
+            return `
+                <header>
+                    <h1>🗺️ Die Reise deines ${product.name}</h1>
+                </header>
+
+                <main class="slide-in">
+                    <div class="card">
+                        <h2 style="text-align: center; margin-bottom: 2rem;">Die Weltreise im Überblick</h2>
+                        
+                        <div style="position: relative;">
+                            ${product.journey.map((station, idx) => `
+                                <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 15px; ${idx === product.journey.length - 1 ? '' : 'border-left: 3px solid #10b981;'}">
+                                    <div style="font-size: 3rem; flex-shrink: 0;">
+                                        ${station.icon}
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: bold; color: #1e3a8a; font-size: 1.2rem; margin-bottom: 0.25rem;">
+                                            Schritt ${station.step}: ${station.location}
+                                        </div>
+                                        <div style="color: #666;">
+                                            ${station.description}
+                                        </div>
+                                    </div>
+                                    ${idx < product.journey.length - 1 ? `
+                                        <div style="position: absolute; left: 2.8rem; top: ${idx * 120 + 80}px; width: 3px; height: 40px; background: #10b981;"></div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="card" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); text-align: center;">
+                        <h3 style="color: #1e3a8a; margin-bottom: 1rem;">📊 Zusammenfassung</h3>
+                        <div style="font-size: 1.5rem; color: #1e3a8a; margin: 1rem 0;">
+                            <strong>${product.totalDistance}</strong> zurückgelegt
+                        </div>
+                        <div style="font-size: 1.2rem; color: #1e40af;">
+                            Über <strong>${product.journey.length}</strong> verschiedene Stationen
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button onclick="showFinalResult()" class="action-button" style="font-size: 1.2rem; padding: 1.25rem 2.5rem;">
+                            Weiter zur Auswertung →
+                        </button>
+                    </div>
+                </main>
             `;
         }
 
@@ -690,95 +1075,65 @@
             const percentage = Math.round((gameState.correctInRound / totalQuestions) * 100);
             
             return `
-                <div class="container mx-auto px-4 py-8 slide-in">
-                    <div class="max-w-3xl mx-auto">
-                        <div class="bg-white rounded-3xl p-12 shadow-2xl text-center">
-                            <div class="text-7xl mb-6 celebration">🏆</div>
-                            <h2 class="text-4xl font-bold text-gray-800 mb-4">
-                                ${product.icon} ${product.name} abgeschlossen!
-                            </h2>
-                            
-                            <div class="bg-gradient-to-br ${product.gradient} text-white rounded-2xl p-8 mb-8">
-                                <div class="grid grid-cols-3 gap-4 mb-6">
-                                    <div>
-                                        <p class="text-sm opacity-90 mb-1">Punkte</p>
-                                        <p class="text-4xl font-bold">${gameState.score}</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm opacity-90 mb-1">Richtig</p>
-                                        <p class="text-4xl font-bold">${gameState.correctInRound}/${totalQuestions}</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm opacity-90 mb-1">Genauigkeit</p>
-                                        <p class="text-4xl font-bold">${percentage}%</p>
-                                    </div>
-                                </div>
-                                <div class="border-t border-white border-opacity-30 pt-6">
-                                    <div class="grid grid-cols-2 gap-4 text-left">
-                                        <div>
-                                            <p class="text-sm opacity-90">Gesamte Distanz</p>
-                                            <p class="text-2xl font-bold">${product.totalDistance}</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm opacity-90">CO₂-Fussabdruck</p>
-                                            <p class="text-2xl font-bold">${product.totalCO2}</p>
-                                        </div>
-                                    </div>
-                                </div>
+                <header>
+                    <h1>🏆 ${product.icon} ${product.name} abgeschlossen!</h1>
+                    <a href="#" onclick="backToMenu(); return false;" class="back-link">← Zurück zum Menü</a>
+                </header>
+
+                <main class="slide-in">
+                    <div class="card celebration">
+                        <div style="text-align: center; font-size: 5rem; margin-bottom: 1.5rem;">🎉</div>
+                        
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Punkte</div>
+                                <div class="info-value">${gameState.score}</div>
                             </div>
-
-                            <div class="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6 mb-6">
-                                <p class="text-lg font-semibold mb-2 text-gray-800">✨ ${product.funFact}</p>
+                            <div class="info-item">
+                                <div class="info-label">Richtig</div>
+                                <div class="info-value">${gameState.correctInRound}/${totalQuestions}</div>
                             </div>
-
-                            <div class="bg-green-50 rounded-xl p-6 mb-8 text-left">
-                                <p class="font-bold text-gray-800 mb-3 text-center">🌱 Was kannst du tun?</p>
-                                <ul class="space-y-2 text-gray-700 text-sm">
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-green-600">✓</span>
-                                        <span>Kaufe lokale und nachhaltig produzierte Produkte, wenn möglich</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-green-600">✓</span>
-                                        <span>Repariere Dinge, statt sie wegzuwerfen</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-green-600">✓</span>
-                                        <span>Achte auf Fair-Trade und Bio-Siegel</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-green-600">✓</span>
-                                        <span>Kaufe nur, was du wirklich brauchst</span>
-                                    </li>
-                                </ul>
+                            <div class="info-item">
+                                <div class="info-label">Genauigkeit</div>
+                                <div class="info-value">${percentage}%</div>
                             </div>
+                        </div>
 
-                            ${percentage === 100 ? `
-                                <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-6 mb-6">
-                                    <p class="text-2xl font-bold text-orange-600 mb-2">🌟 Perfekt!</p>
-                                    <p class="text-gray-700">Du bist ein Globalisierungs-Experte!</p>
-                                </div>
-                            ` : percentage >= 66 ? `
-                                <div class="bg-blue-50 rounded-xl p-6 mb-6">
-                                    <p class="text-2xl font-bold text-blue-600 mb-2">👏 Super!</p>
-                                    <p class="text-gray-700">Sehr gut! Du kennst dich schon gut aus!</p>
-                                </div>
-                            ` : `
-                                <div class="bg-purple-50 rounded-xl p-6 mb-6">
-                                    <p class="text-2xl font-bold text-purple-600 mb-2">💪 Weiter so!</p>
-                                    <p class="text-gray-700">Guter Start! Probiere weitere Produkte aus!</p>
-                                </div>
-                            `}
-
-                            <button
-                                onclick="backToMenu()"
-                                class="w-full py-4 px-8 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold text-xl rounded-xl shadow-lg transition-all"
-                            >
-                                Nächstes Produkt erkunden 🚀
-                            </button>
+                        <div style="margin-top: 1.5rem; text-align: center;">
+                            <div style="font-size: 1.2rem; color: #1e3a8a;">
+                                Gesamte Distanz: <strong>${product.totalDistance}</strong>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="card" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">
+                        <h3 style="color: #92400e; margin-bottom: 1rem;">✨ Interessanter Fakt</h3>
+                        <p style="color: #78350f; font-size: 1.1rem;">${product.funFact}</p>
+                    </div>
+
+                    ${percentage === 100 ? `
+                        <div class="card" style="background: linear-gradient(135deg, #d1fae5, #a7f3d0); text-align: center;">
+                            <h3 style="color: #047857; font-size: 2rem; margin-bottom: 0.5rem;">🌟 Perfekt!</h3>
+                            <p style="color: #065f46;">Du bist ein Globalisierungs-Experte!</p>
+                        </div>
+                    ` : percentage >= 66 ? `
+                        <div class="card" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); text-align: center;">
+                            <h3 style="color: #1e40af; font-size: 2rem; margin-bottom: 0.5rem;">👏 Super!</h3>
+                            <p style="color: #1e3a8a;">Sehr gut! Du kennst dich schon gut aus!</p>
+                        </div>
+                    ` : `
+                        <div class="card" style="background: linear-gradient(135deg, #e9d5ff, #d8b4fe); text-align: center;">
+                            <h3 style="color: #7c3aed; font-size: 2rem; margin-bottom: 0.5rem;">💪 Weiter so!</h3>
+                            <p style="color: #6b21a8;">Guter Start! Probiere weitere Produkte aus!</p>
+                        </div>
+                    `}
+
+                    <div style="text-align: center;">
+                        <button onclick="backToMenu()" class="action-button" style="font-size: 1.2rem; padding: 1.25rem 2.5rem;">
+                            Nächstes Produkt erkunden 🚀
+                        </button>
+                    </div>
+                </main>
             `;
         }
 
@@ -789,6 +1144,11 @@
             gameState.showHint = false;
             gameState.usedHint = false;
             gameState.correctInRound = 0;
+            
+            // Shuffle options for each question
+            const product = products[productKey];
+            gameState.shuffledOptions = product.questions.map(q => shuffleArray(q.options));
+            
             render();
         }
 
@@ -829,6 +1189,11 @@
         }
 
         function finishProduct() {
+            gameState.gameMode = 'summary';
+            render();
+        }
+
+        function showFinalResult() {
             gameState.gameMode = 'final';
             render();
         }
@@ -848,7 +1213,8 @@
                 correctInRound: 0,
                 gameMode: 'menu',
                 showHint: false,
-                usedHint: false
+                usedHint: false,
+                shuffledOptions: []
             };
             render();
         }
@@ -864,6 +1230,8 @@
                 const gameHTML = renderGame();
                 const resultHTML = renderResult(gameState.lastAnswerCorrect);
                 app.innerHTML = gameHTML + resultHTML;
+            } else if (gameState.gameMode === 'summary') {
+                app.innerHTML = renderSummary();
             } else if (gameState.gameMode === 'final') {
                 app.innerHTML = renderFinal();
             }
