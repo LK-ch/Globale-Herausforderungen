@@ -393,26 +393,13 @@
             }
         }
 
-        // Fortschritt speichern wenn Link geklickt wird
-        document.querySelectorAll('.step-button').forEach(button => {
-            button.addEventListener('click', function(e) {
-                const card = this.closest('.step-card');
-                const stepNumber = parseInt(card.dataset.step);
-                
-                // Fortschritt speichern
-                let completed = JSON.parse(localStorage.getItem('globalisierungProgress') || '[]');
-                if (!completed.includes(stepNumber)) {
-                    completed.push(stepNumber);
-                    localStorage.setItem('globalisierungProgress', JSON.stringify(completed));
-                }
-            });
-        });
-
         // Reset-Funktion (für Testzwecke - kann später entfernt werden)
         // localStorage.removeItem('globalisierungProgress');
 
         // Beim Laden der Seite Fortschritt anzeigen
         loadProgress();
+        
+        // Fortschritt wird jetzt auf den einzelnen Modul-Seiten getrackt, nicht beim Klick
     </script>
 </body>
 </html>
