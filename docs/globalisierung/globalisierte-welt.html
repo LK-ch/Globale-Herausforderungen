@@ -3,278 +3,520 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Die globalisierte Welt</title>
+    <title>Globalisierungs-Spiel - Die Weltreise deiner Alltagsgegenstände</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f3f4f6;
+        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
-
-        header {
-            background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin: 1rem 0 0 0;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        main {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .content-box {
-            background: white;
-            padding: 3rem 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-
-        .content-box h2 {
-            color: #1e3a8a;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .content-box h2:first-child {
-            margin-top: 0;
-        }
-
-        .content-box p {
-            margin-bottom: 1rem;
-            color: #555;
-        }
-
-        .content-box ul {
-            margin-left: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .content-box li {
-            margin-bottom: 0.5rem;
-            color: #555;
-        }
-
-        /* Fortschritts-Anzeige */
-        .progress-indicator {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: white;
-            padding: 1rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            min-width: 200px;
-            text-align: center;
-        }
-
-        .progress-indicator.hidden {
-            display: none;
-        }
-
-        .progress-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: conic-gradient(#10b981 0% 0%, #e5e7eb 0% 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 0.5rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #1e3a8a;
-        }
-
-        .progress-text {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        /* Abschluss-Button */
-        .completion-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .completion-section h3 {
-            color: #1e3a8a;
-            margin-bottom: 1rem;
-        }
-
-        .completion-button {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .completion-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .completion-button:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-        }
-
-        .completion-message {
-            background: #d1fae5;
-            color: #065f46;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-            display: none;
-        }
-
-        .completion-message.show {
-            display: block;
-        }
-
-        .navigation-buttons {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .nav-button {
-            background: #0ea5e9;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: transform 0.2s;
-        }
-
-        .nav-button:hover {
-            transform: translateY(-2px);
-        }
-
-        .nav-button.disabled {
-            background: #9ca3af;
-            pointer-events: none;
-        }
-
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2rem;
-            }
-
-            .progress-indicator {
-                bottom: 1rem;
-                right: 1rem;
-                min-width: 150px;
-            }
-
-            .navigation-buttons {
-                flex-direction: column;
-            }
-        }
+        .float-animation { animation: float 3s ease-in-out infinite; }
     </style>
 </head>
-<body>
-    <header>
-        <h1>🌐 Die globalisierte Welt</h1>
-        <p>Schritt 1 von 6</p>
-        <a href="index.html" class="back-link">← Zurück zum Lernpfad</a>
-    </header>
+<body class="bg-gradient-to-br from-blue-50 to-green-50">
+    <div id="app"></div>
 
-    <main>
-        <div class="content-box">
-            <h2>Was ist Globalisierung?</h2>
-            <p>Globalisierung beschreibt die zunehmende weltweite Verflechtung in den Bereichen Wirtschaft, Politik, Kultur, Umwelt und Kommunikation. Die Welt wächst immer mehr zusammen.</p>
+    <script>
+        const products = {
+            tshirt: {
+                name: 'T-Shirt',
+                icon: '👕',
+                color: 'bg-blue-500',
+                steps: [
+                    {
+                        title: 'Baumwollanbau',
+                        location: 'Indien oder Usbekistan',
+                        description: 'Die Baumwolle für dein T-Shirt wird auf riesigen Feldern angebaut. Ein T-Shirt benötigt ca. 2.700 Liter Wasser!',
+                        icon: '🌱',
+                        country: 'IN/UZ',
+                        co2: '2.1 kg CO₂'
+                    },
+                    {
+                        title: 'Spinnen & Weben',
+                        location: 'Bangladesh oder China',
+                        description: 'Die Baumwolle wird zu Garn gesponnen und dann zu Stoff gewebt. Oft arbeiten hier Menschen für sehr niedrige Löhne.',
+                        icon: '🧵',
+                        country: 'BD/CN',
+                        co2: '3.5 kg CO₂'
+                    },
+                    {
+                        title: 'Färben & Veredeln',
+                        location: 'China oder Türkei',
+                        description: 'Der Stoff wird gefärbt und behandelt. Dabei werden oft Chemikalien verwendet, die die Umwelt belasten können.',
+                        icon: '🎨',
+                        country: 'CN/TR',
+                        co2: '2.8 kg CO₂'
+                    },
+                    {
+                        title: 'Nähen & Produktion',
+                        location: 'Vietnam oder Bangladesch',
+                        description: 'Hier wird dein T-Shirt zusammengenäht. Die Nähereien beschäftigen oft tausende Arbeiter*innen.',
+                        icon: '✂️',
+                        country: 'VN/BD',
+                        co2: '1.2 kg CO₂'
+                    },
+                    {
+                        title: 'Transport per Schiff',
+                        location: 'Containerschiff über den Ozean',
+                        description: 'Dein T-Shirt reist ca. 15.000 km auf einem Containerschiff. Die Reise dauert etwa 4-6 Wochen.',
+                        icon: '🚢',
+                        country: 'Meer',
+                        co2: '0.8 kg CO₂'
+                    },
+                    {
+                        title: 'Im Geschäft in der Schweiz',
+                        location: 'Zürich, Schweiz',
+                        description: 'Endlich im Laden! Dein T-Shirt hat eine Weltreise von über 15.000 km hinter sich und wurde von über 20 Händen berührt.',
+                        icon: '🏪',
+                        country: 'CH',
+                        co2: '0.3 kg CO₂'
+                    }
+                ],
+                totalDistance: '15.000 km',
+                totalCO2: '10.7 kg CO₂',
+                funFact: 'Ein durchschnittliches T-Shirt reist weiter als die meisten Menschen in einem Jahr!'
+            },
+            smartphone: {
+                name: 'Smartphone',
+                icon: '📱',
+                color: 'bg-purple-500',
+                steps: [
+                    {
+                        title: 'Seltene Erden',
+                        location: 'Kongo, China, Chile',
+                        description: 'Über 60 verschiedene Materialien werden für ein Smartphone benötigt! Coltan, Lithium und seltene Erden werden oft unter schwierigen Bedingungen abgebaut.',
+                        icon: '⛏️',
+                        country: 'CD/CN/CL',
+                        co2: '15 kg CO₂'
+                    },
+                    {
+                        title: 'Chip-Produktion',
+                        location: 'Taiwan oder Südkorea',
+                        description: 'Die komplexen Mikrochips werden in High-Tech-Fabriken hergestellt. Die Produktion einer einzigen Chip-Fabrik kostet Milliarden!',
+                        icon: '💾',
+                        country: 'TW/KR',
+                        co2: '25 kg CO₂'
+                    },
+                    {
+                        title: 'Display-Herstellung',
+                        location: 'Südkorea oder Japan',
+                        description: 'Die hochauflösenden Displays werden in spezialisierten Fabriken gefertigt. Ein modernes Display hat mehr Pixel als das menschliche Auge unterscheiden kann.',
+                        icon: '📱',
+                        country: 'KR/JP',
+                        co2: '12 kg CO₂'
+                    },
+                    {
+                        title: 'Zusammenbau',
+                        location: 'China (z.B. Shenzhen)',
+                        description: 'Tausende Arbeiter*innen setzen die einzelnen Komponenten zusammen. Manche Fabriken produzieren über 500.000 Smartphones pro Tag!',
+                        icon: '🔧',
+                        country: 'CN',
+                        co2: '8 kg CO₂'
+                    },
+                    {
+                        title: 'Qualitätskontrolle & Verpackung',
+                        location: 'China',
+                        description: 'Jedes Gerät wird getestet und in seine Verpackung gelegt. Die Verpackung selbst kommt oft aus wieder anderen Ländern.',
+                        icon: '📦',
+                        country: 'CN',
+                        co2: '3 kg CO₂'
+                    },
+                    {
+                        title: 'Luftfracht in die Schweiz',
+                        location: 'Zürich, Schweiz',
+                        description: 'Neue Smartphones werden oft per Flugzeug transportiert, um schnell im Laden zu sein. Das ist schnell, aber sehr CO₂-intensiv!',
+                        icon: '✈️',
+                        country: 'CH',
+                        co2: '7 kg CO₂'
+                    }
+                ],
+                totalDistance: '20.000 km',
+                totalCO2: '70 kg CO₂',
+                funFact: 'Ein Smartphone enthält mehr Rechenleistung als die Computer, die Apollo 11 zum Mond gebracht haben!'
+            },
+            coffee: {
+                name: 'Kaffee',
+                icon: '☕',
+                color: 'bg-amber-600',
+                steps: [
+                    {
+                        title: 'Kaffeeanbau',
+                        location: 'Brasilien, Kolumbien oder Äthiopien',
+                        description: 'Kaffeebohnen wachsen an Sträuchern in tropischen Regionen. Die Ernte erfolgt oft von Hand – ein harter Job!',
+                        icon: '☕',
+                        country: 'BR/CO/ET',
+                        co2: '0.5 kg CO₂'
+                    },
+                    {
+                        title: 'Ernte & Verarbeitung',
+                        location: 'Im Anbauland',
+                        description: 'Die reifen Kaffeekirschen werden gepflückt, die Bohnen herausgelöst und getrocknet. Dieser Prozess dauert mehrere Wochen.',
+                        icon: '🌾',
+                        country: 'Ursprung',
+                        co2: '0.3 kg CO₂'
+                    },
+                    {
+                        title: 'Export & Verschiffung',
+                        location: 'Per Containerschiff',
+                        description: 'Die grünen Kaffeebohnen reisen in großen Säcken per Schiff nach Europa. Die Reise kann 4-8 Wochen dauern.',
+                        icon: '🚢',
+                        country: 'Ozean',
+                        co2: '0.4 kg CO₂'
+                    },
+                    {
+                        title: 'Röstung',
+                        location: 'Schweiz oder Deutschland',
+                        description: 'In Europa angekommen, werden die Bohnen geröstet. Dabei entwickelt sich erst das typische Kaffeearoma!',
+                        icon: '🔥',
+                        country: 'CH/DE',
+                        co2: '0.6 kg CO₂'
+                    },
+                    {
+                        title: 'Verpackung & Vertrieb',
+                        location: 'Schweiz',
+                        description: 'Der geröstete Kaffee wird verpackt und an Geschäfte geliefert.',
+                        icon: '📦',
+                        country: 'CH',
+                        co2: '0.2 kg CO₂'
+                    },
+                    {
+                        title: 'In deiner Tasse',
+                        location: 'Zuhause in der Schweiz',
+                        description: 'Endlich kannst du deinen Kaffee geniessen! Aber denk dran: Für eine Tasse Kaffee werden etwa 140 Liter Wasser benötigt (Anbau inkl.).',
+                        icon: '☕',
+                        country: 'CH',
+                        co2: '0.1 kg CO₂'
+                    }
+                ],
+                totalDistance: '10.000 km',
+                totalCO2: '2.1 kg CO₂ pro kg',
+                funFact: 'Kaffee ist nach Erdöl das zweitwertvollste Handelsgut der Welt!'
+            },
+            sneakers: {
+                name: 'Sneakers',
+                icon: '👟',
+                color: 'bg-red-500',
+                steps: [
+                    {
+                        title: 'Rohstoffe sammeln',
+                        location: 'Verschiedene Länder',
+                        description: 'Ein Sneaker besteht aus über 65 Einzelteilen! Gummi aus Malaysia, Leder aus Brasilien, synthetische Materialien aus China.',
+                        icon: '🌍',
+                        country: 'Welt',
+                        co2: '3.2 kg CO₂'
+                    },
+                    {
+                        title: 'Material-Produktion',
+                        location: 'China, Vietnam, Taiwan',
+                        description: 'Die verschiedenen Materialien werden verarbeitet: Gummi wird vulkanisiert, Stoffe gewebt, Kunststoffe geformt.',
+                        icon: '🏭',
+                        country: 'CN/VN/TW',
+                        co2: '5.8 kg CO₂'
+                    },
+                    {
+                        title: 'Schuhproduktion',
+                        location: 'Vietnam oder Indonesien',
+                        description: 'In großen Fabriken werden die Schuhe zusammengesetzt. Ein Paar Sneakers durchläuft über 360 Arbeitsschritte!',
+                        icon: '👟',
+                        country: 'VN/ID',
+                        co2: '4.5 kg CO₂'
+                    },
+                    {
+                        title: 'Qualitätskontrolle',
+                        location: 'Im Produktionsland',
+                        description: 'Jeder Schuh wird geprüft, ob er den Standards entspricht. Dann werden sie verpackt und etikettiert.',
+                        icon: '✓',
+                        country: 'VN/ID',
+                        co2: '0.8 kg CO₂'
+                    },
+                    {
+                        title: 'Seefracht nach Europa',
+                        location: 'Container über den Pazifik',
+                        description: 'Die Sneakers reisen etwa 6-8 Wochen in Containern über das Meer.',
+                        icon: '🚢',
+                        country: 'Ozean',
+                        co2: '1.2 kg CO₂'
+                    },
+                    {
+                        title: 'Im Sportgeschäft',
+                        location: 'Schweiz',
+                        description: 'Nach der langen Reise stehen deine Sneakers endlich im Regal. Insgesamt wurden sie von über 50 Händen berührt!',
+                        icon: '🏪',
+                        country: 'CH',
+                        co2: '0.5 kg CO₂'
+                    }
+                ],
+                totalDistance: '18.000 km',
+                totalCO2: '16 kg CO₂',
+                funFact: 'Die globale Schuhindustrie produziert jährlich über 24 Milliarden Paar Schuhe!'
+            }
+        };
 
-            <h2>Merkmale der Globalisierung</h2>
-            <ul>
-                <li><strong>Wirtschaftliche Verflechtung:</strong> Internationale Arbeitsteilung und weltweiter Handel</li>
-                <li><strong>Technologischer Fortschritt:</strong> Internet und moderne Kommunikationsmittel</li>
-                <li><strong>Kultureller Austausch:</strong> Verbreitung von Ideen, Werten und Lebensstilen</li>
-                <li><strong>Politische Zusammenarbeit:</strong> Internationale Organisationen wie UN, WTO</li>
-            </ul>
+        let currentState = {
+            selectedProduct: null,
+            currentStep: 0,
+            score: 0,
+            showFact: false
+        };
 
-            <h2>Dimensionen der Globalisierung</h2>
-            <p>Die Globalisierung umfasst verschiedene Bereiche:</p>
-            <ul>
-                <li><strong>Ökonomische Dimension:</strong> Welthandel, internationale Konzerne, Finanzmärkte</li>
-                <li><strong>Politische Dimension:</strong> Internationale Abkommen, supranationale Organisationen</li>
-                <li><strong>Kulturelle Dimension:</strong> Medien, Musik, Mode, Sprache</li>
-                <li><strong>Ökologische Dimension:</strong> Klimawandel, Umweltverschmutzung</li>
-            </ul>
+        function selectProduct(productKey) {
+            currentState.selectedProduct = productKey;
+            currentState.currentStep = 0;
+            currentState.showFact = false;
+            render();
+        }
 
-            <h2>Beispiele aus dem Alltag</h2>
-            <p>Globalisierung begegnet uns täglich:</p>
-            <ul>
-                <li>Das Smartphone wird in verschiedenen Ländern produziert</li>
-                <li>Kleidung kommt aus Asien, Früchte aus Südamerika</li>
-                <li>Netflix-Serien werden weltweit geschaut</li>
-                <li>WhatsApp verbindet Menschen auf allen Kontinenten</li>
-            </ul>
+        function nextStep() {
+            const product = products[currentState.selectedProduct];
+            if (currentState.currentStep < product.steps.length - 1) {
+                currentState.currentStep++;
+                currentState.score += 10;
+            } else {
+                currentState.showFact = true;
+                currentState.score += 50;
+            }
+            render();
+        }
 
-            <h2>Zusammenfassung</h2>
-            <p>Die Globalisierung hat unsere Welt grundlegend verändert. Sie bringt Chancen wie wirtschaftlichen Wohlstand und kulturellen Austausch, aber auch Herausforderungen wie soziale Ungleichheit und Umweltprobleme.</p>
+        function reset() {
+            currentState.selectedProduct = null;
+            currentState.currentStep = 0;
+            currentState.showFact = false;
+            render();
+        }
 
-            <div class="navigation-buttons">
-                <a href="index.html" class="nav-button">← Lernpfad</a>
-                <a href="globalisierung-definition.html" class="nav-button" id="nextButton">Nächstes Thema →</a>
-            </div>
-        </div>
+        function renderStartScreen() {
+            return `
+                <div class="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-8">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="text-center mb-12">
+                            <div class="text-6xl mb-4 float-animation">🌍</div>
+                            <h1 class="text-5xl font-bold text-gray-800 mb-4">
+                                Die Weltreise deiner Alltagsgegenstände
+                            </h1>
+                            <p class="text-xl text-gray-600 mb-2">
+                                Entdecke, woher deine Sachen wirklich kommen!
+                            </p>
+                            <p class="text-lg text-gray-500">
+                                Wähle einen Gegenstand und verfolge seine Reise bis in die Schweiz
+                            </p>
+                            <div class="mt-4 flex items-center justify-center gap-2 text-sm text-gray-600">
+                                <span>📦</span>
+                                <span>Punkte: ${currentState.score}</span>
+                            </div>
+                        </div>
 
-        <div class="completion-section">
-            <h3>Haben Sie diese Seite vollständig gelesen?</h3>
-            <button class="completion-button" id="completeButton" disabled>
-                Modul als abgeschlossen markieren
-            </button>
-            <div class="completion-message" id="completionMessage">
-                ✓ Modul abgeschlossen! Sie können jetzt zum nächsten Thema weitergehen.
-            </div>
-        </div>
-    </main>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            ${Object.entries(products).map(([key, product]) => `
+                                <button
+                                    onclick="selectProduct('${key}')"
+                                    class="${product.color} hover:scale-105 transform transition-all duration-300 rounded-2xl p-8 text-white shadow-2xl hover:shadow-3xl cursor-pointer"
+                                >
+                                    <div class="text-6xl mb-4">${product.icon}</div>
+                                    <h3 class="text-2xl font-bold mb-2">${product.name}</h3>
+                                    <div class="text-sm opacity-90 space-y-1">
+                                        <p>🌍 ${product.totalDistance}</p>
+                                        <p>💨 ${product.totalCO2}</p>
+                                        <p class="text-xs mt-2">→ Klicke für die Reise</p>
+                                    </div>
+                                </button>
+                            `).join('')}
+                        </div>
 
-    <!-- Fortschritts-Indikator -->
-    <div class="progress-indicator" id="progressIndicator">
-        <div class="progress-circle" id="progressCircle">0%</div>
-        <div class="progress-text">Scrollen Sie bis zum Ende</div>
-    </div>
+                        <div class="mt-12 bg-white rounded-xl p-6 shadow-lg">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <span>🌍</span>
+                                Wusstest du?
+                            </h2>
+                            <div class="grid md:grid-cols-2 gap-4 text-gray-700">
+                                <div class="bg-blue-50 p-4 rounded-lg">
+                                    <p class="font-semibold mb-2">🌏 Globalisierung bedeutet:</p>
+                                    <p class="text-sm">Produkte werden dort hergestellt, wo es am günstigsten ist – oft in verschiedenen Ländern für verschiedene Teile!</p>
+                                </div>
+                                <div class="bg-green-50 p-4 rounded-lg">
+                                    <p class="font-semibold mb-2">♻️ Umweltauswirkungen:</p>
+                                    <p class="text-sm">Je weiter ein Produkt reist, desto mehr CO₂ wird ausgestossen. Lokale Produkte sind oft umweltfreundlicher!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
+        function renderFactScreen() {
+            const product = products[currentState.selectedProduct];
+            return `
+                <div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-8 flex items-center justify-center">
+                    <div class="max-w-3xl mx-auto">
+                        <div class="bg-white rounded-3xl p-12 shadow-2xl text-center">
+                            <div class="text-6xl mb-6">🎉</div>
+                            <h2 class="text-4xl font-bold text-gray-800 mb-6">
+                                Weltreise abgeschlossen!
+                            </h2>
+                            <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl p-8 mb-8">
+                                <p class="text-2xl font-bold mb-4">${product.name}</p>
+                                <div class="grid grid-cols-2 gap-4 text-left">
+                                    <div>
+                                        <p class="text-sm opacity-90">Gesamte Distanz</p>
+                                        <p class="text-3xl font-bold">${product.totalDistance}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm opacity-90">CO₂-Fussabdruck</p>
+                                        <p class="text-3xl font-bold">${product.totalCO2}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6 mb-8">
+                                <p class="text-lg font-semibold text-gray-800 mb-2">💡 Wusstest du?</p>
+                                <p class="text-gray-700">${product.funFact}</p>
+                            </div>
+
+                            <div class="bg-green-50 rounded-xl p-6 mb-8 text-left">
+                                <p class="font-bold text-gray-800 mb-3">🌱 Was kannst du tun?</p>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>• Kaufe lokale und nachhaltig produzierte Produkte, wenn möglich</li>
+                                    <li>• Repariere Dinge, statt sie wegzuwerfen</li>
+                                    <li>• Achte auf Fair-Trade und Bio-Siegel</li>
+                                    <li>• Kaufe nur, was du wirklich brauchst</li>
+                                </ul>
+                            </div>
+
+                            <div class="text-3xl font-bold text-green-600 mb-4">
+                                +50 Punkte! Gesamt: ${currentState.score} Punkte
+                            </div>
+
+                            <button
+                                onclick="reset()"
+                                class="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
+                            >
+                                Nächstes Produkt erkunden
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderJourneyScreen() {
+            const product = products[currentState.selectedProduct];
+            const step = product.steps[currentState.currentStep];
+            const progress = ((currentState.currentStep + 1) / product.steps.length) * 100;
+
+            return `
+                <div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-8">
+                    <div class="max-w-5xl mx-auto">
+                        <div class="mb-8">
+                            <button
+                                onclick="reset()"
+                                class="text-gray-600 hover:text-gray-800 flex items-center gap-2 mb-4"
+                            >
+                                ← Zurück zur Übersicht
+                            </button>
+                            
+                            <div class="bg-white rounded-xl p-4 shadow-lg mb-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                                        <span class="text-3xl">${product.icon}</span>
+                                        ${product.name}
+                                    </h2>
+                                    <div class="text-sm text-gray-600 flex items-center gap-2">
+                                        <span>📦</span>
+                                        ${currentState.score} Punkte
+                                    </div>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                    <div
+                                        class="h-full ${product.color} transition-all duration-500 rounded-full"
+                                        style="width: ${progress}%"
+                                    ></div>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">
+                                    Schritt ${currentState.currentStep + 1} von ${product.steps.length}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+                            <div class="${product.color} text-white p-8">
+                                <div class="text-7xl mb-4 text-center">${step.icon}</div>
+                                <h3 class="text-3xl font-bold text-center mb-2">
+                                    ${step.title}
+                                </h3>
+                                <div class="flex items-center justify-center gap-2 text-lg opacity-90">
+                                    <span>📍</span>
+                                    <p>${step.location}</p>
+                                </div>
+                            </div>
+
+                            <div class="p-8">
+                                <p class="text-xl text-gray-700 leading-relaxed mb-6">
+                                    ${step.description}
+                                </p>
+
+                                <div class="grid grid-cols-2 gap-4 mb-8">
+                                    <div class="bg-blue-50 rounded-xl p-4">
+                                        <p class="text-sm text-gray-600 mb-1">Land/Region</p>
+                                        <p class="text-2xl font-bold text-blue-600">${step.country}</p>
+                                    </div>
+                                    <div class="bg-green-50 rounded-xl p-4">
+                                        <p class="text-sm text-gray-600 mb-1">CO₂ in diesem Schritt</p>
+                                        <p class="text-2xl font-bold text-green-600">${step.co2}</p>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onclick="nextStep()"
+                                    class="w-full ${product.color} hover:opacity-90 text-white font-bold py-4 px-8 rounded-xl text-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                                >
+                                    ${currentState.currentStep < product.steps.length - 1 
+                                        ? '⛴️ Weiter zur nächsten Station' 
+                                        : '🛍️ Reise abschliessen'}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 bg-white rounded-xl p-4 shadow-lg">
+                            <div class="flex items-center gap-4 overflow-x-auto">
+                                ${product.steps.map((s, idx) => `
+                                    <div class="flex flex-col items-center min-w-[80px] ${idx <= currentState.currentStep ? 'opacity-100' : 'opacity-30'}">
+                                        <div class="text-2xl mb-1 ${idx === currentState.currentStep ? 'scale-125' : ''} transition-transform">
+                                            ${s.icon}
+                                        </div>
+                                        <div class="text-xs text-center text-gray-600">${s.country}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            
+            if (!currentState.selectedProduct) {
+                app.innerHTML = renderStartScreen();
+            } else if (currentState.showFact) {
+                app.innerHTML = renderFactScreen();
+            } else {
+                app.innerHTML = renderJourneyScreen();
+            }
+        }
+
+        // Initial render
+        render();
+    </script>
+</body>
+</html>
     <!-- ========================================
          FORTSCHRITTS-TRACKING CODE
          Dieser Code muss in JEDE Modul-Seite!
