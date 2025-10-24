@@ -65,12 +65,19 @@
         
         .country-marker {
             cursor: pointer;
-            transition: all 0.3s;
         }
         
-        .country-marker:hover {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
+        .country-marker circle {
+            transition: r 0.2s, fill 0.2s;
+        }
+        
+        .country-marker:hover circle {
+            r: 3;
+        }
+        
+        .country-label {
+            pointer-events: none;
+            user-select: none;
         }
     </style>
 </head>
@@ -102,7 +109,7 @@
                         question: 'Wo wird die Baumwolle für T-Shirts hauptsächlich angebaut?',
                         options: ['Indien', 'Schweiz', 'Deutschland', 'Brasilien'],
                         correctCountry: 'Indien',
-                        coordinates: { x: 65, y: 45 },
+                        coordinates: { x: 64, y: 38 },
                         fact: 'Indien ist der zweitgrößte Baumwollproduzent der Welt! Ein einziges T-Shirt benötigt etwa 2.700 Liter Wasser.',
                         co2: '2.1 kg CO₂'
                     },
@@ -110,7 +117,7 @@
                         question: 'In welchem Land wird der Stoff oft gewebt und gefärbt?',
                         options: ['China', 'Italien', 'USA', 'Kanada'],
                         correctCountry: 'China',
-                        coordinates: { x: 70, y: 42 },
+                        coordinates: { x: 72, y: 34 },
                         fact: 'China ist die weltgrößte Textilindustrie. Beim Färben werden oft große Mengen Wasser verschmutzt.',
                         co2: '3.5 kg CO₂'
                     },
@@ -118,16 +125,16 @@
                         question: 'Wo werden viele T-Shirts zusammengenäht?',
                         options: ['Bangladesh', 'Norwegen', 'Australien', 'Mexiko'],
                         correctCountry: 'Bangladesh',
-                        coordinates: { x: 67, y: 46 },
+                        coordinates: { x: 67, y: 40 },
                         fact: 'Bangladesh ist eines der größten Textilproduktionsländer. Viele Menschen arbeiten dort in der Bekleidungsindustrie.',
                         co2: '1.2 kg CO₂'
                     }
                 ],
                 route: [
-                    { x: 65, y: 45 }, // Indien
-                    { x: 70, y: 42 }, // China
-                    { x: 67, y: 46 }, // Bangladesh
-                    { x: 50, y: 35 }  // Schweiz
+                    { x: 64, y: 38 }, // Indien
+                    { x: 72, y: 34 }, // China
+                    { x: 67, y: 40 }, // Bangladesh
+                    { x: 50, y: 28 }  // Schweiz
                 ]
             },
             smartphone: {
@@ -139,7 +146,7 @@
                         question: 'Wo wird Coltan für Smartphone-Batterien oft abgebaut?',
                         options: ['Kongo', 'Grönland', 'Island', 'Argentinien'],
                         correctCountry: 'Kongo',
-                        coordinates: { x: 52, y: 55 },
+                        coordinates: { x: 52, y: 52 },
                         fact: 'Der Kongo besitzt 80% der weltweiten Coltan-Reserven. Dieser Rohstoff ist essentiell für Kondensatoren in Elektronik.',
                         co2: '15 kg CO₂'
                     },
@@ -147,7 +154,7 @@
                         question: 'In welchem Land werden die meisten Mikrochips produziert?',
                         options: ['Taiwan', 'Portugal', 'Ägypten', 'Peru'],
                         correctCountry: 'Taiwan',
-                        coordinates: { x: 72, y: 47 },
+                        coordinates: { x: 74, y: 42 },
                         fact: 'Taiwan produziert über 60% der weltweiten Mikrochips! Eine einzige Chip-Fabrik kostet mehrere Milliarden Dollar.',
                         co2: '25 kg CO₂'
                     },
@@ -155,16 +162,16 @@
                         question: 'Wo werden die meisten Smartphones zusammengebaut?',
                         options: ['China', 'Finnland', 'Spanien', 'Südafrika'],
                         correctCountry: 'China',
-                        coordinates: { x: 70, y: 42 },
+                        coordinates: { x: 72, y: 34 },
                         fact: 'China ist die „Werkbank der Welt". Allein in Shenzhen werden täglich Hunderttausende Smartphones produziert.',
                         co2: '8 kg CO₂'
                     }
                 ],
                 route: [
-                    { x: 52, y: 55 }, // Kongo
-                    { x: 72, y: 47 }, // Taiwan
-                    { x: 70, y: 42 }, // China
-                    { x: 50, y: 35 }  // Schweiz
+                    { x: 52, y: 52 }, // Kongo
+                    { x: 74, y: 42 }, // Taiwan
+                    { x: 72, y: 34 }, // China
+                    { x: 50, y: 28 }  // Schweiz
                 ]
             },
             coffee: {
@@ -176,7 +183,7 @@
                         question: 'Welches Land ist der größte Kaffeeproduzent der Welt?',
                         options: ['Brasilien', 'Schweiz', 'Russland', 'Indien'],
                         correctCountry: 'Brasilien',
-                        coordinates: { x: 35, y: 60 },
+                        coordinates: { x: 32, y: 58 },
                         fact: 'Brasilien produziert etwa ein Drittel des weltweiten Kaffees! Die Ernte erfolgt oft noch von Hand.',
                         co2: '0.5 kg CO₂'
                     },
@@ -184,7 +191,7 @@
                         question: 'Aus welcher Region kommt traditionell der beste Arabica-Kaffee?',
                         options: ['Äthiopien', 'Schweden', 'Japan', 'Frankreich'],
                         correctCountry: 'Äthiopien',
-                        coordinates: { x: 55, y: 52 },
+                        coordinates: { x: 56, y: 48 },
                         fact: 'Äthiopien ist die Geburtsstätte des Kaffees! Hier wächst Kaffee noch wild im Hochland.',
                         co2: '0.3 kg CO₂'
                     },
@@ -192,16 +199,16 @@
                         question: 'In welchem Land wird der Kaffee oft für Europa geröstet?',
                         options: ['Deutschland', 'Thailand', 'Chile', 'Kanada'],
                         correctCountry: 'Deutschland',
-                        coordinates: { x: 50, y: 33 },
+                        coordinates: { x: 50, y: 26 },
                         fact: 'Deutschland ist Europas größter Kaffeeröster. Beim Rösten entwickelt sich erst das typische Kaffeearoma!',
                         co2: '0.6 kg CO₂'
                     }
                 ],
                 route: [
-                    { x: 35, y: 60 }, // Brasilien
-                    { x: 55, y: 52 }, // Äthiopien
-                    { x: 50, y: 33 }, // Deutschland
-                    { x: 50, y: 35 }  // Schweiz
+                    { x: 32, y: 58 }, // Brasilien
+                    { x: 56, y: 48 }, // Äthiopien
+                    { x: 50, y: 26 }, // Deutschland
+                    { x: 50, y: 28 }  // Schweiz
                 ]
             },
             sneakers: {
@@ -213,7 +220,7 @@
                         question: 'Wo wird Naturkautschuk für Schuhsohlen hauptsächlich gewonnen?',
                         options: ['Malaysia', 'Österreich', 'Polen', 'Irland'],
                         correctCountry: 'Malaysia',
-                        coordinates: { x: 68, y: 54 },
+                        coordinates: { x: 70, y: 50 },
                         fact: 'Malaysia ist einer der größten Kautschuk-Produzenten. Kautschuk kommt vom Gummibaum und wird für flexible Sohlen verwendet.',
                         co2: '3.2 kg CO₂'
                     },
@@ -221,7 +228,7 @@
                         question: 'In welchem Land werden die meisten Sportschuhe produziert?',
                         options: ['Vietnam', 'Dänemark', 'Marokko', 'Türkei'],
                         correctCountry: 'Vietnam',
-                        coordinates: { x: 68, y: 48 },
+                        coordinates: { x: 70, y: 44 },
                         fact: 'Vietnam produziert fast ein Drittel aller Schuhe weltweit! Ein Sneaker durchläuft über 360 Arbeitsschritte.',
                         co2: '4.5 kg CO₂'
                     },
@@ -229,35 +236,35 @@
                         question: 'Wo werden synthetische Materialien für Sneakers oft hergestellt?',
                         options: ['China', 'Belgien', 'Neuseeland', 'Kenia'],
                         correctCountry: 'China',
-                        coordinates: { x: 70, y: 42 },
+                        coordinates: { x: 72, y: 34 },
                         fact: 'China produziert die meisten synthetischen Materialien. Ein moderner Sneaker besteht aus über 65 verschiedenen Teilen!',
                         co2: '5.8 kg CO₂'
                     }
                 ],
                 route: [
-                    { x: 68, y: 54 }, // Malaysia
-                    { x: 68, y: 48 }, // Vietnam
-                    { x: 70, y: 42 }, // China
-                    { x: 50, y: 35 }  // Schweiz
+                    { x: 70, y: 50 }, // Malaysia
+                    { x: 70, y: 44 }, // Vietnam
+                    { x: 72, y: 34 }, // China
+                    { x: 50, y: 28 }  // Schweiz
                 ]
             }
         };
 
-        // Country positions on simplified world map
+        // Country positions on improved world map
         const countries = {
-            'Indien': { x: 65, y: 45, label: 'Indien' },
-            'China': { x: 70, y: 42, label: 'China' },
-            'Bangladesh': { x: 67, y: 46, label: 'Bangladesh' },
-            'Kongo': { x: 52, y: 55, label: 'Kongo' },
-            'Taiwan': { x: 72, y: 47, label: 'Taiwan' },
-            'Brasilien': { x: 35, y: 60, label: 'Brasilien' },
-            'Äthiopien': { x: 55, y: 52, label: 'Äthiopien' },
-            'Deutschland': { x: 50, y: 33, label: 'Deutschland' },
-            'Malaysia': { x: 68, y: 54, label: 'Malaysia' },
-            'Vietnam': { x: 68, y: 48, label: 'Vietnam' },
-            'Schweiz': { x: 50, y: 35, label: 'Schweiz' },
-            'USA': { x: 20, y: 40, label: 'USA' },
-            'Japan': { x: 78, y: 43, label: 'Japan' }
+            'Indien': { x: 64, y: 38, label: 'Indien' },
+            'China': { x: 72, y: 34, label: 'China' },
+            'Bangladesh': { x: 67, y: 40, label: 'Bangladesh' },
+            'Kongo': { x: 52, y: 52, label: 'Kongo' },
+            'Taiwan': { x: 74, y: 42, label: 'Taiwan' },
+            'Brasilien': { x: 32, y: 58, label: 'Brasilien' },
+            'Äthiopien': { x: 56, y: 48, label: 'Äthiopien' },
+            'Deutschland': { x: 50, y: 26, label: 'Deutschland' },
+            'Malaysia': { x: 70, y: 50, label: 'Malaysia' },
+            'Vietnam': { x: 70, y: 44, label: 'Vietnam' },
+            'Schweiz': { x: 50, y: 28, label: 'Schweiz' },
+            'USA': { x: 18, y: 32, label: 'USA' },
+            'Japan': { x: 78, y: 36, label: 'Japan' }
         };
 
         function renderMenu() {
@@ -384,45 +391,59 @@
                         </div>
 
                         <!-- World Map -->
-                        <div class="bg-white rounded-xl p-6 shadow-lg">
-                            <svg id="worldMap" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Simplified World Map Background -->
-                                <!-- Continents as simple shapes -->
+                        <div class="bg-gradient-to-br from-blue-100 to-green-100 rounded-xl p-6 shadow-lg">
+                            <svg id="worldMap" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+                                <!-- Ocean background -->
+                                <rect width="100" height="70" fill="#DBEAFE"/>
+                                
+                                <!-- More realistic continents -->
                                 
                                 <!-- North America -->
-                                <path d="M 5 25 Q 10 20, 15 25 L 25 30 L 30 45 L 25 50 L 15 48 L 10 40 Z" 
-                                    fill="#e5e7eb" stroke="#9ca3af" stroke-width="0.5"/>
+                                <path d="M 8 18 L 10 15 L 14 14 L 18 16 L 22 18 L 24 22 L 26 28 L 28 35 L 26 40 L 22 42 L 18 41 L 14 38 L 10 35 L 8 28 Z" 
+                                    fill="#86EFAC" stroke="#059669" stroke-width="0.3" opacity="0.9"/>
+                                
+                                <!-- Central America -->
+                                <path d="M 22 42 L 24 44 L 26 45 L 24 42 Z" 
+                                    fill="#86EFAC" stroke="#059669" stroke-width="0.3" opacity="0.9"/>
                                 
                                 <!-- South America -->
-                                <path d="M 28 48 L 35 50 L 38 65 L 35 75 L 30 72 L 28 60 Z" 
-                                    fill="#e5e7eb" stroke="#9ca3af" stroke-width="0.5"/>
+                                <path d="M 26 45 L 30 46 L 33 50 L 35 55 L 36 60 L 35 65 L 32 67 L 28 66 L 26 62 L 25 56 L 26 50 Z" 
+                                    fill="#86EFAC" stroke="#059669" stroke-width="0.3" opacity="0.9"/>
                                 
                                 <!-- Europe -->
-                                <path d="M 45 25 L 55 28 L 58 35 L 52 38 L 45 35 Z" 
-                                    fill="#e5e7eb" stroke="#9ca3af" stroke-width="0.5"/>
+                                <path d="M 46 22 L 48 20 L 52 21 L 55 23 L 56 26 L 54 29 L 52 31 L 48 30 L 46 27 Z" 
+                                    fill="#FCD34D" stroke="#F59E0B" stroke-width="0.3" opacity="0.9"/>
                                 
                                 <!-- Africa -->
-                                <path d="M 47 38 L 57 40 L 60 55 L 55 65 L 48 60 L 45 45 Z" 
-                                    fill="#e5e7eb" stroke="#9ca3af" stroke-width="0.5"/>
+                                <path d="M 47 32 L 50 30 L 53 31 L 56 33 L 58 38 L 59 45 L 58 52 L 56 58 L 53 61 L 50 60 L 48 56 L 47 50 L 46 42 L 47 36 Z" 
+                                    fill="#FCD34D" stroke="#F59E0B" stroke-width="0.3" opacity="0.9"/>
                                 
                                 <!-- Asia -->
-                                <path d="M 58 20 L 80 25 L 82 48 L 75 52 L 65 50 L 60 35 Z" 
-                                    fill="#e5e7eb" stroke="#9ca3af" stroke-width="0.5"/>
+                                <path d="M 56 18 L 62 16 L 68 17 L 74 19 L 78 22 L 80 26 L 82 32 L 82 38 L 80 42 L 76 45 L 72 46 L 68 44 L 64 40 L 60 36 L 58 30 L 57 24 Z" 
+                                    fill="#FCA5A5" stroke="#DC2626" stroke-width="0.3" opacity="0.9"/>
+                                
+                                <!-- Middle East / India region -->
+                                <path d="M 58 30 L 62 32 L 66 35 L 68 40 L 67 44 L 64 46 L 60 44 L 58 40 L 58 35 Z" 
+                                    fill="#FCA5A5" stroke="#DC2626" stroke-width="0.3" opacity="0.9"/>
+                                
+                                <!-- Southeast Asia -->
+                                <path d="M 68 44 L 72 45 L 74 48 L 72 52 L 69 53 L 67 50 L 68 47 Z" 
+                                    fill="#FCA5A5" stroke="#DC2626" stroke-width="0.3" opacity="0.9"/>
                                 
                                 <!-- Australia -->
-                                <path d="M 72 60 L 80 62 L 82 68 L 78 70 L 72 68 Z" 
-                                    fill="#e5e7eb" stroke="#9ca3af" stroke-width="0.5"/>
+                                <path d="M 74 54 L 78 55 L 82 57 L 84 60 L 82 63 L 78 64 L 74 62 L 72 59 L 72 56 Z" 
+                                    fill="#A78BFA" stroke="#7C3AED" stroke-width="0.3" opacity="0.9"/>
 
-                                <!-- Country Markers -->
+                                <!-- Country Markers with stable positioning -->
                                 ${Object.entries(countries).map(([name, pos]) => `
-                                    <g class="country-marker" onclick="selectCountry('${name}')" style="cursor: pointer;">
-                                        <circle cx="${pos.x}" cy="${pos.y}" r="2" fill="${product.color}" opacity="0.7"/>
-                                        <text x="${pos.x}" y="${pos.y - 3}" 
-                                            font-size="3" 
-                                            fill="#374151" 
+                                    <g class="country-marker" onclick="selectCountry('${name}')">
+                                        <circle cx="${pos.x}" cy="${pos.y}" r="2" fill="${product.color}" stroke="white" stroke-width="0.5" opacity="0.9"/>
+                                        <text class="country-label" x="${pos.x}" y="${pos.y - 3.5}" 
+                                            font-size="2.5" 
+                                            fill="#1F2937" 
                                             text-anchor="middle"
-                                            font-weight="bold"
-                                            pointer-events="none">
+                                            font-weight="600"
+                                            style="paint-order: stroke; stroke: white; stroke-width: 0.3px;">
                                             ${pos.label}
                                         </text>
                                     </g>
@@ -430,8 +451,8 @@
 
                                 <!-- Switzerland Marker (Special) -->
                                 <g>
-                                    <circle cx="50" cy="35" r="2.5" fill="#EF4444" stroke="#fff" stroke-width="0.5"/>
-                                    <text x="50" y="32" font-size="3" fill="#EF4444" text-anchor="middle" font-weight="bold">🇨🇭</text>
+                                    <circle cx="50" cy="28" r="2.5" fill="#EF4444" stroke="white" stroke-width="0.7" opacity="1"/>
+                                    <text x="50" y="24" font-size="3" fill="#EF4444" text-anchor="middle" font-weight="bold">🇨🇭</text>
                                 </g>
                             </svg>
                         </div>
