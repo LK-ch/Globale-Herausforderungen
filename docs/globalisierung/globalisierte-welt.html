@@ -491,6 +491,75 @@
             border: none;
         }
 
+        .completion-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .completion-button {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1.5rem 3rem;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .completion-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .completion-button.completed {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            cursor: default;
+        }
+
+        .completion-button.completed:hover {
+            transform: none;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .progress-indicator.show {
+            display: flex;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+
+        .progress-checkmark {
+            font-size: 1.5rem;
+            color: #10b981;
+        }
+
         @media (max-width: 768px) {
             header h1 {
                 font-size: 1.8rem;
@@ -511,6 +580,18 @@
 
             .expandable-inner {
                 padding: 1rem;
+            }
+
+            .completion-button {
+                font-size: 1.1rem;
+                padding: 1.25rem 2rem;
+            }
+
+            .progress-indicator {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+                justify-content: center;
             }
         }
 
@@ -561,6 +642,12 @@
 </head>
 <body>
     <div id="app"></div>
+
+    <!-- Progress Indicator -->
+    <div id="progress-indicator" class="progress-indicator">
+        <span class="progress-checkmark">✓</span>
+        <span class="progress-text">Seite durchgelesen</span>
+    </div>
 
     <script>
         // Hilfsfunktion um Array zu mischen
@@ -1361,6 +1448,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Abschluss-Button -->
+                    <div class="completion-section" id="completion-section">
+                        <h3 style="color: #1e3a8a; margin-bottom: 1rem;">Modul abschließen</h3>
+                        <p style="color: #666; margin-bottom: 1.5rem;">Haben Sie alle Aufgaben bearbeitet und das Spiel ausprobiert?</p>
+                        <button id="completion-button" class="completion-button" onclick="markAsComplete()">
+                            <span>✓</span>
+                            <span id="button-text">Modul als abgeschlossen markieren</span>
+                        </button>
+                    </div>
                 </main>
             `;
         }
@@ -1721,6 +1818,87 @@
                     folder: 'svg',
                     ext: '.svg'
                 });
+            }
+
+            // Initialisiere Scroll-Tracking und Button-Status nach Render
+            initProgressTracking();
+        }
+
+        // Progress Tracking System
+        let hasScrolledToBottom = false;
+        let isModuleCompleted = false;
+
+        function initProgressTracking() {
+            // Prüfe ob Modul bereits abgeschlossen wurde
+            const completed = localStorage.getItem('globalisierung_module1_completed');
+            if (completed === 'true') {
+                isModuleCompleted = true;
+                updateCompletionButton(true);
+            }
+
+            // Zeige Progress-Indicator wenn bis unten gescrollt
+            checkScrollProgress();
+        }
+
+        function checkScrollProgress() {
+            // Prüfe ob Seite bis unten gescrollt wurde
+            window.addEventListener('scroll', function() {
+                if (gameState.gameMode !== 'menu') return; // Nur im Menu-Modus tracken
+
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                
+                // Wenn User bis fast ganz unten gescrollt hat (mit 100px Puffer)
+                if (scrollTop + windowHeight >= documentHeight - 100) {
+                    if (!hasScrolledToBottom) {
+                        hasScrolledToBottom = true;
+                        showProgressIndicator();
+                    }
+                }
+            });
+        }
+
+        function showProgressIndicator() {
+            const indicator = document.getElementById('progress-indicator');
+            if (indicator) {
+                indicator.classList.add('show');
+                
+                // Automatisch nach 3 Sekunden ausblenden
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        function markAsComplete() {
+            if (isModuleCompleted) return; // Bereits abgeschlossen
+
+            // Markiere Modul als abgeschlossen
+            localStorage.setItem('globalisierung_module1_completed', 'true');
+            localStorage.setItem('globalisierung_module1_completedAt', new Date().toISOString());
+            
+            isModuleCompleted = true;
+            updateCompletionButton(true);
+
+            // Zeige Bestätigung
+            alert('✓ Modul 1 erfolgreich abgeschlossen!\n\nIhr Fortschritt wurde gespeichert.');
+        }
+
+        function updateCompletionButton(completed) {
+            const button = document.getElementById('completion-button');
+            const buttonText = document.getElementById('button-text');
+            
+            if (button && buttonText) {
+                if (completed) {
+                    button.classList.add('completed');
+                    buttonText.textContent = 'Modul abgeschlossen ✓';
+                    button.disabled = true;
+                } else {
+                    button.classList.remove('completed');
+                    buttonText.textContent = 'Modul als abgeschlossen markieren';
+                    button.disabled = false;
+                }
             }
         }
 
