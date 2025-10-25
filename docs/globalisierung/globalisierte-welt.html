@@ -389,6 +389,108 @@
             background: linear-gradient(135deg, #d1fae5, #a7f3d0);
         }
 
+        .expandable-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .expandable-header {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .expandable-header:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+        }
+
+        .expandable-header .arrow {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        .expandable-header.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        #fazit-arrow {
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+
+        .expandable-content.open {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .expandable-inner {
+            padding: 2rem;
+        }
+
+        .task-box {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .task-box h3 {
+            color: #92400e;
+            margin-bottom: 0.75rem;
+        }
+
+        .task-box p {
+            color: #78350f;
+            line-height: 1.6;
+        }
+
+        .task-box ul {
+            color: #78350f;
+            line-height: 1.8;
+            margin-left: 1.5rem;
+        }
+
+        .task-box ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
         @media (max-width: 768px) {
             header h1 {
                 font-size: 1.8rem;
@@ -400,6 +502,15 @@
 
             .options-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .expandable-header {
+                font-size: 1rem;
+                padding: 1rem 1.5rem;
+            }
+
+            .expandable-inner {
+                padding: 1rem;
             }
         }
 
@@ -1019,6 +1130,115 @@
                     { step: 5, location: 'Schweiz', flag: '🇨🇭', description: 'Schokoladen-Produktion' },
                     { step: 6, location: 'Schweiz', flag: '🇨🇭', description: 'Verkauf' }
                 ]
+            },
+            coffee: {
+                name: 'Kaffee',
+                icon: '☕',
+                color: '#78350F',
+                gradient: 'from-amber-900 to-stone-900',
+                totalSteps: 6,
+                questions: [
+                    {
+                        step: 1,
+                        stepTitle: '🌱 Schritt 1: Kaffeeanbau',
+                        intro: 'Kaffee wächst auf Kaffeebäumen in tropischen und subtropischen Gebieten. Die Kaffeepflanze braucht ein warmes Klima und viel Regen.',
+                        question: 'Wo werden die Kaffeebohnen für deinen Kaffee hauptsächlich angebaut?',
+                        options: [
+                            { country: 'Kolumbien', flag: '🇨🇴', correct: true },
+                            { country: 'Schweiz', flag: '🇨🇭', correct: false },
+                            { country: 'Norwegen', flag: '🇳🇴', correct: false },
+                            { country: 'Kanada', flag: '🇨🇦', correct: false }
+                        ],
+                        correctAnswer: 'Kolumbien',
+                        fact: 'Kolumbien ist der drittgrößte Kaffeeproduzent der Welt! Eine Kaffeepflanze braucht 3-4 Jahre, bis sie das erste Mal Früchte trägt.',
+                        hint: 'Ein südamerikanisches Land, weltbekannt für hochwertigen Arabica-Kaffee.'
+                    },
+                    {
+                        step: 2,
+                        stepTitle: '🏞️ Schritt 2: Ernte & Aufbereitung',
+                        intro: 'Die reifen Kaffeekirschen werden von Hand gepflückt. Dann werden die Bohnen aus den Früchten gelöst, fermentiert und getrocknet.',
+                        question: 'Wo werden die Kaffeebohnen aufbereitet und getrocknet?',
+                        options: [
+                            { country: 'Kolumbien', flag: '🇨🇴', correct: true },
+                            { country: 'Deutschland', flag: '🇩🇪', correct: false },
+                            { country: 'China', flag: '🇨🇳', correct: false },
+                            { country: 'Frankreich', flag: '🇫🇷', correct: false }
+                        ],
+                        correctAnswer: 'Kolumbien',
+                        fact: 'Die Aufbereitung findet direkt nach der Ernte statt! Für 1 kg gerösteten Kaffee braucht man etwa 5 kg frische Kaffeekirschen.',
+                        hint: 'Im gleichen Land wie der Anbau - die Bohnen müssen frisch verarbeitet werden.'
+                    },
+                    {
+                        step: 3,
+                        stepTitle: '🚢 Schritt 3: Export',
+                        intro: 'Die getrockneten Kaffeebohnen (Rohkaffee) werden nun in Säcken verpackt und nach Europa verschifft.',
+                        question: 'Wie kommt der Rohkaffee von Südamerika nach Europa?',
+                        options: [
+                            { country: 'Containerschiff', flag: '🚢', correct: true },
+                            { country: 'Flugzeug', flag: '✈️', correct: false },
+                            { country: 'Zug', flag: '🚂', correct: false },
+                            { country: 'LKW', flag: '🚛', correct: false }
+                        ],
+                        correctAnswer: 'Containerschiff',
+                        fact: 'Der Kaffee reist etwa 10.000 km über den Atlantik! Die Seereise dauert 3-4 Wochen.',
+                        hint: 'Der günstigste und umweltfreundlichste Weg über den Ozean.'
+                    },
+                    {
+                        step: 4,
+                        stepTitle: '🔥 Schritt 4: Röstung',
+                        intro: 'Die grünen Rohkaffeebohnen werden nun bei hohen Temperaturen geröstet. Erst durch die Röstung entsteht das typische Kaffeearoma.',
+                        question: 'Wo werden die Kaffeebohnen geröstet?',
+                        options: [
+                            { country: 'Schweiz', flag: '🇨🇭', correct: true },
+                            { country: 'Brasilien', flag: '🇧🇷', correct: false },
+                            { country: 'Äthiopien', flag: '🇪🇹', correct: false },
+                            { country: 'Vietnam', flag: '🇻🇳', correct: false }
+                        ],
+                        correctAnswer: 'Schweiz',
+                        fact: 'In der Schweiz gibt es viele traditionelle Kaffeeröstereien! Beim Rösten verlieren die Bohnen 15-20% ihres Gewichts durch Wasserverdampfung.',
+                        hint: 'Das Land, in dem der Kaffee verkauft wird - frische Röstung für bestes Aroma!'
+                    },
+                    {
+                        step: 5,
+                        stepTitle: '📦 Schritt 5: Verpackung',
+                        intro: 'Die frisch gerösteten Bohnen werden gemahlen oder als ganze Bohnen in Packungen abgefüllt.',
+                        question: 'Wo wird der Kaffee verpackt?',
+                        options: [
+                            { country: 'Schweiz', flag: '🇨🇭', correct: true },
+                            { country: 'Italien', flag: '🇮🇹', correct: false },
+                            { country: 'Türkei', flag: '🇹🇷', correct: false },
+                            { country: 'Indien', flag: '🇮🇳', correct: false }
+                        ],
+                        correctAnswer: 'Schweiz',
+                        fact: 'Kaffee muss luftdicht verpackt werden, damit das Aroma erhalten bleibt! Gerösteter Kaffee ist nur etwa 2-4 Wochen optimal frisch.',
+                        hint: 'Direkt dort, wo er geröstet wurde - für maximale Frische!'
+                    },
+                    {
+                        step: 6,
+                        stepTitle: '🏪 Schritt 6: Verkauf',
+                        intro: 'Nun ist der Kaffee bereit und kann im Supermarkt oder Café gekauft werden.',
+                        question: 'Wo kaufst du deinen Kaffee?',
+                        options: [
+                            { country: 'Laden in der Schweiz', flag: '🇨🇭', correct: true },
+                            { country: 'Kolumbien', flag: '🇨🇴', correct: false },
+                            { country: 'Auf dem Schiff', flag: '🚢', correct: false },
+                            { country: 'Deutschland', flag: '🇩🇪', correct: false }
+                        ],
+                        correctAnswer: 'Laden in der Schweiz',
+                        fact: 'Die Schweizer trinken durchschnittlich 3 Tassen Kaffee pro Tag! Dein Kaffee hat eine Reise von über 10.000 km hinter sich.',
+                        hint: 'Am Ende der Reise - dort, wo du wohnst!'
+                    }
+                ],
+                totalDistance: '~10.000 km',
+                funFact: 'Kaffee ist nach Erdöl das zweitwichtigste Handelsgut der Welt! Weltweit werden täglich über 2 Milliarden Tassen Kaffee getrunken.',
+                journey: [
+                    { step: 1, location: 'Kolumbien', flag: '🇨🇴', description: 'Kaffeeanbau' },
+                    { step: 2, location: 'Kolumbien', flag: '🇨🇴', description: 'Aufbereitung' },
+                    { step: 3, location: 'Atlantik', flag: '🚢', description: 'Transport' },
+                    { step: 4, location: 'Schweiz', flag: '🇨🇭', description: 'Röstung' },
+                    { step: 5, location: 'Schweiz', flag: '🇨🇭', description: 'Verpackung' },
+                    { step: 6, location: 'Schweiz', flag: '🇨🇭', description: 'Verkauf' }
+                ]
             }
         };
 
@@ -1030,8 +1250,54 @@
                 </header>
 
                 <main class="slide-in">
+                    <!-- Aufklappbare Aufgaben-Sektion -->
+                    <div class="expandable-section">
+                        <div class="expandable-header" onclick="toggleExpand()">
+                            <span>📋 Aufgaben zur Globalisierung im Alltag</span>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="expandable-content" id="expandable-content">
+                            <div class="expandable-inner">
+                                <div class="task-box">
+                                    <h3>📚 Aufgabe 1: Woher kommen Ihre Kleider?</h3>
+                                    <p>Am Beispiel Ihrer Kleidung werden Sie sich zum Einstieg mit der Frage beschäftigen, was Globalisierung mit Ihrem Alltag zu tun hat.</p>
+                                    <p style="margin-top: 1rem;"><strong>Besprechen Sie zu zweit:</strong></p>
+                                    <ul style="margin-top: 0.5rem;">
+                                        <li>Woher kommen Ihre Kleider?</li>
+                                        <li>Schauen Sie sich die Etiketten der Kleider genauer an und analysieren Sie mit Hilfe einer Weltkarte, woher diese kamen.</li>
+                                        <li>Notieren Sie Ihre Beobachtungen in Ihr OneNote.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="task-box">
+                                    <h3>📚 Aufgabe 2: Die Reise einer Jeans</h3>
+                                    <p>Ihre Kleidung hat aber bereits mehr Länder gesehen, als dies die Etikette vermuten lässt. Schauen Sie sich das folgende Video zur Jeans an und beantworten Sie folgende Fragen:</p>
+                                    <ul style="margin-top: 1rem;">
+                                        <li><strong>a)</strong> Notieren Sie, wie viele Länder eine Jeans durchläuft, bis sie im Geschäft gekauft werden kann.</li>
+                                        <li><strong>b)</strong> Beschreiben Sie, was mit der Jeans geschieht, wenn Sie diese nicht mehr brauchen.</li>
+                                        <li><strong>c)</strong> Notieren Sie Vermutungen, warum die Jeans nicht einfach von der Herstellung bis zur Entsorgung nur in einem Land bleibt.</li>
+                                    </ul>
+                                    <p style="margin-top: 1rem; font-style: italic; color: #92400e;">(Den Auftrag am Schluss des Videos müssen Sie nicht bearbeiten.)</p>
+                                </div>
+
+                                <div style="margin-top: 1.5rem;">
+                                    <h3 style="color: #1e3a8a; margin-bottom: 1rem;">🎬 Video: Die Reise einer Jeans</h3>
+                                    <div class="video-container">
+                                        <iframe 
+                                            src="https://www.youtube.com/embed/3X4wEijleNg" 
+                                            title="Die Reise einer Jeans" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card">
-                        <h2>📋 Spielregeln</h2>
+                        <h2>🎮 Spiel zum Thema Globalisierung im Alltag</h2>
+                        <h3 style="color: #1e3a8a; margin-top: 1.5rem; margin-bottom: 1rem;">Spielregeln</h3>
                         <div class="info-grid">
                             <div class="info-item">
                                 <div class="info-label">1️⃣ Wähle</div>
@@ -1046,9 +1312,8 @@
                                 <div class="info-value" style="font-size: 1rem;">Punkte</div>
                             </div>
                         </div>
-                        <p style="color: #666; line-height: 1.6;">
-                            Folge der Supply Chain Schritt für Schritt von der Rohstoffgewinnung bis in den Schweizer Laden. 
-                            Jede richtige Antwort bringt dir <strong>100 Punkte</strong>!
+                        <p style="color: #666; line-height: 1.6; margin-top: 1rem;">
+                            Folgen Sie der Supply Chain (=Lieferkette) Schritt für Schritt von der Rohstoffgewinnung bis in den Schweizer Laden. Jede richtige Antwort bringt 100 Punkte!
                         </p>
                     </div>
 
@@ -1078,6 +1343,22 @@
                                     </div>
                                 </div>
                             `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Fazit-Sektion -->
+                    <div class="expandable-section">
+                        <div class="expandable-header" onclick="toggleFazit()">
+                            <span>📝 Fazit zum Thema Globalisierung im Alltag</span>
+                            <span class="arrow" id="fazit-arrow">▼</span>
+                        </div>
+                        <div class="expandable-content" id="fazit-content">
+                            <div class="expandable-inner">
+                                <div class="task-box">
+                                    <h3>📚 Aufgabe 3: Reflexion</h3>
+                                    <p>Notieren Sie nun in Ihrem OneNote drei Beobachtungen aus diesem Modul zum Thema Globalisierung im Alltag.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </main>
@@ -1393,6 +1674,28 @@
                 shuffledOptions: []
             };
             render();
+        }
+
+        function toggleExpand() {
+            const content = document.getElementById('expandable-content');
+            const header = document.querySelector('.expandable-header');
+            
+            content.classList.toggle('open');
+            header.classList.toggle('open');
+        }
+
+        function toggleFazit() {
+            const content = document.getElementById('fazit-content');
+            const arrow = document.getElementById('fazit-arrow');
+            
+            content.classList.toggle('open');
+            
+            // Rotiere den Pfeil
+            if (content.classList.contains('open')) {
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                arrow.style.transform = 'rotate(0deg)';
+            }
         }
 
         function render() {
