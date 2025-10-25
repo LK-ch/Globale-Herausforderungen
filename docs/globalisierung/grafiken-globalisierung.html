@@ -1,1 +1,570 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafiken zur Globalisierung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+            background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cdefs%3E%3CradialGradient id='globe' cx='50%25' cy='40%25'%3E%3Cstop offset='0%25' style='stop-color:%234a90e2;stop-opacity:1' /%3E%3Cstop offset='70%25' style='stop-color:%232c5aa0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%231a3a6b;stop-opacity:1' /%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='400' cy='400' r='300' fill='url(%23globe)' opacity='0.3'/%3E%3Cg fill='%2334d399' opacity='0.4'%3E%3Cpath d='M 400 300 Q 420 310 425 340 Q 430 370 420 400 Q 410 430 400 450 Q 390 430 385 400 Q 380 360 390 330 Q 395 310 400 300 Z'/%3E%3Cpath d='M 380 260 Q 390 255 400 260 Q 410 265 415 275 Q 410 285 400 285 Q 390 285 385 280 Q 378 272 380 260 Z'/%3E%3Cpath d='M 430 250 Q 470 260 500 280 Q 520 300 530 330 Q 535 360 525 390 Q 515 410 500 420 Q 480 410 465 395 Q 450 375 445 350 Q 440 320 445 290 Q 440 270 430 250 Z'/%3E%3Cpath d='M 280 250 Q 300 240 320 245 Q 340 255 350 275 Q 355 300 345 325 Q 335 345 320 355 Q 305 350 295 335 Q 285 315 280 290 Q 275 270 280 250 Z'/%3E%3Cpath d='M 320 370 Q 330 365 340 375 Q 345 395 340 420 Q 335 450 325 475 Q 315 485 310 475 Q 305 455 308 430 Q 312 400 315 385 Q 318 375 320 370 Z'/%3E%3Cpath d='M 520 480 Q 540 475 555 485 Q 565 500 560 515 Q 550 525 535 522 Q 520 515 515 500 Q 513 487 520 480 Z'/%3E%3C/g%3E%3Cg stroke='%23ffffff' stroke-width='1' fill='none' opacity='0.15'%3E%3Cellipse cx='400' cy='400' rx='300' ry='300'/%3E%3Cellipse cx='400' cy='400' rx='300' ry='240'/%3E%3Cellipse cx='400' cy='400' rx='300' ry='180'/%3E%3Cellipse cx='400' cy='400' rx='300' ry='120'/%3E%3Cellipse cx='400' cy='400' rx='300' ry='60'/%3E%3Cellipse cx='400' cy='400' rx='240' ry='300'/%3E%3Cellipse cx='400' cy='400' rx='180' ry='300'/%3E%3Cellipse cx='400' cy='400' rx='120' ry='300'/%3E%3Cellipse cx='400' cy='400' rx='60' ry='300'/%3E%3Cline x1='400' y1='100' x2='400' y2='700'/%3E%3Cline x1='100' y1='400' x2='700' y2='400'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin: 1rem 0 0 0;
+            color: #0ea5e9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem 2rem 1rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            color: #1e3a8a;
+            margin-bottom: 1rem;
+        }
+
+        .chart-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            color: #1e3a8a;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            min-height: 400px;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #cbd5e1;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .image-placeholder-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .image-placeholder-text {
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .chart-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .completion-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .completion-button {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1.5rem 3rem;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .completion-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .completion-button.completed {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            cursor: default;
+        }
+
+        .completion-button.completed:hover {
+            transform: none;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .progress-indicator.show {
+            display: flex;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+
+        .progress-checkmark {
+            font-size: 1.5rem;
+            color: #10b981;
+        }
+
+        .expandable-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .expandable-header {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .expandable-header:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+        }
+
+        .expandable-header .arrow {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .expandable-header.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+
+        .expandable-content.open {
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .expandable-inner {
+            padding: 2rem;
+        }
+
+        .task-box {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .task-box h3 {
+            color: #92400e;
+            margin-bottom: 0.75rem;
+        }
+
+        .task-box p {
+            color: #78350f;
+            line-height: 1.6;
+        }
+
+        .task-box ul {
+            color: #78350f;
+            line-height: 1.8;
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .task-box ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .chart-title {
+                font-size: 1.3rem;
+            }
+
+            .image-placeholder {
+                min-height: 300px;
+            }
+
+            .completion-button {
+                font-size: 1.1rem;
+                padding: 1.25rem 2rem;
+            }
+
+            .expandable-header {
+                font-size: 1rem;
+                padding: 1rem 1.5rem;
+            }
+
+            .expandable-inner {
+                padding: 1rem;
+            }
+
+            .progress-indicator {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📊 Grafiken zur Globalisierung</h1>
+        <a href="index.html" class="back-link">← Zurück zum Lernpfad</a>
+    </header>
+
+    <main>
+        <!-- Aufklappbarer Aufgaben-Bereich -->
+        <div class="expandable-section">
+            <div class="expandable-header" onclick="toggleExpand()">
+                <span>📋 Grafikanalyse: Daten und Fakten zur Globalisierung</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="expandable-content" id="expandable-content">
+                <div class="expandable-inner">
+                    <div class="task-box">
+                        <h3>📚 Aufgabe:</h3>
+                        <p>Wählen Sie zwei Grafiken aus, die Sie mittels O-V-I in Ihrem OneNote analysieren. Fügen Sie jeweils einen Screenshot der analysierten Grafik in Ihr OneNote ein.</p>
+                        <ul>
+                            <li><strong>O</strong> = Orientierung: Was zeigt die Grafik? Thema, Zeitraum, Quelle</li>
+                            <li><strong>V</strong> = Verständnis: Welche Aussagen/Trends sind erkennbar?</li>
+                            <li><strong>I</strong> = Interpretation: Was bedeutet das? Welche Schlüsse können gezogen werden?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alter -->
+        <div class="chart-section">
+            <h3 class="chart-title">📈 Alter</h3>
+            <p class="chart-description">
+                Entwicklung der Altersstruktur und demografischer Wandel im Kontext der Globalisierung.
+            </p>
+            <div class="image-placeholder">
+                <div class="image-placeholder-icon">📊</div>
+                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Alter" eingefügt</div>
+            </div>
+            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-alter.png" alt="Grafik Alter" class="chart-image"> -->
+        </div>
+
+        <!-- Lebenserwartung -->
+        <div class="chart-section">
+            <h3 class="chart-title">❤️ Lebenserwartung</h3>
+            <p class="chart-description">
+                Wie hat sich die Lebenserwartung weltweit durch medizinischen Fortschritt und globale Vernetzung entwickelt?
+            </p>
+            <div class="image-placeholder">
+                <div class="image-placeholder-icon">📊</div>
+                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Lebenserwartung" eingefügt</div>
+            </div>
+            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-lebenserwartung.png" alt="Grafik Lebenserwartung" class="chart-image"> -->
+        </div>
+
+        <!-- Bildung -->
+        <div class="chart-section">
+            <h3 class="chart-title">🎓 Bildung</h3>
+            <p class="chart-description">
+                Entwicklung des Bildungsniveaus und Zugang zu Bildung im globalen Vergleich.
+            </p>
+            <div class="image-placeholder">
+                <div class="image-placeholder-icon">📊</div>
+                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Bildung" eingefügt</div>
+            </div>
+            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-bildung.png" alt="Grafik Bildung" class="chart-image"> -->
+        </div>
+
+        <!-- Armut -->
+        <div class="chart-section">
+            <h3 class="chart-title">💰 Armut</h3>
+            <p class="chart-description">
+                Wie hat sich extreme Armut weltweit entwickelt? Welche Rolle spielt die Globalisierung?
+            </p>
+            <div class="image-placeholder">
+                <div class="image-placeholder-icon">📊</div>
+                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Armut" eingefügt</div>
+            </div>
+            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-armut.png" alt="Grafik Armut" class="chart-image"> -->
+        </div>
+
+        <!-- Wirtschaftswachstum -->
+        <div class="chart-section">
+            <h3 class="chart-title">📈 Wirtschaftswachstum</h3>
+            <p class="chart-description">
+                Globales Wirtschaftswachstum und Bruttoinlandsprodukt (BIP) im internationalen Vergleich.
+            </p>
+            <div class="image-placeholder">
+                <div class="image-placeholder-icon">📊</div>
+                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Wirtschaftswachstum" eingefügt</div>
+            </div>
+            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-wirtschaft.png" alt="Grafik Wirtschaftswachstum" class="chart-image"> -->
+        </div>
+
+        <!-- Handel -->
+        <div class="chart-section">
+            <h3 class="chart-title">🚢 Internationaler Handel</h3>
+            <p class="chart-description">
+                Entwicklung des weltweiten Handels und der Exportvolumina verschiedener Länder.
+            </p>
+            <div class="image-placeholder">
+                <div class="image-placeholder-icon">📊</div>
+                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Internationaler Handel" eingefügt</div>
+            </div>
+            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-handel.png" alt="Grafik Handel" class="chart-image"> -->
+        </div>
+
+        <!-- CO2-Emissionen -->
+        <div class="chart-section">
+            <h3 class="chart-title">🌱 CO₂-Emissionen</h3>
+            <p class="chart-description">
+                Umweltauswirkungen der Globalisierung: CO₂-Emissionen im globalen Vergleich.
+            </p>
+            <div class="image-placeholder">
+                <div class="image-placeholder-icon">📊</div>
+                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "CO₂-Emissionen" eingefügt</div>
+            </div>
+            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-co2.png" alt="Grafik CO2-Emissionen" class="chart-image"> -->
+        </div>
+
+        <!-- Migration -->
+        <div class="chart-section">
+            <h3 class="chart-title">✈️ Migration</h3>
+            <p class="chart-description">
+                Globale Migrationsbewegungen und internationale Mobilität der Bevölkerung.
+            </p>
+            <div class="image-placeholder">
+                <div class="image-placeholder-icon">📊</div>
+                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Migration" eingefügt</div>
+            </div>
+            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-migration.png" alt="Grafik Migration" class="chart-image"> -->
+        </div>
+
+        <!-- Abschluss-Button -->
+        <div class="completion-section" id="completion-section">
+            <h3 style="color: #1e3a8a; margin-bottom: 1rem;">Modul abschließen</h3>
+            <p style="color: #666; margin-bottom: 1.5rem;">Haben Sie alle Grafiken betrachtet und analysiert?</p>
+            <button id="completion-button" class="completion-button" onclick="markAsComplete()">
+                <span>✓</span>
+                <span id="button-text">Modul als abgeschlossen markieren</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- Progress Indicator -->
+    <div id="progress-indicator" class="progress-indicator">
+        <span class="progress-checkmark">✓</span>
+        <span class="progress-text">Seite durchgelesen</span>
+    </div>
+
+    <script>
+        // Progress Tracking System
+        let hasScrolledToBottom = false;
+        let isModuleCompleted = false;
+
+        function initProgressTracking() {
+            // Prüfe ob Modul bereits abgeschlossen wurde
+            const completed = localStorage.getItem('globalisierung_module3_completed');
+            if (completed === 'true') {
+                isModuleCompleted = true;
+                updateCompletionButton(true);
+            }
+
+            // Zeige Progress-Indicator wenn bis unten gescrollt
+            checkScrollProgress();
+        }
+
+        function checkScrollProgress() {
+            // Prüfe ob Seite bis unten gescrollt wurde
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                
+                // Wenn User bis fast ganz unten gescrollt hat (mit 100px Puffer)
+                if (scrollTop + windowHeight >= documentHeight - 100) {
+                    if (!hasScrolledToBottom) {
+                        hasScrolledToBottom = true;
+                        showProgressIndicator();
+                    }
+                }
+            });
+        }
+
+        function showProgressIndicator() {
+            const indicator = document.getElementById('progress-indicator');
+            if (indicator) {
+                indicator.classList.add('show');
+                
+                // Automatisch nach 3 Sekunden ausblenden
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        function markAsComplete() {
+            if (isModuleCompleted) return; // Bereits abgeschlossen
+
+            // Markiere Modul als abgeschlossen
+            localStorage.setItem('globalisierung_module3_completed', 'true');
+            localStorage.setItem('globalisierung_module3_completedAt', new Date().toISOString());
+            
+            isModuleCompleted = true;
+            updateCompletionButton(true);
+
+            // Zeige Bestätigung
+            alert('✓ Modul 3 erfolgreich abgeschlossen!\n\nIhr Fortschritt wurde gespeichert.');
+        }
+
+        function updateCompletionButton(completed) {
+            const button = document.getElementById('completion-button');
+            const buttonText = document.getElementById('button-text');
+            
+            if (button && buttonText) {
+                if (completed) {
+                    button.classList.add('completed');
+                    buttonText.textContent = 'Modul abgeschlossen ✓';
+                    button.disabled = true;
+                } else {
+                    button.classList.remove('completed');
+                    buttonText.textContent = 'Modul als abgeschlossen markieren';
+                    button.disabled = false;
+                }
+            }
+        }
+
+        // Toggle Expandable
+        function toggleExpand() {
+            const content = document.getElementById('expandable-content');
+            const header = document.querySelector('.expandable-header');
+            
+            content.classList.toggle('open');
+            header.classList.toggle('open');
+        }
+
+        // Initialisiere Progress Tracking beim Laden
+        window.onload = () => {
+            initProgressTracking();
+        };
+    </script>
+</body>
+</html>
