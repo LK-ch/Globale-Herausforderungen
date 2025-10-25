@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weltreise von Alltagsgegenständen</title>
+    
+    <!-- Twemoji für einheitliche Emoji-Darstellung auf allen Geräten -->
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+    
     <style>
         * {
             margin: 0;
@@ -231,6 +235,14 @@
         .option-flag {
             font-size: 3rem;
             margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        /* Twemoji-Bilder richtig anzeigen */
+        .option-flag img.emoji {
+            height: 3rem;
+            width: 3rem;
+            vertical-align: middle;
         }
 
         .option-name {
@@ -368,23 +380,18 @@
             50% { transform: scale(1.05); }
         }
         
-        @keyframes celebration {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            25% { transform: rotate(-10deg) scale(1.1); }
-            75% { transform: rotate(10deg) scale(1.1); }
-        }
-
         .slide-in {
             animation: slideIn 0.5s ease-out;
         }
-
+        
         .celebration {
-            animation: celebration 0.6s ease-in-out 2;
+            animation: pulse 1s ease-in-out;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
         }
 
         @media (max-width: 768px) {
             header h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
 
             .product-grid {
@@ -395,13 +402,57 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Twemoji global styling */
+        img.emoji {
+            height: 1em;
+            width: 1em;
+            margin: 0 .05em 0 .1em;
+            vertical-align: -0.1em;
+        }
+
+        .journey-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .journey-step {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.25rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .journey-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+
+        .journey-content {
+            flex: 1;
+        }
+
+        .journey-location {
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 1.1rem;
+        }
+
+        .journey-description {
+            color: #666;
+            margin-top: 0.25rem;
+        }
     </style>
 </head>
 <body>
     <div id="app"></div>
 
     <script>
-        // Shuffle function to randomize options
+        // Hilfsfunktion um Array zu mischen
         function shuffleArray(array) {
             const newArray = [...array];
             for (let i = newArray.length - 1; i > 0; i--) {
@@ -411,20 +462,18 @@
             return newArray;
         }
 
-        // Game State
         let gameState = {
             currentProduct: null,
             currentStep: 0,
             score: 0,
             lives: 3,
             correctInRound: 0,
-            gameMode: 'menu', // menu, playing, result, summary, final
+            gameMode: 'menu',
             showHint: false,
             usedHint: false,
             shuffledOptions: []
         };
 
-        // Product data with chronological questions following the supply chain
         const products = {
             tshirt: {
                 name: 'T-Shirt',
@@ -527,12 +576,12 @@
                 totalDistance: '~15.000 km',
                 funFact: 'Ein durchschnittliches T-Shirt reist weiter als die meisten Menschen in einem Jahr!',
                 journey: [
-                    { step: 1, location: 'Indien', icon: '🇮🇳', description: 'Baumwollanbau' },
-                    { step: 2, location: 'China', icon: '🇨🇳', description: 'Spinnen & Weben' },
-                    { step: 3, location: 'China', icon: '🇨🇳', description: 'Färben' },
-                    { step: 4, location: 'Bangladesh', icon: '🇧🇩', description: 'Nähen' },
-                    { step: 5, location: 'Ozean', icon: '🚢', description: 'Transport' },
-                    { step: 6, location: 'Schweiz', icon: '🇨🇭', description: 'Verkauf' }
+                    { step: 1, location: 'Indien', flag: '🇮🇳', description: 'Baumwollanbau' },
+                    { step: 2, location: 'China', flag: '🇨🇳', description: 'Spinnen & Weben' },
+                    { step: 3, location: 'China', flag: '🇨🇳', description: 'Färben' },
+                    { step: 4, location: 'Bangladesh', flag: '🇧🇩', description: 'Nähen' },
+                    { step: 5, location: 'Ozean', flag: '🚢', description: 'Transport' },
+                    { step: 6, location: 'Schweiz', flag: '🇨🇭', description: 'Verkauf' }
                 ]
             },
             smartphone: {
@@ -599,146 +648,53 @@
                             { country: 'Südafrika', flag: '🇿🇦', correct: false }
                         ],
                         correctAnswer: 'China',
-                        fact: 'In riesigen Fabriken in Shenzhen werden täglich über 500.000 Smartphones produziert! Die Arbeiter*innen setzen hunderte Einzelteile zusammen.',
-                        hint: 'Die „Werkbank der Welt" – auch Shenzhen genannt, die Tech-Hauptstadt.'
+                        fact: 'In riesigen Fabriken in China werden täglich Millionen Smartphones zusammengebaut. Die Arbeiter müssen tausende kleine Teile präzise verbauen.',
+                        hint: 'Die größte Elektronikmontage-Industrie der Welt.'
                     },
                     {
                         step: 5,
-                        stepTitle: '📦 Schritt 5: Verpackung & Transport',
-                        intro: 'Das fertige Smartphone wird in seine Verpackung gelegt und muss nun schnell zu den Kunden gebracht werden.',
-                        question: 'Wie wird dein neues Smartphone in die Schweiz transportiert?',
+                        stepTitle: '📦 Schritt 5: Verpackung & Versand',
+                        intro: 'Das fertige Smartphone wird verpackt und für den weltweiten Versand vorbereitet.',
+                        question: 'Wie kommt dein Smartphone von China in die Schweiz?',
                         options: [
-                            { country: 'Luftfracht', flag: '✈️', correct: true },
+                            { country: 'Flugzeug', flag: '✈️', correct: true },
                             { country: 'Schiff', flag: '🚢', correct: false },
                             { country: 'Zug', flag: '🚂', correct: false },
                             { country: 'Auto', flag: '🚗', correct: false }
                         ],
-                        correctAnswer: 'Luftfracht',
-                        fact: 'Neue Smartphones werden oft per Flugzeug transportiert, um schnell in den Läden zu sein. Das ist schnell, aber sehr umweltbelastend!',
-                        hint: 'Der schnellste, aber umweltschädlichste Transportweg.'
+                        correctAnswer: 'Flugzeug',
+                        fact: 'Wegen des hohen Werts und der Nachfrage werden Smartphones meist per Flugzeug transportiert - schnell, aber nicht sehr umweltfreundlich!',
+                        hint: 'Der schnellste, aber teuerste und umweltschädlichste Transportweg.'
                     },
                     {
                         step: 6,
-                        stepTitle: '🛍️ Schritt 6: Im Laden',
-                        intro: 'Nach seiner Reise durch viele Länder ist das Smartphone endlich beim Verkäufer angekommen.',
-                        question: 'Wo kaufst du dein Smartphone?',
+                        stepTitle: '🏪 Schritt 6: Verkauf',
+                        intro: 'Nach seiner Reise um die halbe Welt ist dein Smartphone endlich verfügbar.',
+                        question: 'Wo kaufst du dein Smartphone schließlich?',
                         options: [
-                            { country: 'Elektronikgeschäft CH', flag: '🇨🇭', correct: true },
-                            { country: 'Direkt aus China', flag: '🇨🇳', correct: false },
-                            { country: 'Vom Flughafen', flag: '✈️', correct: false },
-                            { country: 'Aus Taiwan', flag: '🇹🇼', correct: false }
+                            { country: 'Schweizer Elektronikladen', flag: '🇨🇭', correct: true },
+                            { country: 'Direkt in China', flag: '🇨🇳', correct: false },
+                            { country: 'In Taiwan', flag: '🇹🇼', correct: false },
+                            { country: 'Am Flughafen', flag: '✈️', correct: false }
                         ],
-                        correctAnswer: 'Elektronikgeschäft CH',
-                        fact: 'Nach einer Reise von ca. 20.000 km und Teilen aus über 10 verschiedenen Ländern liegt dein Smartphone endlich im Schweizer Laden!',
-                        hint: 'Der letzte Stopp der Reise in deinem Heimatland.'
-                    }
-                ],
-                totalDistance: '~20.000 km',
-                funFact: 'Ein Smartphone enthält mehr Rechenleistung als die Computer, die Apollo 11 zum Mond gebracht haben!',
-                journey: [
-                    { step: 1, location: 'Kongo', icon: '🇨🇩', description: 'Rohstoffabbau' },
-                    { step: 2, location: 'Taiwan', icon: '🇹🇼', description: 'Chip-Produktion' },
-                    { step: 3, location: 'Südkorea', icon: '🇰🇷', description: 'Display-Herstellung' },
-                    { step: 4, location: 'China', icon: '🇨🇳', description: 'Zusammenbau' },
-                    { step: 5, location: 'Flugzeug', icon: '✈️', description: 'Luftfracht' },
-                    { step: 6, location: 'Schweiz', icon: '🇨🇭', description: 'Verkauf' }
-                ]
-            },
-            coffee: {
-                name: 'Kaffee',
-                icon: '☕',
-                color: '#D97706',
-                gradient: 'from-amber-600 to-amber-700',
-                totalSteps: 5,
-                questions: [
-                    {
-                        step: 1,
-                        stepTitle: '🌱 Schritt 1: Anbau',
-                        intro: 'Kaffee wächst an Sträuchern in tropischen Regionen. Die Kaffeepflanze braucht viel Sonne, Regen und die richtige Höhenlage.',
-                        question: 'Welches Land ist der größte Kaffeeproduzent der Welt?',
-                        options: [
-                            { country: 'Brasilien', flag: '🇧🇷', correct: true },
-                            { country: 'Schweiz', flag: '🇨🇭', correct: false },
-                            { country: 'Russland', flag: '🇷🇺', correct: false },
-                            { country: 'Kanada', flag: '🇨🇦', correct: false }
-                        ],
-                        correctAnswer: 'Brasilien',
-                        fact: 'Brasilien produziert etwa ein Drittel des weltweiten Kaffees! Die Kaffeebohnen wachsen an Sträuchern in tropischen Regionen.',
-                        hint: 'Das größte Land in Südamerika.'
-                    },
-                    {
-                        step: 2,
-                        stepTitle: '🌾 Schritt 2: Ernte',
-                        intro: 'Wenn die Kaffeekirschen reif sind, werden sie geerntet. In den Kirschen stecken die wertvollen Kaffeebohnen.',
-                        question: 'Wo wird der hochwertigste Arabica-Kaffee traditionell geerntet?',
-                        options: [
-                            { country: 'Äthiopien', flag: '🇪🇹', correct: true },
-                            { country: 'Schweden', flag: '🇸🇪', correct: false },
-                            { country: 'Japan', flag: '🇯🇵', correct: false },
-                            { country: 'Frankreich', flag: '🇫🇷', correct: false }
-                        ],
-                        correctAnswer: 'Äthiopien',
-                        fact: 'Äthiopien ist die Geburtsstätte des Kaffees! Hier wächst Kaffee noch wild im Hochland. Die Ernte erfolgt oft von Hand.',
-                        hint: 'Ein ostafrikanisches Hochland – die Heimat des Kaffees.'
-                    },
-                    {
-                        step: 3,
-                        stepTitle: '🚢 Schritt 3: Export',
-                        intro: 'Die getrockneten, grünen Kaffeebohnen werden in große Säcke verpackt und müssen nun nach Europa transportiert werden.',
-                        question: 'Wie reisen die grünen Kaffeebohnen nach Europa?',
-                        options: [
-                            { country: 'Containerschiff', flag: '🚢', correct: true },
-                            { country: 'Flugzeug', flag: '✈️', correct: false },
-                            { country: 'U-Boot', flag: '🤿', correct: false },
-                            { country: 'Drohne', flag: '🚁', correct: false }
-                        ],
-                        correctAnswer: 'Containerschiff',
-                        fact: 'Die grünen Kaffeebohnen reisen in großen Säcken per Schiff nach Europa. Die Reise kann 4-8 Wochen dauern!',
-                        hint: 'Der klassische Weg für Rohstoffe über den Ozean.'
-                    },
-                    {
-                        step: 4,
-                        stepTitle: '🔥 Schritt 4: Röstung',
-                        intro: 'Die grünen Bohnen haben noch kein Kaffeearoma. Erst beim Rösten entwickelt sich der typische Duft und Geschmack.',
-                        question: 'In welchem Land wird der Kaffee für Europa oft geröstet?',
-                        options: [
-                            { country: 'Deutschland', flag: '🇩🇪', correct: true },
-                            { country: 'Thailand', flag: '🇹🇭', correct: false },
-                            { country: 'Chile', flag: '🇨🇱', correct: false },
-                            { country: 'Indien', flag: '🇮🇳', correct: false }
-                        ],
-                        correctAnswer: 'Deutschland',
-                        fact: 'Deutschland ist Europas größter Kaffeeröster! Beim Rösten entwickelt sich erst das typische Kaffeearoma und die braune Farbe.',
-                        hint: 'Europas größte Wirtschaft, bekannt für Qualität und Präzision.'
-                    },
-                    {
-                        step: 5,
-                        stepTitle: '☕ Schritt 5: In deiner Tasse',
-                        intro: 'Der geröstete Kaffee wird gemahlen und ist bereit, als leckeres Getränk genossen zu werden.',
-                        question: 'Wo genießt du deinen Kaffee?',
-                        options: [
-                            { country: 'Zuhause in der Schweiz', flag: '🇨🇭', correct: true },
-                            { country: 'In Brasilien', flag: '🇧🇷', correct: false },
-                            { country: 'In Äthiopien', flag: '🇪🇹', correct: false },
-                            { country: 'Auf dem Schiff', flag: '🚢', correct: false }
-                        ],
-                        correctAnswer: 'Zuhause in der Schweiz',
-                        fact: 'Nach seiner langen Reise kannst du endlich deinen Kaffee genießen! Für eine Tasse werden etwa 140 Liter Wasser benötigt (Anbau inklusive).',
-                        hint: 'Da wo du jetzt sitzt!'
+                        correctAnswer: 'Schweizer Elektronikladen',
+                        fact: 'Dein Smartphone hat eine Reise von über 10.000 km hinter sich und wurde in mindestens 5 verschiedenen Ländern verarbeitet!',
+                        hint: 'Am Ende der Reise – in deinem Heimatland!'
                     }
                 ],
                 totalDistance: '~10.000 km',
-                funFact: 'Kaffee ist nach Erdöl das zweitwertvollste Handelsgut der Welt!',
+                funFact: 'Ein Smartphone enthält mehr Rechenleistung als alle Computer, die die Apollo 11 zum Mond gebracht haben!',
                 journey: [
-                    { step: 1, location: 'Brasilien', icon: '🇧🇷', description: 'Anbau' },
-                    { step: 2, location: 'Äthiopien', icon: '🇪🇹', description: 'Ernte' },
-                    { step: 3, location: 'Ozean', icon: '🚢', description: 'Export' },
-                    { step: 4, location: 'Deutschland', icon: '🇩🇪', description: 'Röstung' },
-                    { step: 5, location: 'Schweiz', icon: '🇨🇭', description: 'Genuss' }
+                    { step: 1, location: 'Kongo', flag: '🇨🇩', description: 'Rohstoffabbau' },
+                    { step: 2, location: 'Taiwan', flag: '🇹🇼', description: 'Chip-Produktion' },
+                    { step: 3, location: 'Südkorea', flag: '🇰🇷', description: 'Display' },
+                    { step: 4, location: 'China', flag: '🇨🇳', description: 'Zusammenbau' },
+                    { step: 5, location: 'Luft', flag: '✈️', description: 'Transport' },
+                    { step: 6, location: 'Schweiz', flag: '🇨🇭', description: 'Verkauf' }
                 ]
             },
-            sneakers: {
-                name: 'Sneakers',
+            sneaker: {
+                name: 'Sneaker',
                 icon: '👟',
                 color: '#EF4444',
                 gradient: 'from-red-500 to-red-600',
@@ -746,104 +702,322 @@
                 questions: [
                     {
                         step: 1,
-                        stepTitle: '🌳 Schritt 1: Naturkautschuk',
-                        intro: 'Für flexible Schuhsohlen wird Naturkautschuk benötigt, der vom Gummibaum gewonnen wird.',
-                        question: 'Wo wird der Naturkautschuk für die Schuhsohlen gewonnen?',
+                        stepTitle: '🧪 Schritt 1: Gummi & Kunststoffe',
+                        intro: 'Moderne Sneaker bestehen hauptsächlich aus synthetischen Materialien und Gummi.',
+                        question: 'Wo werden die Kunststoffe und Gummisohlen für Sneaker hergestellt?',
                         options: [
                             { country: 'Malaysia', flag: '🇲🇾', correct: true },
-                            { country: 'Österreich', flag: '🇦🇹', correct: false },
-                            { country: 'Polen', flag: '🇵🇱', correct: false },
-                            { country: 'Irland', flag: '🇮🇪', correct: false }
+                            { country: 'Schweiz', flag: '🇨🇭', correct: false },
+                            { country: 'Frankreich', flag: '🇫🇷', correct: false },
+                            { country: 'Russland', flag: '🇷🇺', correct: false }
                         ],
                         correctAnswer: 'Malaysia',
-                        fact: 'Malaysia ist einer der größten Kautschuk-Produzenten! Kautschuk wird vom Gummibaum gewonnen und macht die Sohlen flexibel.',
-                        hint: 'Ein südostasiatisches Land mit tropischem Klima – ideal für Gummibäume.'
+                        fact: 'Malaysia ist einer der größten Gummiproduzenten der Welt. Ein Paar Sneaker enthält über 65 verschiedene Teile!',
+                        hint: 'Ein südostasiatisches Land, bekannt für Gummi- und Kunststoffproduktion.'
                     },
                     {
                         step: 2,
-                        stepTitle: '🏭 Schritt 2: Material-Verarbeitung',
-                        intro: 'Neben Kautschuk braucht ein Sneaker viele synthetische Materialien wie Kunststoffe, Schaumstoffe und Textilien.',
-                        question: 'Wo werden die synthetischen Materialien für Sneakers hergestellt?',
+                        stepTitle: '🧵 Schritt 2: Obermaterial',
+                        intro: 'Das Obermaterial (Upper) ist der sichtbare Teil des Schuhs und besteht aus verschiedenen Textilien und Kunstleder.',
+                        question: 'Wo wird das Obermaterial für Sneaker produziert?',
                         options: [
                             { country: 'China', flag: '🇨🇳', correct: true },
-                            { country: 'Belgien', flag: '🇧🇪', correct: false },
-                            { country: 'Neuseeland', flag: '🇳🇿', correct: false },
-                            { country: 'Kenia', flag: '🇰🇪', correct: false }
+                            { country: 'Schweden', flag: '🇸🇪', correct: false },
+                            { country: 'Kanada', flag: '🇨🇦', correct: false },
+                            { country: 'Belgien', flag: '🇧🇪', correct: false }
                         ],
                         correctAnswer: 'China',
-                        fact: 'China produziert die meisten synthetischen Materialien. Gummi wird vulkanisiert, Stoffe gewebt und Kunststoffe geformt.',
-                        hint: 'Die weltgrößte Produktionsnation für Materialien aller Art.'
+                        fact: 'China produziert über 60% aller Schuhmaterialien weltweit. Moderne Sneaker verwenden oft recycelte Plastikflaschen!',
+                        hint: 'Die weltgrößte Textil- und Schuhindustrie.'
                     },
                     {
                         step: 3,
-                        stepTitle: '👟 Schritt 3: Schuh-Produktion',
-                        intro: 'Aus über 65 verschiedenen Einzelteilen wird nun ein fertiger Sneaker zusammengesetzt. Das erfordert viele Arbeitsschritte.',
-                        question: 'In welchem Land werden die meisten Sportschuhe zusammengebaut?',
+                        stepTitle: '⚙️ Schritt 3: Dämpfung & Technologie',
+                        intro: 'Moderne Sneaker haben High-Tech-Dämpfungssysteme für Komfort und Performance.',
+                        question: 'Wo werden die speziellen Dämpfungselemente entwickelt und hergestellt?',
                         options: [
                             { country: 'Vietnam', flag: '🇻🇳', correct: true },
+                            { country: 'Österreich', flag: '🇦🇹', correct: false },
                             { country: 'Dänemark', flag: '🇩🇰', correct: false },
-                            { country: 'Marokko', flag: '🇲🇦', correct: false },
-                            { country: 'Argentinien', flag: '🇦🇷', correct: false }
+                            { country: 'Irland', flag: '🇮🇪', correct: false }
                         ],
                         correctAnswer: 'Vietnam',
-                        fact: 'Vietnam produziert fast ein Drittel aller Schuhe weltweit! Ein Paar Sneakers durchläuft über 360 verschiedene Arbeitsschritte.',
-                        hint: 'Ein südostasiatisches Land, Nachbar von China, wichtiger Produktionsstandort.'
+                        fact: 'Vietnam hat sich auf High-Tech-Schuhkomponenten spezialisiert. Die Dämpfung in Sneakern kann bis zu 80% der Aufprallenergie absorbieren!',
+                        hint: 'Ein südostasiatisches Land, das sich auf Schuh-Technologie spezialisiert hat.'
                     },
                     {
                         step: 4,
-                        stepTitle: '✓ Schritt 4: Qualitätskontrolle',
-                        intro: 'Bevor die Schuhe verschickt werden, muss jedes Paar geprüft werden, ob es den Qualitätsstandards entspricht.',
-                        question: 'Wo werden die fertigen Schuhe geprüft und verpackt?',
+                        stepTitle: '✂️ Schritt 4: Schneiden & Vorbereitung',
+                        intro: 'Alle Materialien werden präzise zugeschnitten und für die Montage vorbereitet.',
+                        question: 'Wo werden die Materialien zugeschnitten und vorbereitet?',
+                        options: [
+                            { country: 'Indonesien', flag: '🇮🇩', correct: true },
+                            { country: 'Niederlande', flag: '🇳🇱', correct: false },
+                            { country: 'Griechenland', flag: '🇬🇷', correct: false },
+                            { country: 'Tschechien', flag: '🇨🇿', correct: false }
+                        ],
+                        correctAnswer: 'Indonesien',
+                        fact: 'Indonesien ist einer der größten Schuhproduzenten. Jeder Sneaker besteht aus durchschnittlich 65 Einzelteilen, die präzise geschnitten werden müssen!',
+                        hint: 'Ein Inselstaat in Südostasien mit großer Schuhindustrie.'
+                    },
+                    {
+                        step: 5,
+                        stepTitle: '🏭 Schritt 5: Zusammenbau',
+                        intro: 'Nun werden alle Teile des Sneakers zusammengefügt - ein komplexer Prozess mit vielen Handarbeitsschritten.',
+                        question: 'Wo werden die Sneaker zusammengebaut?',
                         options: [
                             { country: 'Vietnam', flag: '🇻🇳', correct: true },
                             { country: 'Italien', flag: '🇮🇹', correct: false },
                             { country: 'USA', flag: '🇺🇸', correct: false },
-                            { country: 'Schweiz', flag: '🇨🇭', correct: false }
+                            { country: 'Ungarn', flag: '🇭🇺', correct: false }
                         ],
                         correctAnswer: 'Vietnam',
-                        fact: 'Jeder Schuh wird geprüft, ob er den Standards entspricht. Dann werden sie verpackt und für den Export vorbereitet.',
-                        hint: 'Im gleichen Land wie die Produktion – effizienter Transport.'
-                    },
-                    {
-                        step: 5,
-                        stepTitle: '🚢 Schritt 5: Seefracht',
-                        intro: 'Die verpackten Sneakers werden in Container geladen und auf die lange Reise nach Europa geschickt.',
-                        question: 'Wie gelangen deine Sneakers nach Europa?',
-                        options: [
-                            { country: 'Containerschiff', flag: '🚢', correct: true },
-                            { country: 'Flugzeug', flag: '✈️', correct: false },
-                            { country: 'Rakete', flag: '🚀', correct: false },
-                            { country: 'Zu Fuß', flag: '👣', correct: false }
-                        ],
-                        correctAnswer: 'Containerschiff',
-                        fact: 'Die Sneakers reisen etwa 6-8 Wochen in Containern über den Pazifik und durch den Suezkanal nach Europa.',
-                        hint: 'Die günstigste Methode für schwere Güter über lange Distanzen.'
+                        fact: 'Vietnam produziert über 1 Milliarde Paar Schuhe pro Jahr! Ein Arbeiter benötigt etwa 3 Stunden, um einen High-End-Sneaker zusammenzubauen.',
+                        hint: 'Einer der größten Schuh-Exporteure der Welt in Südostasien.'
                     },
                     {
                         step: 6,
-                        stepTitle: '🏪 Schritt 6: Im Sportgeschäft',
-                        intro: 'Nach ihrer langen Reise sind die Sneakers endlich in Europa angekommen und werden an die Geschäfte verteilt.',
-                        question: 'Wo stehen deine Sneakers schließlich im Regal?',
+                        stepTitle: '🚢 Schritt 6: Versand & Verkauf',
+                        intro: 'Die fertigen Sneaker werden verpackt und in die Schweiz verschifft.',
+                        question: 'Wie kommen deine Sneaker in die Schweiz?',
                         options: [
-                            { country: 'Sportgeschäft Schweiz', flag: '🇨🇭', correct: true },
-                            { country: 'Fabrik Vietnam', flag: '🇻🇳', correct: false },
-                            { country: 'Hafen Hamburg', flag: '⚓', correct: false },
-                            { country: 'Online-Lager China', flag: '📦', correct: false }
+                            { country: 'Containerschiff', flag: '🚢', correct: true },
+                            { country: 'Flugzeug', flag: '✈️', correct: false },
+                            { country: 'Zug durch Asien', flag: '🚂', correct: false },
+                            { country: 'LKW', flag: '🚛', correct: false }
                         ],
-                        correctAnswer: 'Sportgeschäft Schweiz',
-                        fact: 'Nach 18.000 km und über 50 verschiedenen Händen stehen deine Sneakers endlich im Schweizer Sportgeschäft!',
-                        hint: 'Am Ende der langen Reise – in deiner Heimat!'
+                        correctAnswer: 'Containerschiff',
+                        fact: 'Deine Sneaker reisen etwa 12.000 km auf dem Seeweg! Ein Container kann bis zu 10.000 Paar Schuhe transportieren.',
+                        hint: 'Der günstigste Transportweg für große Mengen über weite Distanzen.'
+                    }
+                ],
+                totalDistance: '~12.000 km',
+                funFact: 'Ein Paar Sneaker hat mehr Länder besucht als die meisten Menschen! Und die Produktion verursacht etwa 14 kg CO2.',
+                journey: [
+                    { step: 1, location: 'Malaysia', flag: '🇲🇾', description: 'Gummi & Kunststoff' },
+                    { step: 2, location: 'China', flag: '🇨🇳', description: 'Obermaterial' },
+                    { step: 3, location: 'Vietnam', flag: '🇻🇳', description: 'Dämpfung' },
+                    { step: 4, location: 'Indonesien', flag: '🇮🇩', description: 'Zuschnitt' },
+                    { step: 5, location: 'Vietnam', flag: '🇻🇳', description: 'Zusammenbau' },
+                    { step: 6, location: 'Schweiz', flag: '🇨🇭', description: 'Verkauf' }
+                ]
+            },
+            escooter: {
+                name: 'E-Scooter',
+                icon: '🛴',
+                color: '#F59E0B',
+                gradient: 'from-amber-500 to-amber-600',
+                totalSteps: 6,
+                questions: [
+                    {
+                        step: 1,
+                        stepTitle: '⚡ Schritt 1: Lithium-Abbau',
+                        intro: 'Für die Batterie eines E-Scooters wird Lithium benötigt, ein wertvolles Metall für Akkus.',
+                        question: 'Wo wird das Lithium für die E-Scooter-Batterie hauptsächlich abgebaut?',
+                        options: [
+                            { country: 'Chile', flag: '🇨🇱', correct: true },
+                            { country: 'Schweiz', flag: '🇨🇭', correct: false },
+                            { country: 'Nigeria', flag: '🇳🇬', correct: false },
+                            { country: 'Thailand', flag: '🇹🇭', correct: false }
+                        ],
+                        correctAnswer: 'Chile',
+                        fact: 'Chile besitzt die größten Lithium-Reserven der Welt! Die riesigen Salzseen in der Atacama-Wüste liefern über 25% des weltweiten Lithiums.',
+                        hint: 'Ein südamerikanisches Land mit großen Salzwüsten und Lithium-Vorkommen.'
+                    },
+                    {
+                        step: 2,
+                        stepTitle: '🔋 Schritt 2: Batterie-Produktion',
+                        intro: 'Aus dem Lithium werden nun leistungsstarke Lithium-Ionen-Akkus hergestellt.',
+                        question: 'Wo werden die meisten E-Scooter-Batterien produziert?',
+                        options: [
+                            { country: 'China', flag: '🇨🇳', correct: true },
+                            { country: 'Schweden', flag: '🇸🇪', correct: false },
+                            { country: 'Indien', flag: '🇮🇳', correct: false },
+                            { country: 'Brasilien', flag: '🇧🇷', correct: false }
+                        ],
+                        correctAnswer: 'China',
+                        fact: 'China produziert über 70% aller Lithium-Ionen-Batterien weltweit! Eine E-Scooter-Batterie kann bis zu 1000 Mal aufgeladen werden.',
+                        hint: 'Das Land, das die meisten Elektrofahrzeuge und Batterien produziert.'
+                    },
+                    {
+                        step: 3,
+                        stepTitle: '⚙️ Schritt 3: Motor & Elektronik',
+                        intro: 'Der Elektromotor und die Steuerungselektronik sind das Herzstück des E-Scooters.',
+                        question: 'Wo werden die Elektromotoren für E-Scooter hergestellt?',
+                        options: [
+                            { country: 'Japan', flag: '🇯🇵', correct: true },
+                            { country: 'Marokko', flag: '🇲🇦', correct: false },
+                            { country: 'Argentinien', flag: '🇦🇷', correct: false },
+                            { country: 'Norwegen', flag: '🇳🇴', correct: false }
+                        ],
+                        correctAnswer: 'Japan',
+                        fact: 'Japan ist führend in der Elektromotor-Technologie! Die Motoren sind so effizient, dass über 90% der Energie in Bewegung umgewandelt wird.',
+                        hint: 'Ein ostasiatisches Land, bekannt für Hightech-Elektronik und Präzisionstechnik.'
+                    },
+                    {
+                        step: 4,
+                        stepTitle: '🔩 Schritt 4: Rahmen & Teile',
+                        intro: 'Der Aluminiumrahmen und alle mechanischen Teile wie Bremsen, Räder und Lenkung werden gefertigt.',
+                        question: 'Wo werden Rahmen und mechanische Teile produziert?',
+                        options: [
+                            { country: 'China', flag: '🇨🇳', correct: true },
+                            { country: 'Australien', flag: '🇦🇺', correct: false },
+                            { country: 'Mexiko', flag: '🇲🇽', correct: false },
+                            { country: 'Finnland', flag: '🇫🇮', correct: false }
+                        ],
+                        correctAnswer: 'China',
+                        fact: 'China ist Weltmarktführer in der Aluminium-Verarbeitung! Ein E-Scooter besteht aus über 200 Einzelteilen.',
+                        hint: 'Das Land mit der größten Aluminium- und Metallverarbeitungsindustrie.'
+                    },
+                    {
+                        step: 5,
+                        stepTitle: '🏭 Schritt 5: Zusammenbau',
+                        intro: 'Alle Komponenten - Batterie, Motor, Rahmen und Elektronik - werden nun zum fertigen E-Scooter montiert.',
+                        question: 'Wo werden E-Scooter zusammengebaut?',
+                        options: [
+                            { country: 'China', flag: '🇨🇳', correct: true },
+                            { country: 'Deutschland', flag: '🇩🇪', correct: false },
+                            { country: 'USA', flag: '🇺🇸', correct: false },
+                            { country: 'Südkorea', flag: '🇰🇷', correct: false }
+                        ],
+                        correctAnswer: 'China',
+                        fact: 'China produziert über 90% aller E-Scooter weltweit! In den Fabriken werden täglich zehntausende E-Scooter montiert.',
+                        hint: 'Das gleiche Land, wo die meisten Komponenten hergestellt werden - effizient für die Logistik.'
+                    },
+                    {
+                        step: 6,
+                        stepTitle: '🚢 Schritt 6: Transport & Verkauf',
+                        intro: 'Die fertigen E-Scooter werden verpackt und in die ganze Welt verschickt.',
+                        question: 'Wie kommt dein E-Scooter in die Schweiz?',
+                        options: [
+                            { country: 'Containerschiff', flag: '🚢', correct: true },
+                            { country: 'Flugzeug', flag: '✈️', correct: false },
+                            { country: 'Zug', flag: '🚂', correct: false },
+                            { country: 'E-Scooter fahren', flag: '🛴', correct: false }
+                        ],
+                        correctAnswer: 'Containerschiff',
+                        fact: 'Dein E-Scooter reist etwa 18.000 km auf dem Seeweg! Die Reise dauert 5-6 Wochen bis nach Europa.',
+                        hint: 'Der umweltfreundlichste Weg für schwere Güter über lange Distanzen.'
                     }
                 ],
                 totalDistance: '~18.000 km',
-                funFact: 'Die globale Schuhindustrie produziert jährlich über 24 Milliarden Paar Schuhe!',
+                funFact: 'Die Batterie eines E-Scooters ist das teuerste Teil - sie kostet etwa 30-40% des gesamten Preises!',
                 journey: [
-                    { step: 1, location: 'Malaysia', icon: '🇲🇾', description: 'Kautschuk' },
-                    { step: 2, location: 'China', icon: '🇨🇳', description: 'Material-Verarbeitung' },
-                    { step: 3, location: 'Vietnam', icon: '🇻🇳', description: 'Produktion' },
-                    { step: 4, location: 'Vietnam', icon: '🇻🇳', description: 'Qualitätskontrolle' },
-                    { step: 5, location: 'Ozean', icon: '🚢', description: 'Seefracht' },
-                    { step: 6, location: 'Schweiz', icon: '🇨🇭', description: 'Verkauf' }
+                    { step: 1, location: 'Chile', flag: '🇨🇱', description: 'Lithium-Abbau' },
+                    { step: 2, location: 'China', flag: '🇨🇳', description: 'Batterie-Produktion' },
+                    { step: 3, location: 'Japan', flag: '🇯🇵', description: 'Motor & Elektronik' },
+                    { step: 4, location: 'China', flag: '🇨🇳', description: 'Rahmen & Teile' },
+                    { step: 5, location: 'China', flag: '🇨🇳', description: 'Zusammenbau' },
+                    { step: 6, location: 'Schweiz', flag: '🇨🇭', description: 'Verkauf' }
+                ]
+            },
+            chocolate: {
+                name: 'Schokolade',
+                icon: '🍫',
+                color: '#92400E',
+                gradient: 'from-amber-800 to-amber-900',
+                totalSteps: 6,
+                questions: [
+                    {
+                        step: 1,
+                        stepTitle: '🌴 Schritt 1: Kakao-Anbau',
+                        intro: 'Schokolade beginnt mit Kakaobohnen, die auf Kakaobäumen in tropischen Regionen wachsen.',
+                        question: 'Wo wird der Kakao für deine Schokolade hauptsächlich angebaut?',
+                        options: [
+                            { country: 'Elfenbeinküste', flag: '🇨🇮', correct: true },
+                            { country: 'Schweiz', flag: '🇨🇭', correct: false },
+                            { country: 'Island', flag: '🇮🇸', correct: false },
+                            { country: 'Polen', flag: '🇵🇱', correct: false }
+                        ],
+                        correctAnswer: 'Elfenbeinküste',
+                        fact: 'Die Elfenbeinküste produziert über 40% des weltweiten Kakaos! Ein Kakaobaum braucht 3-5 Jahre, bis er die ersten Früchte trägt.',
+                        hint: 'Ein westafrikanisches Land am Atlantik, weltgrößter Kakao-Produzent.'
+                    },
+                    {
+                        step: 2,
+                        stepTitle: '🏭 Schritt 2: Kakao-Verarbeitung',
+                        intro: 'Die Kakaobohnen werden fermentiert, getrocknet und dann zu Kakaomasse und Kakaobutter verarbeitet.',
+                        question: 'Wo wird der Kakao zu Kakaomasse verarbeitet?',
+                        options: [
+                            { country: 'Niederlande', flag: '🇳🇱', correct: true },
+                            { country: 'Kanada', flag: '🇨🇦', correct: false },
+                            { country: 'Russland', flag: '🇷🇺', correct: false },
+                            { country: 'Australien', flag: '🇦🇺', correct: false }
+                        ],
+                        correctAnswer: 'Niederlande',
+                        fact: 'Die Niederlande sind der weltgrößte Kakao-Verarbeiter! In Amsterdam befindet sich der größte Kakaohafen Europas.',
+                        hint: 'Ein europäisches Land mit großem Hafen, bekannt für internationalen Handel.'
+                    },
+                    {
+                        step: 3,
+                        stepTitle: '🌾 Schritt 3: Zucker',
+                        intro: 'Für Schokolade braucht es Zucker, der aus Zuckerrohr oder Zuckerrüben gewonnen wird.',
+                        question: 'Woher kommt der Zucker für deine Schokolade?',
+                        options: [
+                            { country: 'Brasilien', flag: '🇧🇷', correct: true },
+                            { country: 'Norwegen', flag: '🇳🇴', correct: false },
+                            { country: 'Südafrika', flag: '🇿🇦', correct: false },
+                            { country: 'Japan', flag: '🇯🇵', correct: false }
+                        ],
+                        correctAnswer: 'Brasilien',
+                        fact: 'Brasilien ist der weltgrößte Zuckerproduzent! Für 1 kg Schokolade werden etwa 500g Zucker benötigt.',
+                        hint: 'Das größte Land Südamerikas, bekannt für Zuckerrohr-Plantagen.'
+                    },
+                    {
+                        step: 4,
+                        stepTitle: '🥛 Schritt 4: Milchpulver',
+                        intro: 'Für Milchschokolade wird Milchpulver benötigt, das aus frischer Milch hergestellt wird.',
+                        question: 'Woher kommt das Milchpulver für Schweizer Milchschokolade?',
+                        options: [
+                            { country: 'Neuseeland', flag: '🇳🇿', correct: true },
+                            { country: 'Ägypten', flag: '🇪🇬', correct: false },
+                            { country: 'Schweden', flag: '🇸🇪', correct: false },
+                            { country: 'Türkei', flag: '🇹🇷', correct: false }
+                        ],
+                        correctAnswer: 'Neuseeland',
+                        fact: 'Neuseeland ist weltweit führend in der Milchpulver-Produktion! Das Land hat mehr Kühe als Menschen.',
+                        hint: 'Ein Inselstaat im Pazifik, bekannt für Milchwirtschaft und grüne Weiden.'
+                    },
+                    {
+                        step: 5,
+                        stepTitle: '🏔️ Schritt 5: Schokoladen-Herstellung',
+                        intro: 'Nun werden alle Zutaten gemischt, conchiert und zu feiner Schokolade verarbeitet.',
+                        question: 'Wo wird aus allen Zutaten die fertige Schokolade hergestellt?',
+                        options: [
+                            { country: 'Schweiz', flag: '🇨🇭', correct: true },
+                            { country: 'China', flag: '🇨🇳', correct: false },
+                            { country: 'Indien', flag: '🇮🇳', correct: false },
+                            { country: 'Peru', flag: '🇵🇪', correct: false }
+                        ],
+                        correctAnswer: 'Schweiz',
+                        fact: 'Die Schweiz ist weltberühmt für ihre Schokolade! Der Conchier-Prozess wurde hier erfunden und dauert bis zu 72 Stunden.',
+                        hint: 'Das Land, wo du lebst - weltberühmt für Schokolade!'
+                    },
+                    {
+                        step: 6,
+                        stepTitle: '🏪 Schritt 6: Verpackung & Verkauf',
+                        intro: 'Die fertige Schokolade wird verpackt und ist bereit für den Verkauf.',
+                        question: 'Wo kaufst du deine Schweizer Schokolade?',
+                        options: [
+                            { country: 'Laden in der Schweiz', flag: '🇨🇭', correct: true },
+                            { country: 'Elfenbeinküste', flag: '🇨🇮', correct: false },
+                            { country: 'Niederlande', flag: '🇳🇱', correct: false },
+                            { country: 'Brasilien', flag: '🇧🇷', correct: false }
+                        ],
+                        correctAnswer: 'Laden in der Schweiz',
+                        fact: 'Schweizer essen durchschnittlich 11 kg Schokolade pro Jahr - Weltrekord! Deine Schokolade hat Zutaten von 4 Kontinenten.',
+                        hint: 'Am Ende der Reise - direkt dort, wo die Schokolade produziert wurde!'
+                    }
+                ],
+                totalDistance: '~25.000 km',
+                funFact: 'Obwohl die Schokolade in der Schweiz hergestellt wird, reisen ihre Zutaten über 25.000 km - mehr als die halbe Welt!',
+                journey: [
+                    { step: 1, location: 'Elfenbeinküste', flag: '🇨🇮', description: 'Kakao-Anbau' },
+                    { step: 2, location: 'Niederlande', flag: '🇳🇱', description: 'Kakao-Verarbeitung' },
+                    { step: 3, location: 'Brasilien', flag: '🇧🇷', description: 'Zucker' },
+                    { step: 4, location: 'Neuseeland', flag: '🇳🇿', description: 'Milchpulver' },
+                    { step: 5, location: 'Schweiz', flag: '🇨🇭', description: 'Schokoladen-Produktion' },
+                    { step: 6, location: 'Schweiz', flag: '🇨🇭', description: 'Verkauf' }
                 ]
             }
         };
@@ -998,17 +1172,17 @@
                         `}
 
                         <div class="fact-box">
-                            <p style="font-weight: bold; margin-bottom: 0.75rem; color: #1e3a8a;">💡 Wusstest du?</p>
-                            <p>${question.fact}</p>
+                            <p><strong>💡 Wusstest du?</strong></p>
+                            <p style="margin-top: 0.5rem;">${question.fact}</p>
                         </div>
 
                         ${gameState.currentStep < product.questions.length - 1 ? `
-                            <button onclick="nextQuestion()" class="action-button" style="width: 100%; margin-top: 1.5rem;">
-                                Weiter zum nächsten Schritt →
+                            <button onclick="nextQuestion()" class="action-button" style="width: 100%; margin-top: 1rem;">
+                                Nächste Frage →
                             </button>
                         ` : `
-                            <button onclick="finishProduct()" class="action-button" style="width: 100%; margin-top: 1.5rem;">
-                                Reise abschließen 🎊
+                            <button onclick="finishProduct()" class="action-button" style="width: 100%; margin-top: 1rem;">
+                                Reise anzeigen 🗺️
                             </button>
                         `}
                     </div>
@@ -1021,29 +1195,31 @@
             
             return `
                 <header>
-                    <h1>🗺️ Die Reise deines ${product.name}</h1>
+                    <h1>🗺️ Die Reise deines ${product.icon} ${product.name}</h1>
+                    <a href="#" onclick="backToMenu(); return false;" class="back-link">← Zurück zum Menü</a>
                 </header>
 
                 <main class="slide-in">
                     <div class="card">
-                        <h2 style="text-align: center; margin-bottom: 2rem;">Die Weltreise im Überblick</h2>
-                        
-                        <div style="position: relative;">
-                            ${product.journey.map((station, idx) => `
-                                <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 15px; ${idx === product.journey.length - 1 ? '' : 'border-left: 3px solid #10b981;'}">
-                                    <div style="font-size: 3rem; flex-shrink: 0;">
-                                        ${station.icon}
-                                    </div>
-                                    <div style="flex: 1;">
-                                        <div style="font-weight: bold; color: #1e3a8a; font-size: 1.2rem; margin-bottom: 0.25rem;">
-                                            Schritt ${station.step}: ${station.location}
+                        <h2>Die komplette Reise:</h2>
+                        <p style="color: #666; margin-bottom: 1.5rem;">
+                            Dein ${product.name} hat eine erstaunliche Weltreise hinter sich. Hier siehst du alle Stationen:
+                        </p>
+
+                        <div class="journey-steps">
+                            ${product.journey.map((stop, index) => `
+                                <div class="journey-step">
+                                    <div class="journey-icon">${stop.flag}</div>
+                                    <div class="journey-content">
+                                        <div class="journey-location">
+                                            Schritt ${stop.step}: ${stop.location}
                                         </div>
-                                        <div style="color: #666;">
-                                            ${station.description}
+                                        <div class="journey-description">
+                                            ${stop.description}
                                         </div>
                                     </div>
-                                    ${idx < product.journey.length - 1 ? `
-                                        <div style="position: absolute; left: 2.8rem; top: ${idx * 120 + 80}px; width: 3px; height: 40px; background: #10b981;"></div>
+                                    ${index < product.journey.length - 1 ? `
+                                        <div style="font-size: 1.5rem; color: #10b981;">→</div>
                                     ` : ''}
                                 </div>
                             `).join('')}
@@ -1234,6 +1410,14 @@
                 app.innerHTML = renderSummary();
             } else if (gameState.gameMode === 'final') {
                 app.innerHTML = renderFinal();
+            }
+            
+            // Nach jedem Render: Twemoji auf alle Emojis anwenden
+            if (typeof twemoji !== 'undefined') {
+                twemoji.parse(document.body, {
+                    folder: 'svg',
+                    ext: '.svg'
+                });
             }
         }
 
