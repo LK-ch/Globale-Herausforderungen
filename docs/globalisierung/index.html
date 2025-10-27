@@ -290,7 +290,7 @@
             <div class="progress-track">
                 <div class="progress-fill" id="progressBar"></div>
             </div>
-            <div class="progress-text" id="progressText">0 von 6 Schritten abgeschlossen</div>
+            <div class="progress-text" id="progressText">0 von 5 Schritten abgeschlossen</div>
         </div>
 
         <div class="learning-path">
@@ -331,17 +331,6 @@
             <div class="step-card" data-step="4">
                 <div class="step-number">4</div>
                 <div class="step-content">
-                    <h3 class="step-title"><span class="step-icon">⚖️</span>Gewinner und Verlierer</h3>
-                    <p class="step-description">Untersuchen Sie unterschiedliche Auswirkungen der Globalisierung auf Länder, Branchen und Menschen.</p>
-                    <a href="gewinner-verlierer.html" class="step-button">Zum Thema →</a>
-                </div>
-                <div class="step-status">✓ Abgeschlossen</div>
-            </div>
-
-            <!-- Schritt 5 -->
-            <div class="step-card" data-step="5">
-                <div class="step-number">5</div>
-                <div class="step-content">
                     <h3 class="step-title"><span class="step-icon">✈️</span>Migration</h3>
                     <p class="step-description">Migration ist ein zentraler Aspekt der Globalisierung. Verstehen Sie die Ursachen, Formen und Folgen weltweiter Wanderungsbewegungen.</p>
                     <a href="migration.html" class="step-button">Zum Thema →</a>
@@ -349,9 +338,9 @@
                 <div class="step-status">✓ Abgeschlossen</div>
             </div>
 
-            <!-- Schritt 6 -->
-            <div class="step-card" data-step="6">
-                <div class="step-number">6</div>
+            <!-- Schritt 5 -->
+            <div class="step-card" data-step="5">
+                <div class="step-number">5</div>
                 <div class="step-content">
                     <h3 class="step-title"><span class="step-icon">🎯</span>Abschluss-Quiz</h3>
                     <p class="step-description">Testen Sie Ihr Wissen! Überprüfen Sie, was Sie gelernt haben und festigen Sie Ihr Verständnis der Globalisierung.</p>
@@ -371,7 +360,7 @@
         // Fortschritt aus localStorage laden
         function loadProgress() {
             const completed = JSON.parse(localStorage.getItem('globalisierungProgress') || '[]');
-            const totalSteps = 6;
+            const totalSteps = 5;
             const completedCount = completed.length;
 
             // Fortschrittsbalken aktualisieren
