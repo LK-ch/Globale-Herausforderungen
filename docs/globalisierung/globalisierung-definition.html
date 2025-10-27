@@ -409,7 +409,7 @@
 
             <!-- Frage 2 -->
             <div class="question-card">
-                <div class="question-title">2. Welche Phasen der Globalisierung werden im Video angesprochen?</div>
+                <div class="question-title">2. Wann startet laut Video die Globalisierung?</div>
                 <div class="options" id="q2-options"></div>
                 <button class="check-button" onclick="checkAnswer(2)" id="btn-2">Antwort überprüfen</button>
                 <div id="feedback-2"></div>
@@ -417,7 +417,7 @@
 
             <!-- Frage 3 -->
             <div class="question-card">
-                <div class="question-title">3. Wann wird im Video der Beginn der Globalisierung verortet?</div>
+                <div class="question-title">3. Welche Aussagen zur 2. Phase der Globalisierung ist FALSCH?</div>
                 <div class="options" id="q3-options"></div>
                 <button class="check-button" onclick="checkAnswer(3)" id="btn-3">Antwort überprüfen</button>
                 <div id="feedback-3"></div>
@@ -425,7 +425,7 @@
 
             <!-- Frage 4 -->
             <div class="question-card">
-                <div class="question-title">4. Was ist ein Beispiel für wirtschaftliche Globalisierung?</div>
+                <div class="question-title">4. Welche Bereiche beeinflusst die 3. Welle der Globalisierung?</div>
                 <div class="options" id="q4-options"></div>
                 <button class="check-button" onclick="checkAnswer(4)" id="btn-4">Antwort überprüfen</button>
                 <div id="feedback-4"></div>
@@ -433,10 +433,26 @@
 
             <!-- Frage 5 -->
             <div class="question-card">
-                <div class="question-title">5. Welche Rolle spielen moderne Technologien für die Globalisierung?</div>
+                <div class="question-title">5. Welche Aussage zu den Vorteilen der Globalisierung ist FALSCH?</div>
                 <div class="options" id="q5-options"></div>
                 <button class="check-button" onclick="checkAnswer(5)" id="btn-5">Antwort überprüfen</button>
                 <div id="feedback-5"></div>
+            </div>
+
+            <!-- Frage 6 -->
+            <div class="question-card">
+                <div class="question-title">6. Welche Aussage zu den Nachteilen der Globalisierung ist RICHTIG?</div>
+                <div class="options" id="q6-options"></div>
+                <button class="check-button" onclick="checkAnswer(6)" id="btn-6">Antwort überprüfen</button>
+                <div id="feedback-6"></div>
+            </div>
+
+            <!-- Frage 7 -->
+            <div class="question-card">
+                <div class="question-title">7. Wer profitiert am meisten von der Globalisierung?</div>
+                <div class="options" id="q7-options"></div>
+                <button class="check-button" onclick="checkAnswer(7)" id="btn-7">Antwort überprüfen</button>
+                <div id="feedback-7"></div>
             </div>
         </div>
 
@@ -485,46 +501,64 @@
             1: {
                 question: "Was bedeutet der Begriff 'Globalisierung'?",
                 options: [
-                    { text: "Die weltweite Vernetzung von Wirtschaft, Politik, Kultur und Umwelt", correct: true },
-                    { text: "Nur der internationale Handel zwischen Ländern", correct: false },
-                    { text: "Die Gründung der Vereinten Nationen", correct: false },
-                    { text: "Die Erfindung des Internets", correct: false }
+                    { text: "Die weltweite Vernetzung von diversen Bereichen", correct: true },
+                    { text: "Der internationale Handel zwischen Ländern", correct: false },
+                    { text: "Die Gründung von Staatenbunden", correct: false },
+                    { text: "Die Vernetzung der Welt durch das Internet", correct: false }
                 ]
             },
             2: {
-                question: "Welche Phasen der Globalisierung werden im Video angesprochen?",
+                question: "Wann startet laut Video die Globalisierung?",
                 options: [
-                    { text: "Mittelalter, Entdeckung der Welt durch Kolumbus, Internet", correct: true },
-                    { text: "Industrialisierung, e", correct: false },
-                    { text: "Nur politische Beziehungen", correct: false },
-                    { text: "Ausschließlich kultureller Austausch", correct: false }
+                    { text: "Mit den ersten europäischen Königen", correct: false },
+                    { text: "Mit der Entdeckung Amerikas durch Kolumbus", correct: true },
+                    { text: "Mit der Erfindung des Internets", correct: false },
+                    { text: "Im Jahr 1800", correct: false }
                 ]
             },
             3: {
-                question: "Wann wird im Video der Beginn der Globalisierung verortet?",
+                question: "Welche Aussagen zur 2. Phase der Globalisierung ist FALSCH?",
                 options: [
-                    { text: "Um 1492 mit der Entdeckung Amerikas durch Kolumbus", correct: true },
-                    { text: "Nach dem Zweiten Weltkrieg", correct: false },
-                    { text: "Mit der Erfindung des Computers", correct: false },
-                    { text: "Im Jahr 2000", correct: false }
+                    { text: "In dieser Phase wurden internationale Unternehmen wichtig", correct: false },
+                    { text: "Der technische Fortschritt führte zu einer vermehrten länderübergreifenden Zusammenarbeit", correct: false },
+                    { text: "Es gibt vermehrt hohe Kosten für den Austausch von Waren und Kommunikation", correct: true },
+                    { text: "Die länderübergreifende Kommunikation wurde vereinfacht", correct: false }
                 ]
             },
             4: {
-                question: "Was ist ein Beispiel für wirtschaftliche Globalisierung?",
+                question: "Welche Bereiche beeinflusst die 3. Welle der Globalisierung?",
                 options: [
-                    { text: "Internationale Handelsbeziehungen und multinationale Unternehmen", correct: true },
-                    { text: "Lokale Bauernmärkte", correct: false },
-                    { text: "Nationale Feiertage", correct: false },
-                    { text: "Regionale Dialekte", correct: false }
+                    { text: "Kultur: In erster Linien werden Kulturen durchmischt", correct: false },
+                    { text: "Wirtschaft: Insbesondere der Warenaustausch wird gefördert", correct: false },
+                    { text: "Kommunikation: Vor allem Privatpersonen profitieren durch einen einfacheren Austausch", correct: false },
+                    { text: "alle genannten", correct: true }
                 ]
             },
             5: {
-                question: "Welche Rolle spielen moderne Technologien für die Globalisierung?",
+                question: "Welche Aussage zu den Vorteilen der Globalisierung ist FALSCH?",
                 options: [
-                    { text: "Sie beschleunigen die Vernetzung und Kommunikation weltweit", correct: true },
-                    { text: "Sie haben keinen Einfluss auf Globalisierung", correct: false },
-                    { text: "Sie verlangsamen die globale Entwicklung", correct: false },
-                    { text: "Sie sind nur für die Unterhaltung wichtig", correct: false }
+                    { text: "Weil international zusammengearbeitet wird, sind Kinder geschützter", correct: true },
+                    { text: "Durch das Internet ist Wissen für die meisten Menschen zugänglich", correct: false },
+                    { text: "Durch die weltweite Zusammenarbeit werden Produkte günstiger", correct: false },
+                    { text: "Aufgrund der Globalisierung kann einfacher und günstiger gereist werden", correct: false }
+                ]
+            },
+            6: {
+                question: "Welche Aussage zu den Nachteilen der Globalisierung ist RICHTIG?",
+                options: [
+                    { text: "Je mehr die Welt vernetzt ist, desto mehr Arbeitsplätze werden geschaffen", correct: false },
+                    { text: "Je mehr die Globalisierung fortschreitet, desto weniger Unterschiede gibt es zwischen armen und reichen Personen", correct: false },
+                    { text: "Regenwälder werden immer mehr geschützt", correct: false },
+                    { text: "Vieles wird immer billiger Produziert, sodass lokale Wirtschaften leiden", correct: true }
+                ]
+            },
+            7: {
+                question: "Wer profitiert am meisten von der Globalisierung?",
+                options: [
+                    { text: "Alle etwa gleich viel", correct: false },
+                    { text: "Reiche Länder wie die Schweiz", correct: true },
+                    { text: "Menschen in Ländern, wo billig produziert werden kann", correct: false },
+                    { text: "Niemand profitiert wirklich", correct: false }
                 ]
             }
         };
