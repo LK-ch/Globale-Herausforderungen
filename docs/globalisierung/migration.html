@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -479,20 +479,8 @@
             border: 2px solid #ddd;
             border-radius: 12px;
             padding: 20px;
-            cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .case-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .case-card.selected {
-            border-color: #667eea;
-            background: #f0f4ff;
-            border-width: 3px;
         }
 
         .case-card.correct {
@@ -705,45 +693,46 @@
 
         <!-- Push-Faktoren Aufgabe -->
         <div id="push-task" class="task-content active">
-            <h2 style="text-align: center; color: #ff6b6b; margin-bottom: 30px;">Push-Faktoren: Warum verlassen Menschen ihre Heimat?</h2>
+            <h2 style="text-align: center; color: #ff6b6b; margin-bottom: 10px;">Push-Faktoren: Warum verlassen Menschen ihre Heimat?</h2>
+            <div style="text-align: center; color: #666; margin-bottom: 20px; font-weight: bold;" id="push-progress">Fall 1 von 8</div>
             
             <div class="cases" id="push-cases">
-                <div class="case-card" data-category="politisch" onclick="selectCase(this)">
+                <div class="case-card" data-category="politisch">
                     <div class="case-name">Amira aus Syrien</div>
                     <div class="case-story">„Ich musste aus Damaskus fliehen, weil Journalisten, die kritisch über die Regierung berichten, verhaftet werden. Meine Kollegen sind im Gefängnis und ich habe Todesdrohungen bekommen."</div>
                 </div>
 
-                <div class="case-card" data-category="oekologisch" onclick="selectCase(this)">
+                <div class="case-card" data-category="oekologisch">
                     <div class="case-name">Kofi aus Ghana</div>
                     <div class="case-story">„Unsere Region leidet unter extremer Dürre. Die Ernte ist seit drei Jahren ausgefallen, der Boden ist ausgetrocknet. Wir können unsere Familie nicht mehr ernähren und haben kein Trinkwasser."</div>
                 </div>
 
-                <div class="case-card" data-category="wirtschaftlich" onclick="selectCase(this)">
+                <div class="case-card" data-category="wirtschaftlich">
                     <div class="case-name">Maria aus Venezuela</div>
                     <div class="case-story">„Die Inflation ist so hoch, dass mein Monatsgehalt als Lehrerin nur noch für ein Kilo Brot reicht. Es gibt keine Arbeit mehr und meine Kinder haben oft Hunger. Wir leben in extremer Armut."</div>
                 </div>
 
-                <div class="case-card" data-category="persoenlich" onclick="selectCase(this)">
+                <div class="case-card" data-category="persoenlich">
                     <div class="case-name">Fatima aus Afghanistan</div>
                     <div class="case-story">„Als Frau darf ich nicht mehr studieren oder arbeiten. Ich soll zwangsverheiratet werden mit einem Mann, den ich nicht kenne. Meine Familie unterdrückt mich und ich habe keine Zukunftsperspektive."</div>
                 </div>
 
-                <div class="case-card" data-category="politisch" onclick="selectCase(this)">
+                <div class="case-card" data-category="politisch">
                     <div class="case-name">Wei aus Myanmar</div>
                     <div class="case-story">„Nach dem Militärputsch werden Demonstranten erschossen. Ich habe bei Protesten für Demokratie mitgemacht und werde jetzt vom Militär gesucht. Meine Freunde sind verschwunden."</div>
                 </div>
 
-                <div class="case-card" data-category="oekologisch" onclick="selectCase(this)">
+                <div class="case-card" data-category="oekologisch">
                     <div class="case-name">Tala von den Malediven</div>
                     <div class="case-story">„Der Meeresspiegel steigt jedes Jahr. Unser Dorf wird regelmäßig überflutet und das Salzwasser zerstört unsere Felder. In 20 Jahren wird unsere Insel unbewohnbar sein."</div>
                 </div>
 
-                <div class="case-card" data-category="wirtschaftlich" onclick="selectCase(this)">
+                <div class="case-card" data-category="wirtschaftlich">
                     <div class="case-name">Javier aus Honduras</div>
                     <div class="case-story">„Es gibt keine Jobs in meiner Stadt. Die Arbeitslosenquote liegt bei 70%. Ich habe eine Ausbildung, aber selbst als Ingenieur finde ich keine Stelle. Ohne Arbeit kann ich meine Familie nicht versorgen."</div>
                 </div>
 
-                <div class="case-card" data-category="persoenlich" onclick="selectCase(this)">
+                <div class="case-card" data-category="persoenlich">
                     <div class="case-name">Omar aus dem Irak</div>
                     <div class="case-story">„Ich bin homosexuell und in meinem Land bedeutet das die Todesstrafe. Meine eigene Familie hat gedroht, mich umzubringen. Ich muss meine Identität verstecken und lebe in ständiger Angst."</div>
                 </div>
@@ -779,45 +768,46 @@
 
         <!-- Pull-Faktoren Aufgabe -->
         <div id="pull-task" class="task-content">
-            <h2 style="text-align: center; color: #51cf66; margin-bottom: 30px;">Pull-Faktoren: Was macht ein Land attraktiv?</h2>
+            <h2 style="text-align: center; color: #51cf66; margin-bottom: 10px;">Pull-Faktoren: Was macht ein Land attraktiv?</h2>
+            <div style="text-align: center; color: #666; margin-bottom: 20px; font-weight: bold;" id="pull-progress">Fall 1 von 8</div>
             
             <div class="cases" id="pull-cases">
-                <div class="case-card" data-category="politisch" onclick="selectCase(this)">
+                <div class="case-card" data-category="politisch">
                     <div class="case-name">Hassan aus Eritrea</div>
                     <div class="case-story">„Ich möchte nach Deutschland, weil dort Pressefreiheit und Meinungsfreiheit garantiert sind. Man kann seine Meinung sagen, ohne Angst vor Verhaftung haben zu müssen. Es gibt eine echte Demokratie."</div>
                 </div>
 
-                <div class="case-card" data-category="oekologisch" onclick="selectCase(this)">
+                <div class="case-card" data-category="oekologisch">
                     <div class="case-name">Lina aus Bangladesch</div>
                     <div class="case-story">„Die Schweiz hat saubere Luft, sauberes Wasser und ist vor Naturkatastrophen geschützt. Die Umwelt ist intakt und die Natur wunderschön. Dort kann ich gesund leben ohne Angst vor Überflutungen."</div>
                 </div>
 
-                <div class="case-card" data-category="wirtschaftlich" onclick="selectCase(this)">
+                <div class="case-card" data-category="wirtschaftlich">
                     <div class="case-name">Bogdan aus der Ukraine</div>
                     <div class="case-story">„In Kanada gibt es viele gut bezahlte Jobs für IT-Spezialisten. Der Mindestlohn ist hoch, die Wirtschaft stabil und die Arbeitslosenquote niedrig. Ich kann dort ein gutes Leben aufbauen."</div>
                 </div>
 
-                <div class="case-card" data-category="persoenlich" onclick="selectCase(this)">
+                <div class="case-card" data-category="persoenlich">
                     <div class="case-name">Aisha aus Pakistan</div>
                     <div class="case-story">„In Schweden werden Frauen gleichberechtigt behandelt. Ich kann dort als Ärztin arbeiten, mich frei bewegen und selbst entscheiden, wen ich heiraten möchte. Meine Träume werden respektiert."</div>
                 </div>
 
-                <div class="case-card" data-category="politisch" onclick="selectCase(this)">
+                <div class="case-card" data-category="politisch">
                     <div class="case-name">Chen aus China</div>
                     <div class="case-story">„Australien hat ein faires Rechtssystem und unabhängige Gerichte. Jeder wird vor dem Gesetz gleich behandelt, unabhängig von sozialer Stellung. Die Menschenrechte sind geschützt."</div>
                 </div>
 
-                <div class="case-card" data-category="oekologisch" onclick="selectCase(this)">
+                <div class="case-card" data-category="oekologisch">
                     <div class="case-name">Ibrahim aus Mauretanien</div>
                     <div class="case-story">„Norwegen investiert stark in erneuerbare Energien und Umweltschutz. Das Land ist grün, die Städte nachhaltig geplant. Ich möchte in einem Land leben, das die Natur für zukünftige Generationen erhält."</div>
                 </div>
 
-                <div class="case-card" data-category="wirtschaftlich" onclick="selectCase(this)">
+                <div class="case-card" data-category="wirtschaftlich">
                     <div class="case-name">Sofia aus Bulgarien</div>
                     <div class="case-story">„In den Niederlanden sind die Gehälter dreimal höher als bei uns. Als Krankenschwester kann ich dort gut leben, eine Wohnung mieten und sogar sparen. Der Lebensstandard ist viel besser."</div>
                 </div>
 
-                <div class="case-card" data-category="persoenlich" onclick="selectCase(this)">
+                <div class="case-card" data-category="persoenlich">
                     <div class="case-name">Marcus aus Uganda</div>
                     <div class="case-story">„Neuseeland hat exzellente Universitäten und kostenlose Bildung für Kinder. Meine Kinder können dort studieren und eine gute Ausbildung bekommen. Die Bildungschancen sind für alle gleich."</div>
                 </div>
@@ -1104,140 +1094,135 @@
 
 
         // Migration Game JavaScript
-
-        let selectedCase = null;
-        const assignments = {
-            push: {},
-            pull: {}
+        let currentTask = 'push';
+        let currentCaseIndex = {
+            push: 0,
+            pull: 0
+        };
+        let totalCases = {
+            push: 0,
+            pull: 0
         };
 
-        function switchTask(taskType) {
-            // Update button states
-            document.querySelectorAll('.task-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-
-            // Show/hide task content
-            document.querySelectorAll('.task-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(taskType + '-task').classList.add('active');
-
-            // Reset selection
-            selectedCase = null;
-        }
-
-        function selectCase(caseElement) {
-            // Remove previous selection
-            if (selectedCase) {
-                selectedCase.classList.remove('selected');
-            }
-
-            // If clicking the same case, deselect
-            if (selectedCase === caseElement) {
-                selectedCase = null;
-                return;
-            }
-
-            // Select new case
-            selectedCase = caseElement;
-            caseElement.classList.add('selected');
-        }
-
-        function assignToCategory(categoryElement) {
-            if (!selectedCase) {
-                alert('Bitte wähle zuerst einen Fall aus!');
-                return;
-            }
-
-            // Determine which task we're in
-            const taskType = selectedCase.closest('.task-content').id.includes('push') ? 'push' : 'pull';
+        function initGame() {
+            // Zähle die Fälle
+            totalCases.push = document.querySelectorAll('#push-cases .case-card').length;
+            totalCases.pull = document.querySelectorAll('#pull-cases .case-card').length;
             
-            // Get the case text
-            const caseName = selectedCase.querySelector('.case-name').textContent;
-            const category = categoryElement.dataset.category;
-
-            // Store assignment
-            assignments[taskType][caseName] = category;
-
-            // Visual feedback
-            const hint = categoryElement.querySelector('.drop-hint');
-            hint.textContent = `✓ ${caseName.split(' ')[0]}`;
-
-            // Move case to category visually
-            selectedCase.style.opacity = '0.6';
-            selectedCase.classList.remove('selected');
-            selectedCase = null;
+            // Verstecke alle Cases außer dem ersten
+            showCurrentCase('push');
+            showCurrentCase('pull');
+            
+            updateProgress('push');
+            updateProgress('pull');
         }
 
-        function checkAnswers(taskType) {
-            const cases = document.querySelectorAll(`#${taskType}-cases .case-card`);
-            let correct = 0;
-            let total = cases.length;
-
-            cases.forEach(caseCard => {
-                const caseName = caseCard.querySelector('.case-name').textContent;
-                const correctCategory = caseCard.dataset.category;
-                const assignedCategory = assignments[taskType][caseName];
-
-                if (assignedCategory === correctCategory) {
-                    caseCard.classList.add('correct');
-                    caseCard.classList.remove('incorrect');
-                    correct++;
-                } else if (assignedCategory) {
-                    caseCard.classList.add('incorrect');
-                    caseCard.classList.remove('correct');
-                    setTimeout(() => {
-                        caseCard.classList.remove('incorrect');
-                    }, 1500);
+        function showCurrentCase(task) {
+            const cases = document.querySelectorAll(`#${task}-cases .case-card`);
+            cases.forEach((caseCard, index) => {
+                if (index === currentCaseIndex[task]) {
+                    caseCard.style.display = 'block';
+                } else {
+                    caseCard.style.display = 'none';
                 }
             });
+        }
 
-            // Show feedback
-            const feedback = document.getElementById(`${taskType}-feedback`);
-            const score = document.getElementById(`${taskType}-score`);
-            
-            feedback.classList.add('show');
-            
-            if (correct === total) {
-                feedback.className = 'feedback show success';
-                feedback.textContent = '🎉 Perfekt! Alle Zuordnungen sind richtig!';
-            } else if (correct > total / 2) {
-                feedback.className = 'feedback show partial';
-                feedback.textContent = `👍 Gut gemacht! ${correct} von ${total} richtig. Versuche es nochmal!`;
-            } else {
-                feedback.className = 'feedback show partial';
-                feedback.textContent = `📚 ${correct} von ${total} richtig. Lies die Fälle nochmal genau durch!`;
+        function updateProgress(task) {
+            const progressElement = document.getElementById(`${task}-progress`);
+            if (progressElement) {
+                progressElement.textContent = `Fall ${currentCaseIndex[task] + 1} von ${totalCases[task]}`;
             }
-
-            score.textContent = `Punktzahl: ${correct}/${total}`;
         }
 
-        function resetTask(taskType) {
-            // Reset assignments
-            assignments[taskType] = {};
-
-            // Reset all case cards
-            const cases = document.querySelectorAll(`#${taskType}-cases .case-card`);
-            cases.forEach(card => {
-                card.style.opacity = '1';
-                card.classList.remove('correct', 'incorrect', 'selected');
-            });
-
-            // Reset category hints
-            const categories = document.querySelectorAll(`#${taskType}-categories .category`);
-            categories.forEach(cat => {
-                cat.querySelector('.drop-hint').textContent = 'Klicke auf einen Fall, dann hier';
-            });
-
+        function switchTask(task) {
+            currentTask = task;
+            
+            // Update buttons
+            document.querySelectorAll('.task-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.task-btn.${task}`).classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.task-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`${task}-task`).classList.add('active');
+            
             // Hide feedback
-            document.getElementById(`${taskType}-feedback`).classList.remove('show');
-            document.getElementById(`${taskType}-score`).textContent = '';
-
-            selectedCase = null;
+            document.getElementById(`${task}-feedback`).classList.remove('show');
         }
-    
+
+        function dropToCategory(category) {
+            // Finde den aktuell sichtbaren Fall
+            const currentCase = document.querySelector(`#${currentTask}-cases .case-card[style*="display: block"]`);
+            
+            if (!currentCase) return;
+            
+            const correctCategory = currentCase.getAttribute('data-category');
+            const feedback = document.getElementById(`${currentTask}-feedback`);
+            
+            if (category === correctCategory) {
+                // Richtig zugeordnet
+                currentCase.classList.add('correct');
+                
+                // Zeige kurzes Feedback
+                feedback.textContent = '✓ Richtig!';
+                feedback.className = 'feedback success show';
+                
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                    
+                    // Gehe zum nächsten Fall
+                    currentCaseIndex[currentTask]++;
+                    
+                    if (currentCaseIndex[currentTask] < totalCases[currentTask]) {
+                        showCurrentCase(currentTask);
+                        updateProgress(currentTask);
+                    } else {
+                        // Alle Fälle abgeschlossen
+                        feedback.textContent = '🎉 Alle Fälle richtig zugeordnet! Sehr gut gemacht!';
+                        feedback.className = 'feedback success show';
+                    }
+                }, 1000);
+                
+            } else {
+                // Falsch zugeordnet
+                currentCase.classList.add('incorrect');
+                
+                feedback.textContent = '✗ Nicht ganz richtig. Versuchen Sie es nochmal!';
+                feedback.className = 'feedback error show';
+                
+                setTimeout(() => {
+                    currentCase.classList.remove('incorrect');
+                    feedback.classList.remove('show');
+                }, 2000);
+            }
+        }
+
+        function resetTask() {
+            const task = currentTask;
+            
+            // Reset case index
+            currentCaseIndex[task] = 0;
+            
+            // Reset all cases
+            const cases = document.querySelectorAll(`#${task}-cases .case-card`);
+            cases.forEach(caseCard => {
+                caseCard.classList.remove('correct', 'incorrect');
+            });
+            
+            // Show first case
+            showCurrentCase(task);
+            updateProgress(task);
+            
+            // Hide feedback
+            document.getElementById(`${task}-feedback`).classList.remove('show');
+        }
+
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initGame);
+        } else {
+            initGame();
+        }
 
         // Initialisiere Progress Tracking beim Laden
         window.onload = () => {
