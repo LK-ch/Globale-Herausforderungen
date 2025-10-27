@@ -149,6 +149,20 @@
             line-height: 1.6;
         }
 
+        .task-box-blue {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border-left: 4px solid #3b82f6;
+        }
+
+        .task-box-blue h3 {
+            color: #1e3a8a;
+        }
+
+        .task-box-blue p {
+            color: #1e40af;
+        }
+
+
         .iframe-container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
@@ -304,14 +318,14 @@
         <!-- Aufklappbarer Aufgaben-Bereich -->
         <div class="expandable-section">
             <div class="expandable-header" onclick="toggleExpand()">
-                <span>📋 Migrationsgründe</span>
+                <span>📋 Warum flüchten Menschen?</span>
                 <span class="arrow">▼</span>
             </div>
             <div class="expandable-content" id="expandable-content">
                 <div class="expandable-inner">
-                    <div class="task-box">
-                        <h3>📚 Auftrag:</h3>
-                        <p></p>
+                    <div class="task-box task-box-blue">
+                        <h3>📚 Auftrag a:</h3>
+                        <p>Lesen Sie sich auf der folgenden Website mindestens zwei Geschichten von geflüchteten Personen durch und notieren Sie in Ihr OneNote dazu die Gründe für die Flucht. Fokussieren Sie sich beim Durchlesen insbesondere auf die Gründe, Sie müssen nicht alles im Text sonst lesen und verstehen.</p>
                     </div>
                 </div>
             </div>
@@ -334,6 +348,27 @@
                class="external-link">
                 🔗 Link in neuem Tab öffnen
             </a>
+        </div>
+
+
+        <!-- Migrationsgründe analysieren -->
+        <div class="expandable-section">
+            <div class="expandable-header" onclick="toggleExpand2()">
+                <span>📋 Migrationsgründe analysieren</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="expandable-content" id="expandable-content2">
+                <div class="expandable-inner">
+                    <div class="task-box">
+                        <h3>📚 Auftrag b:</h3>
+                        <p>Finden Sie in Ihrem Buch Gesellschaft das Kapitel zur Migration. Orientieren Sie sich dabei am Inhaltsverzeichnis. Lesen Sie das Kapitel durch und notieren Sie anschliessend, ob die Fluchtgründe aus den Geschichten der flüchtenden Personen Push- oder Pull-Faktoren waren.</p>
+                    </div>
+                    <div class="task-box">
+                        <h3>📚 Auftrag c:</h3>
+                        <p>Oft unterscheidet man zwischen ökologischen, politischen, wirtschaftlichen und persönlichen Hintergründe, welche eine Flucht veranlassen können. Ordnen Sie in Ihrem OneNote konkrete Beispiele diesen Hintergründen zu. Verwenden Sie dazu das Buch Gesellschaft, aber recherchieren Sie auch im Internet.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Abschluss-Button -->
@@ -388,15 +423,16 @@
         }
 
         function showProgressIndicator() {
-            const indicator = document.getElementById('progress-indicator');
-            if (indicator) {
-                indicator.classList.add('show');
-                
-                // Automatisch nach 3 Sekunden ausblenden
-                setTimeout(() => {
-                    indicator.classList.remove('show');
-                }, 3000);
-            }
+            // Nur tracken, nicht anzeigen
+            // const indicator = document.getElementById('progress-indicator');
+            // if (indicator) {
+            //     indicator.classList.add('show');
+            //     
+            //     // Automatisch nach 3 Sekunden ausblenden
+            //     setTimeout(() => {
+            //         indicator.classList.remove('show');
+            //     }, 3000);
+            // }
         }
 
         function markAsComplete() {
@@ -438,6 +474,16 @@
             content.classList.toggle('open');
             header.classList.toggle('open');
         }
+        // Toggle Expandable 2
+        function toggleExpand2() {
+            const content = document.getElementById('expandable-content2');
+            const headers = document.querySelectorAll('.expandable-header');
+            const header = headers[1]; // zweiter Header
+            
+            content.classList.toggle('open');
+            header.classList.toggle('open');
+        }
+
 
         // Initialisiere Progress Tracking beim Laden
         window.onload = () => {
