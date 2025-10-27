@@ -324,6 +324,91 @@
                 justify-content: center;
             }
         }
+
+        /* Modal für Bildansicht */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow: auto;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .modal-content.pdf-view {
+            width: 90%;
+            height: 90%;
+            max-width: none;
+            max-height: none;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        .close-modal:hover {
+            color: #bbb;
+        }
+
+        .chart-image {
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .chart-image:hover {
+            transform: scale(1.02);
+        }
+
+        .dual-image-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .pdf-preview {
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .pdf-preview:hover {
+            transform: scale(1.02);
+        }
+
+        .pdf-preview embed {
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .dual-image-container {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -357,105 +442,44 @@
         <!-- Alter -->
         <div class="chart-section">
             <h3 class="chart-title">📈 Alter</h3>
-            <p class="chart-description">
-                Entwicklung der Altersstruktur und demografischer Wandel im Kontext der Globalisierung.
-            </p>
-            <div class="image-placeholder">
-                <div class="image-placeholder-icon">📊</div>
-                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Alter" eingefügt</div>
-            </div>
-            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-alter.png" alt="Grafik Alter" class="chart-image"> -->
+            <img src="images/Alter.png" alt="Grafik Alter" class="chart-image" onclick="openModal(this.src)">
         </div>
 
         <!-- Lebenserwartung -->
         <div class="chart-section">
             <h3 class="chart-title">❤️ Lebenserwartung</h3>
-            <p class="chart-description">
-                Wie hat sich die Lebenserwartung weltweit durch medizinischen Fortschritt und globale Vernetzung entwickelt?
-            </p>
-            <div class="image-placeholder">
-                <div class="image-placeholder-icon">📊</div>
-                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Lebenserwartung" eingefügt</div>
+            <div class="dual-image-container">
+                <div class="pdf-preview" onclick="openPDF('images/Leben50.pdf')">
+                    <embed src="images/Leben50.pdf" type="application/pdf">
+                </div>
+                <div class="pdf-preview" onclick="openPDF('images/Leben2010.pdf')">
+                    <embed src="images/Leben2010.pdf" type="application/pdf">
+                </div>
             </div>
-            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-lebenserwartung.png" alt="Grafik Lebenserwartung" class="chart-image"> -->
         </div>
 
-        <!-- Bildung -->
+        <!-- Einkommen -->
         <div class="chart-section">
-            <h3 class="chart-title">🎓 Bildung</h3>
-            <p class="chart-description">
-                Entwicklung des Bildungsniveaus und Zugang zu Bildung im globalen Vergleich.
-            </p>
-            <div class="image-placeholder">
-                <div class="image-placeholder-icon">📊</div>
-                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Bildung" eingefügt</div>
-            </div>
-            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-bildung.png" alt="Grafik Bildung" class="chart-image"> -->
+            <h3 class="chart-title">💰 Einkommen</h3>
+            <img src="images/Einkommen.png" alt="Grafik Einkommen" class="chart-image" onclick="openModal(this.src)">
         </div>
 
-        <!-- Armut -->
+        <!-- Internetzugang -->
         <div class="chart-section">
-            <h3 class="chart-title">💰 Armut</h3>
-            <p class="chart-description">
-                Wie hat sich extreme Armut weltweit entwickelt? Welche Rolle spielt die Globalisierung?
-            </p>
-            <div class="image-placeholder">
-                <div class="image-placeholder-icon">📊</div>
-                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Armut" eingefügt</div>
-            </div>
-            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-armut.png" alt="Grafik Armut" class="chart-image"> -->
+            <h3 class="chart-title">🌐 Internetzugang</h3>
+            <img src="images/Internet.png" alt="Grafik Internetzugang" class="chart-image" onclick="openModal(this.src)">
         </div>
 
-        <!-- Wirtschaftswachstum -->
+        <!-- Globaler Handel -->
         <div class="chart-section">
-            <h3 class="chart-title">📈 Wirtschaftswachstum</h3>
-            <p class="chart-description">
-                Globales Wirtschaftswachstum und Bruttoinlandsprodukt (BIP) im internationalen Vergleich.
-            </p>
-            <div class="image-placeholder">
-                <div class="image-placeholder-icon">📊</div>
-                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Wirtschaftswachstum" eingefügt</div>
-            </div>
-            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-wirtschaft.png" alt="Grafik Wirtschaftswachstum" class="chart-image"> -->
+            <h3 class="chart-title">🚢 Globaler Handel</h3>
+            <img src="images/handel.jpg" alt="Grafik Globaler Handel" class="chart-image" onclick="openModal(this.src)">
         </div>
 
-        <!-- Handel -->
+        <!-- Die Rolle Afrikas -->
         <div class="chart-section">
-            <h3 class="chart-title">🚢 Internationaler Handel</h3>
-            <p class="chart-description">
-                Entwicklung des weltweiten Handels und der Exportvolumina verschiedener Länder.
-            </p>
-            <div class="image-placeholder">
-                <div class="image-placeholder-icon">📊</div>
-                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Internationaler Handel" eingefügt</div>
-            </div>
-            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-handel.png" alt="Grafik Handel" class="chart-image"> -->
-        </div>
-
-        <!-- CO2-Emissionen -->
-        <div class="chart-section">
-            <h3 class="chart-title">🌱 CO₂-Emissionen</h3>
-            <p class="chart-description">
-                Umweltauswirkungen der Globalisierung: CO₂-Emissionen im globalen Vergleich.
-            </p>
-            <div class="image-placeholder">
-                <div class="image-placeholder-icon">📊</div>
-                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "CO₂-Emissionen" eingefügt</div>
-            </div>
-            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-co2.png" alt="Grafik CO2-Emissionen" class="chart-image"> -->
-        </div>
-
-        <!-- Migration -->
-        <div class="chart-section">
-            <h3 class="chart-title">✈️ Migration</h3>
-            <p class="chart-description">
-                Globale Migrationsbewegungen und internationale Mobilität der Bevölkerung.
-            </p>
-            <div class="image-placeholder">
-                <div class="image-placeholder-icon">📊</div>
-                <div class="image-placeholder-text">Hier wird die Grafik zum Thema "Migration" eingefügt</div>
-            </div>
-            <!-- Bild hier einfügen: <img src="pfad/zur/grafik-migration.png" alt="Grafik Migration" class="chart-image"> -->
+            <h3 class="chart-title">🌍 Die Rolle Afrikas</h3>
+            <img src="images/Afrika.jpg" alt="Grafik Die Rolle Afrikas" class="chart-image" onclick="openModal(this.src)">
         </div>
 
         <!-- Abschluss-Button -->
@@ -473,6 +497,14 @@
     <div id="progress-indicator" class="progress-indicator">
         <span class="progress-checkmark">✓</span>
         <span class="progress-text">Seite durchgelesen</span>
+    </div>
+
+
+    <!-- Modal für Bildansicht -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <embed class="modal-content pdf-view" id="modalPDF" style="display: none;" type="application/pdf">
     </div>
 
     <script>
@@ -559,6 +591,35 @@
             
             content.classList.toggle('open');
             header.classList.toggle('open');
+        }
+
+
+        // Modal-Funktionen
+        function openModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const modalPDF = document.getElementById('modalPDF');
+            
+            modal.style.display = 'block';
+            modalImg.src = src;
+            modalImg.style.display = 'block';
+            modalPDF.style.display = 'none';
+        }
+
+        function openPDF(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const modalPDF = document.getElementById('modalPDF');
+            
+            modal.style.display = 'block';
+            modalPDF.src = src;
+            modalPDF.style.display = 'block';
+            modalImg.style.display = 'none';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
         }
 
         // Initialisiere Progress Tracking beim Laden
