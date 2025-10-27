@@ -81,29 +81,59 @@
             margin-bottom: 1rem;
         }
 
+
         .chart-section {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            padding: 2rem;
+            padding: 0;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             margin-bottom: 1.5rem;
+            overflow: hidden;
         }
 
         .chart-title {
-            color: #1e3a8a;
+            color: white;
             font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 1rem;
+            margin: 0;
+            padding: 1.5rem 2rem;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 0.5rem;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .chart-description {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
+        .chart-title:hover {
+            background: linear-gradient(135deg, #2563eb, #1e3a8a);
         }
+
+        .chart-title .arrow {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .chart-title.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .chart-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+
+        .chart-content.open {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .chart-inner {
+            padding: 2rem;
+        }
+
 
         .image-placeholder {
             width: 100%;
@@ -427,7 +457,7 @@
             <div class="expandable-content" id="expandable-content">
                 <div class="expandable-inner">
                     <div class="task-box">
-                        <h3>📚 Aufgabe:</h3>
+                        <h3>📚 Auftrag a:</h3>
                         <p>Wählen Sie zwei Grafiken aus, die Sie mittels O-V-I in Ihrem OneNote analysieren. Fügen Sie jeweils einen Screenshot der analysierten Grafik in Ihr OneNote ein.</p>
                         <ul>
                             <li><strong>O</strong> = Orientierung: Was zeigt die Grafik? Thema, Zeitraum, Angaben, Quelle, ...</li>
@@ -441,45 +471,104 @@
 
         <!-- Alter -->
         <div class="chart-section">
-            <h3 class="chart-title">📈 Alter</h3>
-            <img src="images/Alter.png" alt="Grafik Alter" class="chart-image" onclick="openModal(this.src)">
+            <h3 class="chart-title" onclick="toggleChart(this)">
+                <span>📈 Alter</span>
+                <span class="arrow">▼</span>
+            </h3>
+            <div class="chart-content">
+                <div class="chart-inner">
+                    <img src="images/Alter.png" alt="Grafik Alter" class="chart-image" onclick="openModal(this.src)">
+                </div>
+            </div>
         </div>
 
         <!-- Lebenserwartung -->
         <div class="chart-section">
-            <h3 class="chart-title">❤️ Lebenserwartung</h3>
-            <div class="dual-image-container">
-                <div class="pdf-preview" onclick="openPDF('images/Leben50.pdf')">
-                    <embed src="images/Leben50.pdf" type="application/pdf">
-                </div>
-                <div class="pdf-preview" onclick="openPDF('images/Leben2010.pdf')">
-                    <embed src="images/Leben2010.pdf" type="application/pdf">
+            <h3 class="chart-title" onclick="toggleChart(this)">
+                <span>❤️ Lebenserwartung</span>
+                <span class="arrow">▼</span>
+            </h3>
+            <div class="chart-content">
+                <div class="chart-inner">
+                    <div class="dual-image-container">
+                        <div class="pdf-preview" onclick="openPDF('images/Leben50.pdf')">
+                            <embed src="images/Leben50.pdf" type="application/pdf">
+                        </div>
+                        <div class="pdf-preview" onclick="openPDF('images/Leben2010.pdf')">
+                            <embed src="images/Leben2010.pdf" type="application/pdf">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Einkommen -->
         <div class="chart-section">
-            <h3 class="chart-title">💰 Einkommen</h3>
-            <img src="images/Einkommen.png" alt="Grafik Einkommen" class="chart-image" onclick="openModal(this.src)">
+            <h3 class="chart-title" onclick="toggleChart(this)">
+                <span>💰 Einkommen</span>
+                <span class="arrow">▼</span>
+            </h3>
+            <div class="chart-content">
+                <div class="chart-inner">
+                    <img src="images/Einkommen.png" alt="Grafik Einkommen" class="chart-image" onclick="openModal(this.src)">
+                </div>
+            </div>
         </div>
 
         <!-- Internetzugang -->
         <div class="chart-section">
-            <h3 class="chart-title">🌐 Internetzugang</h3>
-            <img src="images/Internet.png" alt="Grafik Internetzugang" class="chart-image" onclick="openModal(this.src)">
+            <h3 class="chart-title" onclick="toggleChart(this)">
+                <span>🌐 Internetzugang</span>
+                <span class="arrow">▼</span>
+            </h3>
+            <div class="chart-content">
+                <div class="chart-inner">
+                    <img src="images/Internet.png" alt="Grafik Internetzugang" class="chart-image" onclick="openModal(this.src)">
+                </div>
+            </div>
         </div>
 
         <!-- Globaler Handel -->
         <div class="chart-section">
-            <h3 class="chart-title">🚢 Globaler Handel</h3>
-            <img src="images/handel.jpg" alt="Grafik Globaler Handel" class="chart-image" onclick="openModal(this.src)">
+            <h3 class="chart-title" onclick="toggleChart(this)">
+                <span>🚢 Globaler Handel</span>
+                <span class="arrow">▼</span>
+            </h3>
+            <div class="chart-content">
+                <div class="chart-inner">
+                    <img src="images/handel.jpg" alt="Grafik Globaler Handel" class="chart-image" onclick="openModal(this.src)">
+                </div>
+            </div>
         </div>
 
         <!-- Die Rolle Afrikas -->
         <div class="chart-section">
-            <h3 class="chart-title">🌍 Die Rolle Afrikas</h3>
-            <img src="images/Afrika.jpg" alt="Grafik Die Rolle Afrikas" class="chart-image" onclick="openModal(this.src)">
+            <h3 class="chart-title" onclick="toggleChart(this)">
+                <span>🌍 Die Rolle Afrikas</span>
+                <span class="arrow">▼</span>
+            </h3>
+            <div class="chart-content">
+                <div class="chart-inner">
+                    <img src="images/Afrika.jpg" alt="Grafik Die Rolle Afrikas" class="chart-image" onclick="openModal(this.src)">
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Fazit zu den Grafiken -->
+        <div class="expandable-section">
+            <div class="expandable-header" onclick="toggleExpand2()">
+                <span>📋 Fazit zu den Grafiken</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="expandable-content" id="expandable-content2">
+                <div class="expandable-inner">
+                    <div class="task-box">
+                        <h3>📚 Auftrag b:</h3>
+                        <p>Durch das Betrachten dieser Grafiken kann erkannt werden, dass es sowohl Gewinner als auch Verlierer gibt, was die Globalisierung betrifft. Notieren Sie Ihre Beobachtungen und auch offene Fragen dazu in Ihr OneNote.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Abschluss-Button -->
@@ -593,6 +682,24 @@
             header.classList.toggle('open');
         }
 
+        // Toggle Expandable 2
+        function toggleExpand2() {
+            const content = document.getElementById('expandable-content2');
+            const header = document.querySelectorAll('.expandable-header')[1];
+            
+            content.classList.toggle('open');
+            header.classList.toggle('open');
+        }
+
+
+
+
+        // Toggle Chart Function
+        function toggleChart(element) {
+            const content = element.nextElementSibling;
+            content.classList.toggle('open');
+            element.classList.toggle('open');
+        }
 
         // Modal-Funktionen
         function openModal(src) {
