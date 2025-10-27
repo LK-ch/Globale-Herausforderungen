@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -605,7 +605,22 @@
                 grid-template-columns: 1fr;
             }
         }
-        </style>
+    
+        .expandable-header.white {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1e3a8a;
+            border: 2px solid #e5e7eb;
+        }
+
+        .expandable-header.white:hover {
+            background: rgba(255, 255, 255, 1);
+            border-color: #cbd5e1;
+        }
+
+        .expandable-header.white .arrow {
+            color: #1e3a8a;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -672,9 +687,15 @@
 
 
         <!-- Migrationsspiel -->
-        <div class="game-container">
-            <h2>🎮 Interaktive Übung: Push- und Pull-Faktoren</h2>
-            <p class="game-intro">Ordnen Sie die Migrationsfälle den richtigen Kategorien zu.</p>
+        <div class="expandable-section">
+            <div class="expandable-header white" onclick="toggleExpand3()">
+                <span>🎮 Interaktive Übung: Push- und Pull-Faktoren</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="expandable-content" id="expandable-content3">
+                <div class="expandable-inner">
+                    <div class="game-container">
+                        <p class="game-intro">Ordnen Sie die Migrationsfälle den richtigen Kategorien zu.</p>
             
 
     <div class="container">
@@ -977,6 +998,9 @@
         }
     </script>
 
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Abschluss-Button -->
@@ -1092,6 +1116,17 @@
             header.classList.toggle('open');
         }
 
+
+
+        // Toggle Expandable 3 (Game)
+        function toggleExpand3() {
+            const content = document.getElementById('expandable-content3');
+            const headers = document.querySelectorAll('.expandable-header');
+            const header = headers[2]; // dritter Header
+            
+            content.classList.toggle('open');
+            header.classList.toggle('open');
+        }
 
         // Migration Game JavaScript
         let currentTask = 'push';
