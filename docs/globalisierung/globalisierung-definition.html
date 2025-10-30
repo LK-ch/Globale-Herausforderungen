@@ -650,9 +650,8 @@
             header.classList.toggle('open');
         }
 
-        // Completion Funktionen
+        // Progress Tracking
         function initProgressTracking() {
-            // Prüfe ob Modul bereits abgeschlossen wurde
             const completed = localStorage.getItem('globalisierung_module2_completed');
             if (completed === 'true') {
                 isModuleCompleted = true;
@@ -661,31 +660,20 @@
         }
 
         function markAsComplete() {
-            console.log('markAsComplete wurde aufgerufen');
-            
-            if (isModuleCompleted) {
-                console.log('Modul bereits abgeschlossen');
-                return;
-            }
+            if (isModuleCompleted) return;
 
-            // Markiere Modul als abgeschlossen
             localStorage.setItem('globalisierung_module2_completed', 'true');
             localStorage.setItem('globalisierung_module2_completedAt', new Date().toISOString());
             
             isModuleCompleted = true;
             updateCompletionButton(true);
 
-            // Zeige Bestätigung
             alert('✓ Modul 2 erfolgreich abgeschlossen!\n\nIhr Fortschritt wurde gespeichert.');
         }
 
         function updateCompletionButton(completed) {
             const button = document.getElementById('completion-button');
             const buttonText = document.getElementById('button-text');
-            
-            console.log('updateCompletionButton aufgerufen, completed:', completed);
-            console.log('Button gefunden:', button);
-            console.log('ButtonText gefunden:', buttonText);
             
             if (button && buttonText) {
                 if (completed) {
@@ -700,23 +688,18 @@
             }
         }
 
-        // Initialisiere beim Laden
+        // Initialisierung
         window.onload = () => {
-            console.log('Seite geladen, initialisiere...');
             initQuestions();
             initProgressTracking();
             
-            // Füge Event Listener für Completion Button hinzu
+            // Event Listener für Completion Button
             const completionButton = document.getElementById('completion-button');
             if (completionButton) {
-                console.log('Completion Button gefunden, füge Event Listener hinzu');
                 completionButton.addEventListener('click', function(e) {
-                    console.log('Button wurde geklickt!');
                     e.preventDefault();
                     markAsComplete();
                 });
-            } else {
-                console.error('Completion Button nicht gefunden!');
             }
         };
     </script>
