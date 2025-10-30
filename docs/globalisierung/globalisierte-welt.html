@@ -1896,8 +1896,8 @@
 
         function initProgressTracking() {
             // Prüfe ob Modul bereits abgeschlossen wurde
-            const completed = localStorage.getItem('globalisierung_module1_completed');
-            if (completed === 'true') {
+            const completed = JSON.parse(localStorage.getItem('globalisierungProgress') || '[]');
+            if (completed.includes(1)) {
                 isModuleCompleted = true;
                 updateCompletionButton(true);
             }
@@ -1906,9 +1906,12 @@
         function markAsComplete() {
             if (isModuleCompleted) return; // Bereits abgeschlossen
 
-            // Markiere Modul als abgeschlossen
-            localStorage.setItem('globalisierung_module1_completed', 'true');
-            localStorage.setItem('globalisierung_module1_completedAt', new Date().toISOString());
+            // Markiere Modul als abgeschlossen im neuen System
+            const completed = JSON.parse(localStorage.getItem('globalisierungProgress') || '[]');
+            if (!completed.includes(1)) {
+                completed.push(1);
+                localStorage.setItem('globalisierungProgress', JSON.stringify(completed));
+            }
             
             isModuleCompleted = true;
             updateCompletionButton(true);
