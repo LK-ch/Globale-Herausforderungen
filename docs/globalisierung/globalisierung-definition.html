@@ -652,18 +652,44 @@
 
         // Progress Tracking
         function initProgressTracking() {
-            const completed = localStorage.getItem('globalisierung_module2_completed');
-            if (completed === 'true') {
+            // Prüfe beide Systeme
+            const completedOld = localStorage.getItem('globalisierung_module2_completed');
+            const progress = JSON.parse(localStorage.getItem('globalisierungProgress') || '[]');
+            
+            // Wenn im neuen System (Index-Seite) als abgeschlossen markiert
+            if (progress.includes(2)) {
                 isModuleCompleted = true;
                 updateCompletionButton(true);
+                // Synchronisiere mit altem System
+                if (completedOld !== 'true') {
+                    localStorage.setItem('globalisierung_module2_completed', 'true');
+                }
+            }
+            // Wenn im alten System als abgeschlossen markiert
+            else if (completedOld === 'true') {
+                isModuleCompleted = true;
+                updateCompletionButton(true);
+                // Synchronisiere mit neuem System
+                if (!progress.includes(2)) {
+                    progress.push(2);
+                    localStorage.setItem('globalisierungProgress', JSON.stringify(progress));
+                }
             }
         }
 
         function markAsComplete() {
             if (isModuleCompleted) return;
 
+            // Altes System (für Kompatibilität)
             localStorage.setItem('globalisierung_module2_completed', 'true');
             localStorage.setItem('globalisierung_module2_completedAt', new Date().toISOString());
+            
+            // Neues System (für Index-Seite)
+            let progress = JSON.parse(localStorage.getItem('globalisierungProgress') || '[]');
+            if (!progress.includes(2)) {
+                progress.push(2);
+                localStorage.setItem('globalisierungProgress', JSON.stringify(progress));
+            }
             
             isModuleCompleted = true;
             updateCompletionButton(true);
