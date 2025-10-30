@@ -207,39 +207,9 @@
             transform: none;
         }
 
-        .progress-indicator {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            display: none;
-            align-items: center;
-            gap: 0.75rem;
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
-        }
-
         @keyframes slideIn {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
-        }
-
-        .progress-indicator.show {
-            display: flex;
-        }
-
-        .progress-text {
-            font-size: 0.9rem;
-            color: #1e3a8a;
-            font-weight: bold;
-        }
-
-        .progress-checkmark {
-            font-size: 1.5rem;
-            color: #10b981;
         }
 
         .expandable-section {
@@ -293,24 +263,24 @@
         }
 
         .task-box {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
             padding: 1.5rem;
             border-radius: 10px;
-            border-left: 4px solid #f59e0b;
+            border-left: 4px solid #3b82f6;
         }
 
         .task-box h3 {
-            color: #92400e;
+            color: #1e3a8a;
             margin-bottom: 0.75rem;
         }
 
         .task-box p {
-            color: #78350f;
+            color: #1e40af;
             line-height: 1.6;
         }
 
         .task-box ul {
-            color: #78350f;
+            color: #1e40af;
             line-height: 1.8;
             margin-left: 1.5rem;
             margin-top: 0.5rem;
@@ -318,6 +288,23 @@
 
         .task-box ul li {
             margin-bottom: 0.5rem;
+        }
+
+        .task-box-yellow {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .task-box-yellow h3 {
+            color: #92400e;
+            margin-bottom: 0.75rem;
+        }
+
+        .task-box-yellow p {
+            color: #78350f;
+            line-height: 1.6;
         }
 
         @media (max-width: 768px) {
@@ -345,13 +332,6 @@
 
             .expandable-inner {
                 padding: 1rem;
-            }
-
-            .progress-indicator {
-                bottom: 1rem;
-                right: 1rem;
-                left: 1rem;
-                justify-content: center;
             }
         }
 
@@ -563,11 +543,11 @@
             </div>
             <div class="expandable-content" id="expandable-content2">
                 <div class="expandable-inner">
-                    <div class="task-box" style="margin-bottom: 2rem;">
+                    <div class="task-box-yellow" style="margin-bottom: 2rem;">
                         <h3>📚 Auftrag 2:</h3>
                         <p>Durch das Betrachten dieser Grafiken kann erkannt werden, dass es sowohl Gewinner als auch Verlierer gibt, was die Globalisierung betrifft. Notieren Sie Ihre Beobachtungen und auch offene Fragen dazu in Ihr OneNote.</p>
                     </div>
-                    <div class="task-box">
+                    <div class="task-box-yellow">
                         <h3>📚 Auftrag 3:</h3>
                         <p>Erklären Sie mit Beispielen, ob Ihre Berufsbranche eher zu den Gewinnern oder zu den Verlierern der Globalisierung gehört.</p>
                     </div>
@@ -586,13 +566,6 @@
         </div>
     </main>
 
-    <!-- Progress Indicator -->
-    <div id="progress-indicator" class="progress-indicator">
-        <span class="progress-checkmark">✓</span>
-        <span class="progress-text">Seite durchgelesen</span>
-    </div>
-
-
     <!-- Modal für Bildansicht -->
     <div id="imageModal" class="modal" onclick="closeModal()">
         <span class="close-modal">&times;</span>
@@ -602,56 +575,26 @@
 
     <script>
         // Progress Tracking System
-        let hasScrolledToBottom = false;
         let isModuleCompleted = false;
 
         function initProgressTracking() {
             // Prüfe ob Modul bereits abgeschlossen wurde
-            const completed = localStorage.getItem('globalisierung_module3_completed');
-            if (completed === 'true') {
+            const completed = JSON.parse(localStorage.getItem('globalisierungProgress') || '[]');
+            if (completed.includes(3)) {
                 isModuleCompleted = true;
                 updateCompletionButton(true);
-            }
-
-            // Zeige Progress-Indicator wenn bis unten gescrollt
-            checkScrollProgress();
-        }
-
-        function checkScrollProgress() {
-            // Prüfe ob Seite bis unten gescrollt wurde
-            window.addEventListener('scroll', function() {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const windowHeight = window.innerHeight;
-                const documentHeight = document.documentElement.scrollHeight;
-                
-                // Wenn User bis fast ganz unten gescrollt hat (mit 100px Puffer)
-                if (scrollTop + windowHeight >= documentHeight - 100) {
-                    if (!hasScrolledToBottom) {
-                        hasScrolledToBottom = true;
-                        showProgressIndicator();
-                    }
-                }
-            });
-        }
-
-        function showProgressIndicator() {
-            const indicator = document.getElementById('progress-indicator');
-            if (indicator) {
-                indicator.classList.add('show');
-                
-                // Automatisch nach 3 Sekunden ausblenden
-                setTimeout(() => {
-                    indicator.classList.remove('show');
-                }, 3000);
             }
         }
 
         function markAsComplete() {
             if (isModuleCompleted) return; // Bereits abgeschlossen
 
-            // Markiere Modul als abgeschlossen
-            localStorage.setItem('globalisierung_module3_completed', 'true');
-            localStorage.setItem('globalisierung_module3_completedAt', new Date().toISOString());
+            // Markiere Modul als abgeschlossen im neuen System
+            const completed = JSON.parse(localStorage.getItem('globalisierungProgress') || '[]');
+            if (!completed.includes(3)) {
+                completed.push(3);
+                localStorage.setItem('globalisierungProgress', JSON.stringify(completed));
+            }
             
             isModuleCompleted = true;
             updateCompletionButton(true);
@@ -694,9 +637,6 @@
             content.classList.toggle('open');
             header.classList.toggle('open');
         }
-
-
-
 
         // Toggle Chart Function
         function toggleChart(element) {
