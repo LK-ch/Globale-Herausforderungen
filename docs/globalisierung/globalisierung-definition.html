@@ -316,7 +316,7 @@
             gap: 0.75rem;
         }
 
-        .completion-button:hover {
+        .completion-button:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
         }
@@ -326,43 +326,8 @@
             cursor: default;
         }
 
-        .completion-button.completed:hover {
-            transform: none;
-        }
-
-        .progress-indicator {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            display: none;
-            align-items: center;
-            gap: 0.75rem;
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .progress-indicator.show {
-            display: flex;
-        }
-
-        .progress-text {
-            font-size: 0.9rem;
-            color: #1e3a8a;
-            font-weight: bold;
-        }
-
-        .progress-checkmark {
-            font-size: 1.5rem;
-            color: #10b981;
+        .completion-button:disabled {
+            cursor: not-allowed;
         }
 
         @media (max-width: 768px) {
@@ -377,13 +342,6 @@
             .completion-button {
                 font-size: 1.1rem;
                 padding: 1.25rem 2rem;
-            }
-
-            .progress-indicator {
-                bottom: 1rem;
-                right: 1rem;
-                left: 1rem;
-                justify-content: center;
             }
         }
     </style>
@@ -501,12 +459,6 @@
         </div>
     </main>
 
-    <!-- Progress Indicator -->
-    <div id="progress-indicator" class="progress-indicator">
-        <span class="progress-checkmark">✓</span>
-        <span class="progress-text">Seite durchgelesen</span>
-    </div>
-
     <script>
         // Quiz-Daten
         const questions = {
@@ -577,6 +529,7 @@
 
         let userAnswers = {};
         let correctCount = 0;
+        let isModuleCompleted = false;
 
         // Shuffle-Funktion
         function shuffleArray(array) {
@@ -695,10 +648,7 @@
             header.classList.toggle('open');
         }
 
-        // Progress Tracking System
-        let hasScrolledToBottom = false;
-        let isModuleCompleted = false;
-
+        // Completion Funktionen
         function initProgressTracking() {
             // Prüfe ob Modul bereits abgeschlossen wurde
             const completed = localStorage.getItem('globalisierung_module2_completed');
@@ -706,42 +656,15 @@
                 isModuleCompleted = true;
                 updateCompletionButton(true);
             }
-
-            // Zeige Progress-Indicator wenn bis unten gescrollt
-            checkScrollProgress();
-        }
-
-        function checkScrollProgress() {
-            // Prüfe ob Seite bis unten gescrollt wurde
-            window.addEventListener('scroll', function() {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const windowHeight = window.innerHeight;
-                const documentHeight = document.documentElement.scrollHeight;
-                
-                // Wenn User bis fast ganz unten gescrollt hat (mit 100px Puffer)
-                if (scrollTop + windowHeight >= documentHeight - 100) {
-                    if (!hasScrolledToBottom) {
-                        hasScrolledToBottom = true;
-                        showProgressIndicator();
-                    }
-                }
-            });
-        }
-
-        function showProgressIndicator() {
-            const indicator = document.getElementById('progress-indicator');
-            if (indicator) {
-                indicator.classList.add('show');
-                
-                // Automatisch nach 3 Sekunden ausblenden
-                setTimeout(() => {
-                    indicator.classList.remove('show');
-                }, 3000);
-            }
         }
 
         function markAsComplete() {
-            if (isModuleCompleted) return; // Bereits abgeschlossen
+            console.log('markAsComplete wurde aufgerufen');
+            
+            if (isModuleCompleted) {
+                console.log('Modul bereits abgeschlossen');
+                return;
+            }
 
             // Markiere Modul als abgeschlossen
             localStorage.setItem('globalisierung_module2_completed', 'true');
@@ -758,6 +681,10 @@
             const button = document.getElementById('completion-button');
             const buttonText = document.getElementById('button-text');
             
+            console.log('updateCompletionButton aufgerufen, completed:', completed);
+            console.log('Button gefunden:', button);
+            console.log('ButtonText gefunden:', buttonText);
+            
             if (button && buttonText) {
                 if (completed) {
                     button.classList.add('completed');
@@ -771,8 +698,9 @@
             }
         }
 
-        // Initialisiere Fragen und Progress Tracking beim Laden
+        // Initialisiere beim Laden
         window.onload = () => {
+            console.log('Seite geladen, initialisiere...');
             initQuestions();
             initProgressTracking();
         };
