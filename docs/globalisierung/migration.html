@@ -801,6 +801,19 @@
             </div>
         </div>
 
+        <!-- Schweiz als Ein- und Auswanderungsland -->
+        <div class="expandable-section">
+            <div class="expandable-header" onclick="toggleExpand4()">
+                <span>🇨🇭 Die Schweiz als Ein- und Auswanderungsland</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="expandable-content" id="expandable-content4">
+                <div class="expandable-inner">
+                    <!-- Inhalt kann später hier ergänzt werden -->
+                </div>
+            </div>
+        </div>
+
         <!-- Abschluss-Button -->
         <div class="completion-section" id="completion-section">
             <h3 style="color: #1e3a8a; margin-bottom: 1rem;">Modul abschließen</h3>
@@ -982,6 +995,14 @@
             const content = document.getElementById('expandable-content3');
             const headers = document.querySelectorAll('.expandable-header');
             const header = headers[2];
+            content.classList.toggle('open');
+            header.classList.toggle('open');
+        }
+
+        function toggleExpand4() {
+            const content = document.getElementById('expandable-content4');
+            const headers = document.querySelectorAll('.expandable-header');
+            const header = headers[3];
             content.classList.toggle('open');
             header.classList.toggle('open');
         }
