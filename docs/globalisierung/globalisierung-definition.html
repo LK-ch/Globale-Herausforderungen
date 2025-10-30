@@ -314,6 +314,8 @@
             display: inline-flex;
             align-items: center;
             gap: 0.75rem;
+            position: relative;
+            z-index: 10;
         }
 
         .completion-button:hover:not(:disabled) {
@@ -452,7 +454,7 @@
         <div class="completion-section" id="completion-section">
             <h3 style="color: #1e3a8a; margin-bottom: 1rem;">Modul abschließen</h3>
             <p style="color: #666; margin-bottom: 1.5rem;">Haben Sie alle Fragen beantwortet und die Aufträge bearbeitet?</p>
-            <button id="completion-button" class="completion-button" onclick="markAsComplete()">
+            <button id="completion-button" class="completion-button">
                 <span>✓</span>
                 <span id="button-text">Modul als abgeschlossen markieren</span>
             </button>
@@ -703,6 +705,19 @@
             console.log('Seite geladen, initialisiere...');
             initQuestions();
             initProgressTracking();
+            
+            // Füge Event Listener für Completion Button hinzu
+            const completionButton = document.getElementById('completion-button');
+            if (completionButton) {
+                console.log('Completion Button gefunden, füge Event Listener hinzu');
+                completionButton.addEventListener('click', function(e) {
+                    console.log('Button wurde geklickt!');
+                    e.preventDefault();
+                    markAsComplete();
+                });
+            } else {
+                console.error('Completion Button nicht gefunden!');
+            }
         };
     </script>
 </body>
