@@ -124,6 +124,12 @@
             transform: translateY(0);
         }
 
+        .btn:disabled {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .question-text {
             font-size: 1.4em;
             color: #333;
@@ -275,6 +281,24 @@
             margin: 20px 0;
         }
 
+        .completion-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .completion-box h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .completion-box p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
         @media (max-width: 600px) {
             .header h1 {
                 font-size: 1.8em;
@@ -322,6 +346,8 @@
                     Einige Fragen haben mehrere richtige Antworten. Viel Erfolg!
                 </p>
                 <button class="btn" onclick="startQuiz()">Quiz starten</button>
+                <br><br>
+                <a href="index.html" style="color: #667eea; text-decoration: none; font-weight: 600;">← Zurück zum Lernpfad</a>
             </div>
 
             <!-- Question Screen -->
@@ -362,7 +388,19 @@
                         <strong id="successRate">0%</strong>
                     </div>
                 </div>
+                
+                <!-- Abschluss-Button -->
+                <div class="completion-box">
+                    <h3>Modul abschließen</h3>
+                    <p>Markiere dieses Quiz-Modul als abgeschlossen</p>
+                    <button class="btn" id="completionBtn" onclick="markAsComplete()">
+                        <span id="completionText">✓ Modul als abgeschlossen markieren</span>
+                    </button>
+                </div>
+                
                 <button class="btn" onclick="restartQuiz()">Nochmal spielen</button>
+                <br><br>
+                <a href="index.html" style="color: #667eea; text-decoration: none; font-weight: 600;">← Zurück zum Lernpfad</a>
             </div>
         </div>
     </div>
@@ -555,6 +593,71 @@
         let score = 0;
         let correctAnswers = 0;
         let incorrectAnswers = 0;
+        let isModuleCompleted = false;
+
+        // Progress Tracking
+        function initProgressTracking() {
+            // Prüfe beide Systeme
+            const completedOld = localStorage.getItem('globalisierung_module5_completed');
+            const progress = JSON.parse(localStorage.getItem('globalisierungProgress') || '[]');
+            
+            // Wenn im neuen System (Index-Seite) als abgeschlossen markiert
+            if (progress.includes(5)) {
+                isModuleCompleted = true;
+                updateCompletionButton(true);
+                // Synchronisiere mit altem System
+                if (completedOld !== 'true') {
+                    localStorage.setItem('globalisierung_module5_completed', 'true');
+                }
+            }
+            // Wenn im alten System als abgeschlossen markiert
+            else if (completedOld === 'true') {
+                isModuleCompleted = true;
+                updateCompletionButton(true);
+                // Synchronisiere mit neuem System
+                if (!progress.includes(5)) {
+                    progress.push(5);
+                    localStorage.setItem('globalisierungProgress', JSON.stringify(progress));
+                }
+            }
+        }
+
+        function markAsComplete() {
+            if (isModuleCompleted) return;
+
+            // Altes System (für Kompatibilität)
+            localStorage.setItem('globalisierung_module5_completed', 'true');
+            localStorage.setItem('globalisierung_module5_completedAt', new Date().toISOString());
+            
+            // Neues System (für Index-Seite)
+            let progress = JSON.parse(localStorage.getItem('globalisierungProgress') || '[]');
+            if (!progress.includes(5)) {
+                progress.push(5);
+                localStorage.setItem('globalisierungProgress', JSON.stringify(progress));
+            }
+            
+            isModuleCompleted = true;
+            updateCompletionButton(true);
+
+            alert('✓ Modul 5 erfolgreich abgeschlossen!\n\nGlückwunsch! Sie haben alle Module des Lernpfads abgeschlossen!');
+        }
+
+        function updateCompletionButton(completed) {
+            const button = document.getElementById('completionBtn');
+            const buttonText = document.getElementById('completionText');
+            
+            if (button && buttonText) {
+                if (completed) {
+                    button.classList.add('completed');
+                    button.disabled = true;
+                    buttonText.textContent = 'Modul abgeschlossen ✓';
+                } else {
+                    button.classList.remove('completed');
+                    button.disabled = false;
+                    buttonText.textContent = '✓ Modul als abgeschlossen markieren';
+                }
+            }
+        }
 
         function startQuiz() {
             document.getElementById('startScreen').classList.remove('active');
@@ -678,6 +781,9 @@
             
             document.getElementById('resultEmoji').textContent = emoji;
             document.getElementById('evaluation').textContent = evaluation;
+            
+            // Initialisiere Progress Tracking nach Anzeige der Ergebnisse
+            initProgressTracking();
         }
 
         function restartQuiz() {
